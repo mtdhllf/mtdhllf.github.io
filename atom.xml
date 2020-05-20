@@ -1,0 +1,1025 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://mtdhllf.github.io/</id>
+    <title>Gopher&apos;s Blog</title>
+    <updated>2020-05-20T09:58:34.093Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://mtdhllf.github.io/"/>
+    <link rel="self" href="https://mtdhllf.github.io/atom.xml"/>
+    <subtitle>峰子的博客</subtitle>
+    <logo>https://mtdhllf.github.io/images/avatar.png</logo>
+    <icon>https://mtdhllf.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2020, Gopher&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[支付宝实现自定义金额转账收款]]></title>
+        <id>https://mtdhllf.github.io/alipay/</id>
+        <link href="https://mtdhllf.github.io/alipay/">
+        </link>
+        <updated>2020-05-17T09:41:24.000Z</updated>
+        <content type="html"><![CDATA[<h4 id="1跳转后可修改金额和备注的方式">1.跳转后可修改金额和备注的方式</h4>
+<p>先来个二维码举例:</p>
+<figure data-type="image" tabindex="1"><img src="http://yanxuan.nosdn.127.net/0624647c619a6371ec8156ab2d8572ae.png" alt="二维码图片_5月20日16时55分21秒.png" loading="lazy"></figure>
+<p>识别之后的内容:</p>
+<pre><code>alipays://platformapi/startapp?appId=09999988&amp;actionType=toAccount&amp;goBack=NO&amp;amount=1.00&amp;userId=2088502148745835&amp;memo=备注
+</code></pre>
+<p>这里边有几个重要的参数:</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>amount</td>
+<td>价格(元)</td>
+</tr>
+<tr>
+<td>userId</td>
+<td>支付宝用户Id</td>
+</tr>
+<tr>
+<td>memo</td>
+<td>转账备注</td>
+</tr>
+</tbody>
+</table>
+<p>效果图就没有了,你可以扫上面的码打赏我试试</p>
+<h4 id="2跳转后不可修改金额和备注的方式">2.跳转后不可修改金额和备注的方式</h4>
+<p>先来个二维码</p>
+<figure data-type="image" tabindex="2"><img src="http://yanxuan.nosdn.127.net/f88dbd013e4a3ea487b4af9c52f4aaaa.png" alt="二维码图片_5月20日17时16分34秒.png" loading="lazy"></figure>
+<p>识别之后的内容:</p>
+<pre><code>alipays://platformapi/startapp?appId=20000067&amp;url=http%3a%2f%2fwww.baidu.com
+</code></pre>
+<p>参数讲解:</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>appId</td>
+<td>固定即可,支付宝内部定义的一种类型</td>
+</tr>
+<tr>
+<td>url</td>
+<td>跳转的网址(UrlEncode)</td>
+</tr>
+</tbody>
+</table>
+<p>这种方式需要配合一个网页:通过支付宝<a href="http://myjsapi.alipay.com/jsapi/events/alipay-js-bridge-ready.html">AlipayJSBridge</a>的能力来发起支付</p>
+<p>网页代码参考(界面部分省略,参数都类似),<a href="http://www.ezhifu.org/tiyan?qqdrsign=00aca">点我测试</a></p>
+<pre><code class="language-html">&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot; /&gt;
+    &lt;meta content=&quot;width=device-width,initial-scale=1.0&quot; name=&quot;viewport&quot; /&gt;
+    &lt;title&gt;支付宝收银台&lt;/title&gt;
+    &lt;script src=&quot;https://gw.alipayobjects.com/as/g/h5-lib/alipayjsapi/3.1.1/alipayjsapi.min.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+
+    &lt;script&gt;
+
+        var money = 1;
+        money = &quot;&quot; + money.toFixed(2);
+        var num = &quot;306318921589965701775TSD&quot;;
+        var userId = &quot;2088502148745835&quot;;
+
+        document.getElementById(&quot;money&quot;).innerText = money;
+        document.getElementById(&quot;num1&quot;).innerText = num;
+        document.getElementById(&quot;num2&quot;).innerText = num;
+
+        function returnApp() {
+            AlipayJSBridge.call(&quot;exitApp&quot;)
+        }
+
+        function closeAlert() {
+            document.getElementById(&quot;alert&quot;).style.display = &quot;none&quot;;
+        }
+
+        function closeTip() {
+            document.getElementById(&quot;tip&quot;).style.display = &quot;none&quot;;
+        }
+
+        function closeDialog() {
+            document.getElementById(&quot;dialog-mask&quot;).style.display = &quot;none&quot;;
+            document.getElementById(&quot;dialog&quot;).style.display = &quot;none&quot;;
+        }
+
+        function ready(a) {
+            window.AlipayJSBridge ? a &amp;&amp; a() : document.addEventListener(&quot;AlipayJSBridgeReady&quot;, a, !1)
+        }
+
+        function openAlipay() {
+            var u = navigator.userAgent, app = navigator.appVersion;
+            var isAndroid = u.indexOf('Android') &gt; -1 || u.indexOf('Linux') &gt; -1; //g
+            var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+            if (isAndroid) {
+                setTimeout(function () {
+
+                    var a = {
+                        actionType: &quot;scan&quot;,
+                        u: userId,
+                        a: money,
+                        m: num,
+                        biz_data: {
+                            s: &quot;money&quot;,
+                            u: userId,
+                            a: money,
+                            m: num
+                        }
+                    }
+                    AlipayJSBridge.call(&quot;startApp&quot;, {
+                        appId: &quot;20000123&quot;,
+                        param: a
+                    },
+                        function (a) {
+                        });
+
+
+                }, 50);
+
+            }
+            if (isIOS) {
+                $payurl = 'alipays://platformapi/startapp?appId=20000123&amp;actionType=scan&amp;biz_data={&quot;s&quot;: &quot;money&quot;,&quot;u&quot;: &quot;' + userId + '&quot;,&quot;a&quot;: &quot;' + money + '&quot;,&quot;m&quot;: &quot;' + num + '&quot;}';
+                AlipayJSBridge.call('scan', {
+                    &quot;type&quot;: &quot;qr&quot;,
+                    &quot;actionType&quot;: &quot;scanAndRoute&quot;,
+                    &quot;qrcode&quot;: 'alipays://platformapi/startapp?appId=20000123&amp;actionType=scan&amp;biz_data={&quot;s&quot;: &quot;money&quot;,&quot;u&quot;: &quot;' + userId + '&quot;,&quot;a&quot;: &quot;' + money + '&quot;,&quot;m&quot;: &quot;' + num + '&quot;}'
+                }, function (result) {
+
+                });
+            }
+        }
+
+        ready(function () {
+            openAlipay();
+            document.addEventListener('resume', function (event) {
+                AlipayJSBridge.call('popWindow');
+            });
+        });
+
+
+    &lt;/script&gt;
+
+&lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+<h4 id="参考">参考</h4>
+<ul>
+<li><a href="https://blog.csdn.net/qq_32524177/article/details/105792306">如何获取支付宝UserId</a></li>
+<li><a href="http://myjsapi.alipay.com/index.html">支付宝H5开放文档</a></li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Android识别图片中的颜色]]></title>
+        <id>https://mtdhllf.github.io/palette/</id>
+        <link href="https://mtdhllf.github.io/palette/">
+        </link>
+        <updated>2020-04-29T14:32:15.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="android识别图片中的颜色">Android识别图片中的颜色</h1>
+<p>Java的同学可参考<a href="https://mtdhllf.github.io/analyze_image_color/">JAVA 图像分析-主要颜色</a></p>
+<p>前端的同学可参考<a href="https://github.com/google/palette.js">palette.js</a></p>
+<p>IOS的同学可参考<a href="https://www.jianshu.com/p/b7f79c55b066">Google Palette算法详解以及OC化</a></p>
+<p>本篇使用谷歌的Palette库来实现</p>
+<h3 id="效果图">效果图</h3>
+<p><img src="http://yanxuan.nosdn.127.net/4edfd99250d652e0a2bafc2ce76dfc1d.jpg" alt="" loading="lazy"><br>
+<img src="http://yanxuan.nosdn.127.net/227567e78c31690f5ed8a94df1fd849c.jpg" alt="" loading="lazy"></p>
+<p>添加依赖</p>
+<pre><code class="language-scss">//Android
+implementation 'com.android.support:palette-v7:29.0.0'
+//AndroidX
+implementation 'androidx.palette:palette:1.0.0'
+</code></pre>
+<h3 id="代码">代码</h3>
+<pre><code class="language-kotlin">object PaletteUtils {
+	/**
+	* 回调接口
+	*/
+    interface IAnalyzeColor {
+        fun result(result: ArrayList&lt;ColorInfo&gt;)
+    }
+
+    data class ColorInfo(
+            //颜色
+            val color: Int,
+            //颜色占比
+            val percentage: Float
+    )
+
+    /**
+     * 从bitmap获取主色调及权重
+     */
+    fun paletteColor(bitmap: Bitmap, iColor: IAnalyzeColor?) {
+        val builder = Palette.from(bitmap)
+        builder.maximumColorCount(8)
+        builder.generate { palette -&gt;
+            palette?.let {
+                val swatches = palette.swatches
+                swatches.forEach {
+                    ALog.v(&quot;Palette&quot;, &quot;${it.bodyTextColor} ${it.population}&quot;)
+                }
+                //这里取权重靠前的五个颜色
+                val take = swatches.toMutableList().sortedByDescending { it.population }.take(5)
+                val sum = take.sumBy { it.population }
+                val result = ArrayList&lt;ColorInfo&gt;(take.size)
+                take.forEach {
+                    result.add(ColorInfo(it.rgb, it.population.toFloat() / sum))
+                }
+                iColor?.result(result)
+            }
+
+        }
+    }
+}
+</code></pre>
+<h3 id="demo">Demo</h3>
+<p>由于代码不多,想实践的话可复用此<a href="https://github.com/mtdhllf/ImageColorSample">demo</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[几行代码完美实现VerticalSeekBar]]></title>
+        <id>https://mtdhllf.github.io/vertical_seekbar/</id>
+        <link href="https://mtdhllf.github.io/vertical_seekbar/">
+        </link>
+        <updated>2020-04-28T04:40:32.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="有哪些优点">有哪些优点</h3>
+<ul>
+<li>继承自原生SeekBar，显示效果与原生相当</li>
+<li>核心代码只有20行左右，无侵入，使用Api跟原生别无二致</li>
+<li>兼容性好，不同于网上使用旋转实现的方案，某些场景下有各种各样的bug</li>
+</ul>
+<h3 id="上个效果图参考miui12配色">上个效果图(参考MIUI12配色)</h3>
+<h3 id=""><a href="https://github.com/mtdhllf/VerticalSeekBar"><strong>Demo点我</strong></a></h3>
+<figure data-type="image" tabindex="1"><img src="http://yanxuan.nosdn.127.net/04b4f0c033a7775420ee37f508bfd7d5.jpg" alt="" loading="lazy"></figure>
+<h3 id="代码">代码</h3>
+<pre><code class="language-kotlin">/**
+ * author: mtdhllf
+ * time  : 2020/04/28 9:57
+ * desc  :
+ */
+class VerticalSeekBar : AppCompatSeekBar {
+
+    private var mOnSeekBarChangeListener: OnSeekBarChangeListener? = null
+
+    override fun setOnSeekBarChangeListener(l: OnSeekBarChangeListener) {
+        mOnSeekBarChangeListener = l
+        super.setOnSeekBarChangeListener(l)
+    }
+
+    @SuppressLint(&quot;ClickableViewAccessibility&quot;)
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        if (!isEnabled) {
+            return false
+        }
+        parent.requestDisallowInterceptTouchEvent(true)
+        when (event!!.action) {
+            MotionEvent.ACTION_DOWN -&gt; {
+                mOnSeekBarChangeListener?.onStartTrackingTouch(this)
+                val i = max - (max * event.y * 1f / height).toInt()
+                progress = i
+                if (event.action == MotionEvent.ACTION_UP || event.action == MotionEvent.ACTION_CANCEL) {
+                    parent.requestDisallowInterceptTouchEvent(false)
+                    mOnSeekBarChangeListener?.onStopTrackingTouch(this)
+                }
+            }
+            MotionEvent.ACTION_MOVE, MotionEvent.ACTION_UP -&gt; {
+                val i = max - (max * event.y * 1f / height).toInt()
+                progress = i
+                if (event.action == MotionEvent.ACTION_UP || event.action == MotionEvent.ACTION_CANCEL) {
+                    parent.requestDisallowInterceptTouchEvent(false)
+                    mOnSeekBarChangeListener?.onStopTrackingTouch(this)
+                }
+            }
+        }
+        return true
+    }
+
+    constructor(ctx: Context) : super(ctx)
+
+    constructor(ctx: Context, attrs: AttributeSet?) : this(ctx, attrs, 0)
+
+    constructor(ctx: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(ctx, attrs, defStyleAttr)
+
+    init {
+        thumb = null
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        mOnSeekBarChangeListener = null
+    }
+
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Android自定义环形进度条]]></title>
+        <id>https://mtdhllf.github.io/ringview/</id>
+        <link href="https://mtdhllf.github.io/ringview/">
+        </link>
+        <updated>2020-04-27T04:25:52.000Z</updated>
+        <content type="html"><![CDATA[<p>手把手教你实现一个炫酷的环形进度条。</p>
+<p>支持纯色/渐变，可选线条样式，动画时长。</p>
+<p>可实现扇形进度条、多个进度叠加、最小/最大进度等。</p>
+<p>先上个效果图:	<a href="https://github.com/mtdhllf/RingProgressView">Demo点我</a></p>
+<figure data-type="image" tabindex="1"><a href="https://github.com/mtdhllf/RingProgressView"><img src="http://yanxuan.nosdn.127.net/a25a8853b1da306c5fea02dfc83dca75.gif" alt="" loading="lazy"></a></figure>
+<h3 id="实现思路">实现思路</h3>
+<p>环形进度条,本质就是根据角度、半径等条件实现画圆的过程</p>
+<ol>
+<li>创建一个类继承View，并实现几个构造方法</li>
+<li>定义样式属性，获取属性值</li>
+<li>创建画笔，设置线条等样式</li>
+<li>在onDraw方法中进行绘制</li>
+</ol>
+<ul>
+<li>
+<p>定义的属性样式</p>
+<pre><code class="language-xml">&lt;declare-styleable name=&quot;RingProgressView&quot;&gt;
+  &lt;!--前景环形是否使用渐变--&gt;
+  &lt;attr format=&quot;boolean&quot; name=&quot;f_useGradient&quot;/&gt;
+  &lt;!--前景环形渐变起始颜色--&gt;
+  &lt;attr format=&quot;color&quot; name=&quot;f_startColor&quot;/&gt;
+  &lt;!--前景环形渐变中间颜色--&gt;
+  &lt;attr format=&quot;color&quot; name=&quot;f_centerColor&quot;/&gt;
+  &lt;!--前景环形渐变结束颜色--&gt;
+  &lt;attr format=&quot;color&quot; name=&quot;f_endColor&quot;/&gt;
+  &lt;!--前景环形颜色--&gt;
+  &lt;attr format=&quot;color&quot; name=&quot;f_ringColor&quot;/&gt;
+  &lt;!--背景环形颜色--&gt;
+  &lt;attr format=&quot;color&quot; name=&quot;f_ringBgColor&quot;/&gt;
+  &lt;!--前景环形起始角度--&gt;
+  &lt;attr format=&quot;float&quot; name=&quot;f_startAngle&quot;/&gt;
+  &lt;!--前景环形结束角度--&gt;
+  &lt;attr format=&quot;float&quot; name=&quot;f_endAngle&quot;/&gt;
+  &lt;!--背景环形起始角度--&gt;
+  &lt;attr format=&quot;float&quot; name=&quot;f_startBgAngle&quot;/&gt;
+  &lt;!--背景环形结束角度--&gt;
+  &lt;attr format=&quot;float&quot; name=&quot;f_endBgAngle&quot;/&gt;
+  &lt;!--环形线宽--&gt;
+  &lt;attr format=&quot;dimension&quot; name=&quot;f_roundWidth&quot;/&gt;
+  &lt;!--进度变化动画时长--&gt;
+  &lt;attr format=&quot;integer&quot; name=&quot;f_duration&quot;/&gt;
+  &lt;!--前景环形开始进度--&gt;
+  &lt;attr format=&quot;float&quot; name=&quot;f_startProgress&quot;/&gt;
+  &lt;!--前景环形结束进度--&gt;
+  &lt;attr format=&quot;float&quot; name=&quot;f_endProgress&quot;/&gt;
+  &lt;!--前景环形目标进度(你想设置的)--&gt;
+  &lt;attr format=&quot;float&quot; name=&quot;f_progress&quot;/&gt;
+  &lt;!--环形线帽样式Paint.Cap--&gt;
+  &lt;attr format=&quot;enum&quot; name=&quot;f_strokeCap&quot;&gt;
+      &lt;!--默认没有--&gt;
+      &lt;enum name=&quot;butt&quot; value=&quot;0&quot;/&gt;
+      &lt;!--圆角--&gt;
+      &lt;enum name=&quot;round&quot; value=&quot;1&quot;/&gt;
+      &lt;!--直角--&gt;
+      &lt;enum name=&quot;square&quot; value=&quot;2&quot;/&gt;
+  &lt;/attr&gt;
+  &lt;!--环形描边样式,详见Paint.Join--&gt;
+  &lt;attr format=&quot;enum&quot; name=&quot;f_strokeJoin&quot;&gt;
+      &lt;enum name=&quot;miter&quot; value=&quot;0&quot;/&gt;
+      &lt;enum name=&quot;round&quot; value=&quot;1&quot;/&gt;
+      &lt;enum name=&quot;bevel&quot; value=&quot;2&quot;/&gt;
+  &lt;/attr&gt;
+&lt;/declare-styleable&gt;
+</code></pre>
+</li>
+<li>
+<p>定义的属性,及初始化</p>
+<p>xml属性的读取,变量含义可参考上面的属性定义</p>
+<pre><code class="language-kotlin">//属性配置
+val ta = context.obtainStyledAttributes(attrs, R.styleable.RingProgressView)
+ringColor = ta.getColor(R.styleable.RingProgressView_f_ringColor, ringColor)
+ringBgColor = ta.getColor(R.styleable.RingProgressView_f_ringBgColor, ringBgColor)
+startColor = ta.getColor(R.styleable.RingProgressView_f_startColor, startColor)
+centerColor = ta.getColor(R.styleable.RingProgressView_f_centerColor, centerColor)
+endColor = ta.getColor(R.styleable.RingProgressView_f_endColor, endColor)
+//渐变色设置检查
+if (startColor != Color.TRANSPARENT || startColor != Color.TRANSPARENT || startColor != Color.TRANSPARENT) {
+    useGradient = true
+}
+useGradient = ta.getBoolean(R.styleable.RingProgressView_f_useGradient, useGradient)
+startAngle = ta.getFloat(R.styleable.RingProgressView_f_startAngle, startAngle)
+endAngle = ta.getFloat(R.styleable.RingProgressView_f_endAngle, endAngle)
+startBgAngle = ta.getFloat(R.styleable.RingProgressView_f_startBgAngle, startBgAngle)
+endBgAngle = ta.getFloat(R.styleable.RingProgressView_f_endBgAngle, endBgAngle)
+roundWidth = ta.getDimensionPixelSize(R.styleable.RingProgressView_f_roundWidth, roundWidth)
+strokeCap = when (ta.getInteger(R.styleable.RingProgressView_f_strokeCap, 0)) {
+    0 -&gt; Paint.Cap.BUTT
+    1 -&gt; Paint.Cap.ROUND
+    else -&gt; Paint.Cap.SQUARE
+}
+strokeJoin = when (ta.getInteger(R.styleable.RingProgressView_f_strokeJoin, 0)) {
+    0 -&gt; Paint.Join.MITER
+    1 -&gt; Paint.Join.ROUND
+    else -&gt; Paint.Join.BEVEL
+}
+duration = ta.getInt(R.styleable.RingProgressView_f_duration, duration.toInt()).toLong()
+startProgress = ta.getFloat(R.styleable.RingProgressView_f_startProgress, startProgress)
+endProgress = ta.getFloat(R.styleable.RingProgressView_f_endProgress, endProgress)
+progress = ta.getFloat(R.styleable.RingProgressView_f_progress, progress)
+tempProgress = progress
+ta.recycle()
+</code></pre>
+</li>
+<li>
+<p>动画插值器及画笔</p>
+<p>这里使用的是线性插值器(LinearInterpolator)，插值器是控制动画过程的关键，也有其他可代替的方案有Scroller、ValueAnimator等</p>
+<p>有关插值器等了解看文章最后的参考部分</p>
+<pre><code class="language-kotlin">init {	
+        va.interpolator = LinearInterpolator()
+        va.setFloatValues(startProgress, progress)
+        va.duration = duration
+        va.addUpdateListener {
+            tempProgress = it.animatedValue as Float
+            postInvalidate()
+        }
+        va.start()
+    }
+
+/**
+ * 初始化参数
+ */
+private fun init() {
+    //设置画笔参数
+    bgPaint.strokeWidth = roundWidth.toFloat()
+    bgPaint.strokeCap = strokeCap
+    bgPaint.strokeJoin = Paint.Join.ROUND
+    bgPaint.style = Paint.Style.STROKE
+    bgPaint.isAntiAlias = true
+    bgPaint.color = ringBgColor
+    forePaint.strokeWidth = roundWidth.toFloat()
+    forePaint.strokeCap = strokeCap
+    forePaint.strokeJoin = Paint.Join.ROUND
+    forePaint.style = Paint.Style.STROKE
+    forePaint.isAntiAlias = true
+    //着色器颜色筛选
+    val filter = intArrayOf(startColor, centerColor, endColor).filter { it != Color.TRANSPARENT }
+    val colorArray:IntArray = when{
+        filter.isEmpty()-&gt; intArrayOf(startColor, centerColor, endColor)
+        filter.size&gt;1-&gt; filter.toIntArray()
+        else-&gt;{
+            intArrayOf(filter.first(),filter.first())
+        }
+    }
+    //着色器/颜色设置
+    if (useGradient) {
+        forePaint.shader = LinearGradient(
+            0f,
+            0f,
+            width.toFloat(),
+            height.toFloat(),
+            colorArray,
+            null,
+            Shader.TileMode.CLAMP
+        )
+    } else {
+        forePaint.shader = null
+        forePaint.color = ringColor
+    }
+    //矩形
+    rectF
+    .set(
+        0f + roundWidth / 2,
+        0f + roundWidth / 2,
+        width.toFloat() - roundWidth / 2,
+        height.toFloat() - roundWidth / 2
+    )
+    if (init) {
+        postInvalidate()
+    }
+}
+</code></pre>
+</li>
+<li>
+<p>绘制部分</p>
+<pre><code class="language-kotlin">override fun onDraw(canvas: Canvas) {
+    //画背景环形
+    canvas.drawArc(rectF, startBgAngle, endBgAngle - startBgAngle, false, bgPaint)
+    //计算前景环形角度
+    sweepAngle = tempProgress / (endProgress - startProgress) * (endAngle - startAngle)
+    //画前景环形
+    canvas.drawArc(rectF, startAngle, sweepAngle, false, forePaint)
+}
+</code></pre>
+</li>
+</ul>
+<h3 id="总结">总结</h3>
+<ul>
+<li>动画的实现主要依赖于插值器的配合</li>
+<li>渐变的功能实现在于着色器(Paint.shader及LinearGradient)的应用</li>
+</ul>
+<h3 id="参考">参考</h3>
+<h4 id="interpolator插值器"><a href="https://www.jianshu.com/p/a5750828003c">Interpolator插值器</a></h4>
+<h4 id="scroller"><a href="https://www.jianshu.com/p/d27c792c98b9">Scroller</a></h4>
+<h4 id="valueanimator"><a href="https://www.jianshu.com/p/7d70fedcef21%5D">ValueAnimator</a></h4>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Android/JAVA 图像分析-主要颜色]]></title>
+        <id>https://mtdhllf.github.io/analyze_image_color/</id>
+        <link href="https://mtdhllf.github.io/analyze_image_color/">
+        </link>
+        <updated>2020-04-26T14:56:46.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="androidjava-图像分析-主要颜色">Android/JAVA 图像分析-主要颜色</h2>
+<p>有些项目可能会遇到这类需求，识别一套服装或者其他物体的颜色信息，以此来判定他的颜色风格。如果业务交由于后端的话压力可能会比较大，其实前端自行处理一下就好了，逻辑也不复杂。</p>
+<p>彩色图像的颜色模型有很多种形式，<a href="https://baike.baidu.com/item/RGB">RGB</a>、YUV、<a href="https://baike.baidu.com/item/HSV/547122">HSV</a>、CMYK，其中在图像处理以<a href="https://baike.baidu.com/item/RGB">RGB</a>最为直观理解且显示器系统采用就是此类模型，而<a href="https://baike.baidu.com/item/HSV/547122">HSV</a>更符合人眼的颜色分辨，通常在<a href="https://baike.baidu.com/item/HSV/547122">HSV</a>颜色空间下进行颜色识别。</p>
+<h2 id="先上个效果图demo点我">先上个效果图(<a href="https://github.com/mtdhllf/ImageColorSample">Demo点我</a>)</h2>
+<figure data-type="image" tabindex="1"><img src="http://yanxuan.nosdn.127.net/d51c329b9f19efdd8bded91bb5f9a9de.jpg" alt="" loading="lazy"></figure>
+<h2 id="rgb的局限性">RGB的局限性</h2>
+<p><a href="https://baike.baidu.com/item/RGB">RGB</a> 是我们接触最多的颜色空间，由三个通道表示一幅图像，分别为红色(R)，绿色(G)和蓝色(B)。这三种颜色的不同组合可以形成几乎所有的其他颜色。</p>
+<p><a href="https://baike.baidu.com/item/RGB">RGB</a> 颜色空间是图像处理中最基本、最常用、面向硬件的颜色空间，比较容易理解。</p>
+<p><a href="https://baike.baidu.com/item/RGB">RGB</a> 色空间利用三个颜色分量的线性组合来表示颜色，任何颜色都与这三个分量有关，而且这三个分量是高度相关的，所以连续变换颜色时并不直观，想对图像的颜色进行调整需要更改这三个分量才行。</p>
+<p>自然环境下获取的图像容易受自然光照、遮挡和阴影等情况的影响，即对亮度比较敏感。而 <a href="https://baike.baidu.com/item/RGB">RGB</a> 颜色空间的三个分量都与亮度密切相关，即只要亮度改变，三个分量都会随之相应地改变，而没有一种更直观的方式来表达。</p>
+<p>但是人眼对于这三种颜色分量的敏感程度是不一样的，在单色中，人眼对红色最不敏感，蓝色最敏感，所以 <a href="https://baike.baidu.com/item/RGB">RGB</a> 颜色空间是一种均匀性较差的颜色空间。如果颜色的相似性直接用欧氏距离来度量，其结果与人眼视觉会有较大的偏差。对于某一种颜色，我们很难推测出较为精确的三个分量数值来表示。</p>
+<p>所以，<a href="https://baike.baidu.com/item/RGB">RGB</a> 颜色空间适合于显示系统，却并不适合于图像处理。</p>
+<h2 id="hsv颜色空间">HSV颜色空间</h2>
+<p>基于上述理由，在图像处理中使用较多的是 <a href="https://baike.baidu.com/item/HSV/547122">HSV</a>颜色空间，它比 <a href="https://baike.baidu.com/item/RGB">RGB</a> 更接近人们对彩色的感知经验。非常直观地表达颜色的色调、鲜艳程度和明暗程度，方便进行颜色的对比。</p>
+<p>在 <a href="https://baike.baidu.com/item/HSV/547122">HSV</a> 颜色空间下，比<a href="https://baike.baidu.com/item/RGB">RGB</a>更容易跟踪某种颜色的物体，常用于分割指定颜色的物体。</p>
+<p><a href="https://baike.baidu.com/item/HSV/547122">HSV</a> 表达彩色图像的方式由三个部分组成：</p>
+<ul>
+<li>Hue（色调、色相）</li>
+<li>Saturation（饱和度、色彩纯净度）</li>
+<li>Value（明度）</li>
+</ul>
+<p>用下面这个圆柱体来表示 <a href="https://baike.baidu.com/item/HSV/547122">HSV</a> 颜色空间，圆柱体的横截面可以看做是一个极坐标系 ，H 用极坐标的极角表示，S 用极坐标的极轴长度表示，V 用圆柱中轴的高度表示。</p>
+<h2 id="颜色识别的思路">颜色识别的思路</h2>
+<ol>
+<li>统计图像中的颜色比重情况</li>
+<li>合并相近的颜色输</li>
+<li>得到新的结果</li>
+</ol>
+<h2 id="代码实现">代码实现</h2>
+<ul>
+<li>
+<h4 id="颜色识别">颜色识别</h4>
+<pre><code class="language-kotlin">/**
+     * 颜色分析
+     * @param bitmap 位图(建议分辨率先压缩到256基准,当quality为10耗时大概[100-200]ms)
+     * @param quality 质量(颜色合并遍历次数)
+     * @param take 取前几个结果
+     */
+    fun analyzeImageColor(bitmap: Bitmap, quality: Int = 10, take: Int) {
+
+        /**&lt;颜色,计数&gt;*/
+        val allColor = ConcurrentHashMap&lt;Int, Int&gt;()
+        //统计所有颜色,相同颜色计数累加
+        for (y in 0 until bitmap.height) {
+            for (x in 0 until bitmap.width) {
+                bitmap.getPixel(x, y).let {
+                    if (allColor.containsKey(it)) allColor[it]!! + 1 else 1
+                }
+            }
+        }
+        //倒序排序
+        val sortColor = allColor.toList().sortedByDescending { it.second }
+            .toMap().toMutableMap()
+
+        val hsv1 = FloatArray(3)
+        val hsv2 = FloatArray(3)
+        Log.i(&quot;合并前&quot;, &quot;${sortColor.size}&quot;)
+        for (i in 0 until min(quality, sortColor.size)) {
+            if (sortColor.size &gt; i) {
+                val iterator = sortColor.iterator()
+                var first = iterator.next()
+                //move head
+                for (j in (0 until i)) {
+                    first = iterator.next()
+                }
+                while (iterator.hasNext()) {
+                    val second = iterator.next()
+                    Color.colorToHSV(first.key, hsv1)
+                    Color.colorToHSV(second.key, hsv2)
+                    //颜色相似判断及合并
+                    if (checkColorSimilar(hsv1, hsv2)) {
+                        first.setValue(first.value + second.value)
+                        iterator.next()
+                    }
+                }
+
+            }
+        }
+        Log.i(&quot;合并后&quot;, &quot;${sortColor.size}&quot;)
+
+        //结果取数量最多的前[take]个数据,
+        //List&lt;颜色,数量&gt;,结合实际需求自行封装成想要的数据
+        val result = sortColor.toList().sortedByDescending { it.second }.take(take)
+    }
+
+    /**
+     * 颜色相似判定
+     */
+    fun checkColorSimilar(hsv1: FloatArray, hsv2: FloatArray): Boolean {
+        val similarH = 10f
+        val similarS = 0.05
+        val similarV = 0.05
+        return when {
+            abs(hsv1[0] - hsv2[0]) &lt; similarH -&gt; true
+
+            abs(hsv1[0] - hsv2[0]) &lt; similarH * 2
+            &amp;&amp; abs(hsv1[1] - hsv2[1]) &lt; similarS -&gt; true
+
+            abs(hsv1[0] - hsv2[0]) &lt; similarH * 2
+            &amp;&amp; abs(hsv1[2] - hsv2[2]) &lt; similarV -&gt; true
+
+            else-&gt;false
+        }
+    }
+</code></pre>
+</li>
+<li>
+<h4 id="rgb转hsv">RGB转HSV</h4>
+<pre><code class="language-java">public static HSV RGB2HSV(RGB rgb) {
+    float r =(float) rgb . getR () / 255;
+    float g =(float) rgb . getG () / 255;
+    float b =(float) rgb . getB () / 255;
+    float max = max (r, g, b);
+    float min = min (r, g, b);
+    float h = 0;
+    if (r == max)
+        h = (g - b) / (max - min);
+    if (g == max)
+        h = 2 + (b - r) / (max - min);
+    if (b == max)
+        h = 4 + (r - g) / (max - min);
+    h *= 60;
+    if (h &lt; 0) h += 360;
+    HSV hsv = new HSV(h, (max - min) / max, max);
+    return hsv;
+}
+</code></pre>
+</li>
+</ul>
+<h2 id="参考">参考</h2>
+<h3 id="rgb-hsv和hsl颜色空间"><a href="https://zhuanlan.zhihu.com/p/67930839">RGB、HSV和HSL颜色空间</a></h3>
+<h3 id="rgb转-hsv"><a href="http://www.360doc.com/content/17/0726/16/45531310_674302066.shtml">RGB转 HSV</a></h3>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Markdown学习笔记]]></title>
+        <id>https://mtdhllf.github.io/markdown-study-notes/</id>
+        <link href="https://mtdhllf.github.io/markdown-study-notes/">
+        </link>
+        <updated>2020-04-25T16:06:03.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="markdown-标题">Markdown 标题</h2>
+<ul>
+<li>
+<p>使用 = 和 - 标记一级和二级标题</p>
+<pre><code class="language-markdown">我展示的是一级标题(下面=要两个以上)
+=================
+
+我展示的是二级标题(下行-要两个以上)
+-----------------
+</code></pre>
+<h2 id="显示效果如下">显示效果如下：</h2>
+<h1 id="我展示的是一级标题">我展示的是一级标题</h1>
+<h2 id="我展示的是二级标题">我展示的是二级标题</h2>
+<hr>
+</li>
+<li>
+<p>使用 # 号标记</p>
+<p>使用 <strong>#</strong> 号可表示 1-6 级标题，一级标题对应一个 <strong>#</strong> 号，二级标题对应两个 <strong>#</strong> 号，以此类推。</p>
+<pre><code class="language-markdown"># 一级标题
+## 二级标题
+### 三级标题
+#### 四级标题
+##### 五级标题
+###### 六级标题
+</code></pre>
+<p>显示效果如下：</p>
+<hr>
+<h1 id="一级标题">一级标题</h1>
+<h2 id="二级标题">二级标题</h2>
+<h3 id="三级标题">三级标题</h3>
+<h4 id="四级标题">四级标题</h4>
+<h5 id="五级标题">五级标题</h5>
+<h6 id="六级标题">六级标题</h6>
+<hr>
+</li>
+</ul>
+<h2 id="markdown段落样式">Markdown段落样式</h2>
+<ul>
+<li>
+<h3 id="markdown段落">Markdown段落</h3>
+<ol>
+<li>
+<p>Markdown 段落没有特殊的格式，直接编写文字就好，段落的换行是使用两个以上空格加上回车。</p>
+<pre><code class="language-markdown">text1  (text1后面有两个空格)  
+text2
+</code></pre>
+</li>
+<li>
+<p>也可以在段落后面使用一个空行来表示重新开始一个段落。</p>
+<pre><code class="language-markdown">text1
+
+text2
+</code></pre>
+</li>
+</ol>
+</li>
+<li>
+<h3 id="字体">字体</h3>
+<p>Markdown 可以使用以下几种字体：</p>
+<pre><code class="language-markdown">*斜体文本*
+_斜体文本_
+**粗体文本**
+__粗体文本__
+***粗斜体文本***
+___粗斜体文本___
+</code></pre>
+<p>显示效果如下所示：</p>
+<hr>
+<p><em>斜体文本</em><br>
+<em>斜体文本</em><br>
+<strong>粗体文本</strong><br>
+<strong>粗体文本</strong><br>
+<em><strong>粗斜体文本</strong></em><br>
+<em><strong>粗斜体文本</strong></em></p>
+<hr>
+</li>
+</ul>
+<h2 id="markdown-列表">Markdown 列表</h2>
+<p>Markdown 支持有序列表和无序列表。</p>
+<p>无序列表使用星号(<em><strong><strong>)、加号(</strong>+</strong>)或是减号(</em><em>-</em>*)作为列表标记：</p>
+<pre><code class="language-markdown">* 第一项
+* 第二项
+* 第三项
+
++ 第一项
++ 第二项
++ 第三项
+
+
+- 第一项
+- 第二项
+- 第三项
+</code></pre>
+<p>显示结果如下：</p>
+<hr>
+<ul>
+<li>第一项</li>
+<li>第二项</li>
+<li>第三项</li>
+</ul>
+<ul>
+<li>第一项</li>
+<li>第二项</li>
+<li>第三项</li>
+</ul>
+<ul>
+<li>第一项</li>
+<li>第二项</li>
+<li>第三项</li>
+</ul>
+<h2 id="markdown-区块">Markdown 区块</h2>
+<ul>
+<li>
+<p><strong>单层区块</strong></p>
+<p>Markdown 区块引用是在段落开头使用 <strong>&gt;</strong> 符号 ，然后后面紧跟一个<strong>空格</strong>符号：</p>
+<pre><code class="language-markdown">&gt; 白日依山尽，
+&gt; 黄河入海流。
+&gt; 欲穷千里目，
+&gt; 更上一层楼。
+</code></pre>
+<p>显示结果如下：</p>
+<blockquote>
+<p>白日依山尽，<br>
+黄河入海流。<br>
+欲穷千里目，<br>
+更上一层楼。</p>
+</blockquote>
+</li>
+<li>
+<p><strong>嵌套区块</strong></p>
+<p>区块是可以嵌套的，一个 <strong>&gt;</strong> 符号是最外层，两个 <strong>&gt;</strong> 符号是第一层嵌套，以此类推：</p>
+<pre><code class="language-markdown">&gt; 最外层
+&gt; &gt; 第一层嵌套
+&gt; &gt; &gt; 第二层嵌套
+</code></pre>
+<p>显示结果如下：</p>
+<blockquote>
+<p>最外层</p>
+<blockquote>
+<p>第一层嵌套</p>
+<blockquote>
+<p>第二层嵌套</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</li>
+<li>
+<p><strong>区块中使用列表</strong></p>
+</li>
+</ul>
+<h2 id="markdown-代码">Markdown 代码</h2>
+<p>如果是段落上的一个函数或片段的代码可以用反引号把它包起来（<strong>`</strong>），例如：</p>
+<pre><code class="language-markdown">`printf()` 函数
+</code></pre>
+<p>显示结果如下：</p>
+<p><code>printf()</code> 函数</p>
+<ul>
+<li>
+<h3 id="代码区块">代码区块</h3>
+<p>代码区块使用 <strong>4 个空格</strong>或者一个<strong>制表符（Tab 键）</strong>。</p>
+<p>实例如下：</p>
+<pre><code class="language-php">&lt;?php
+echo 'beast php';
+function test(){
+    echo 'test';
+}
+</code></pre>
+<p>你也可以用 <strong>```</strong> 包裹一段代码，并指定一种语言（也可以不指定）：</p>
+<pre><code>```javascript
+$(document).ready(function () {
+    alert('javascript');
+});
+</code></pre>
+<p>显示结果如下：</p>
+<pre><code class="language-javascript">$(document).ready(function () {
+    alert('javascript');
+});
+</code></pre>
+<h2 id="markdown-链接">Markdown 链接</h2>
+<ul>
+<li>
+<p>常用链接使用方法：</p>
+<pre><code class="language-markdown">[链接名称](链接地址)
+
+或者
+
+&lt;链接地址&gt;
+</code></pre>
+<p>例如：</p>
+<pre><code class="language-markdown">这是一个链接 [百度一下](https://www.baidu.com)
+</code></pre>
+<p>显示结果如下：</p>
+<p>这是一个链接 <a href="https://www.baidu.com">百度一下</a></p>
+</li>
+<li>
+<p>直接使用链接地址：</p>
+<pre><code class="language-markdown">&lt;https://www.baidu.com&gt;
+</code></pre>
+<p>显示结果如下：</p>
+<p><a href="https://www.baidu.com">https://www.baidu.com</a></p>
+</li>
+</ul>
+<h2 id="markdown-图片">Markdown 图片</h2>
+<p>Markdown 图片语法格式如下：</p>
+<pre><code class="language-markdown">![alt 属性文本](图片地址)
+
+![alt 属性文本](图片地址 &quot;可选标题&quot;)
+</code></pre>
+<ul>
+<li>开头一个感叹号 !</li>
+<li>接着一个方括号，里面放上图片的替代文字</li>
+<li>接着一个普通括号，里面放上图片的网址，最后还可以用引号包住并加上选择性的 'title' 属性的文字。</li>
+</ul>
+<p>使用实例：</p>
+<pre><code class="language-markdown">![RUNOOB 图标](https://www.baidu.com/img/bd_logo1.png)
+
+![RUNOOB 图标](https://www.baidu.com/img/bd_logo1.png &quot;百度&quot;)
+</code></pre>
+<p>显示结果如下：</p>
+<figure data-type="image" tabindex="1"><img src="https://www.baidu.com/img/baidu_jgylogo3.gif" alt="RUNOOB 图标" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://www.baidu.com/img/baidu_jgylogo3.gif" alt="RUNOOB 图标" title="百度" loading="lazy"></figure>
+<p>Markdown 还没有办法指定图片的高度与宽度，如果你需要的话，你可以使用普通的 <img> 标签。</p>
+<pre><code class="language-html">&lt;img src=&quot;https://www.baidu.com/img/baidu_jgylogo3.gif&quot; width=&quot;20%&quot;&gt;
+</code></pre>
+<p>显示结果如下：</p>
+<img src="https://www.baidu.com/img/baidu_jgylogo3.gif" width="20%">
+</li>
+</ul>
+<h2 id="markdown-表格">Markdown 表格</h2>
+<p>Markdown 制作表格使用 <strong>|</strong> 来分隔不同的单元格，使用 <strong>-</strong> 来分隔表头和其他行。</p>
+<p>语法格式如下：</p>
+<pre><code class="language-markdown">|  表头   | 表头  |
+|  ----  | ----  |
+| 单元格  | 单元格 |
+| 单元格  | 单元格 |
+</code></pre>
+<p>以上代码显示结果如下：</p>
+<table>
+<thead>
+<tr>
+<th>表头</th>
+<th>表头</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>单元格</td>
+<td>单元格</td>
+</tr>
+<tr>
+<td>单元格</td>
+<td>单元格</td>
+</tr>
+</tbody>
+</table>
+<p>对齐方式</p>
+<p><strong>我们可以设置表格的对齐方式：</strong></p>
+<ul>
+<li><strong>-:</strong> 设置内容和标题栏居右对齐。</li>
+<li><strong>:-</strong> 设置内容和标题栏居左对齐。</li>
+<li><strong>:-:</strong> 设置内容和标题栏居中对齐。</li>
+</ul>
+<p>实例如下：</p>
+<pre><code class="language-markdown">| 左对齐 | 右对齐 | 居中对齐 |
+| :-----| ----: | :----: |
+| 单元格 | 单元格 | 单元格 |
+| 单元格 | 单元格 | 单元格 |
+</code></pre>
+<p>以上代码显示结果如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">左对齐</th>
+<th style="text-align:right">右对齐</th>
+<th style="text-align:center">居中对齐</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">单元格</td>
+<td style="text-align:right">单元格</td>
+<td style="text-align:center">单元格</td>
+</tr>
+<tr>
+<td style="text-align:left">单元格</td>
+<td style="text-align:right">单元格</td>
+<td style="text-align:center">单元格</td>
+</tr>
+</tbody>
+</table>
+<h2 id="markdown-高级技巧">Markdown 高级技巧</h2>
+<ul>
+<li>
+<h3 id="支持的-html-元素">支持的 HTML 元素</h3>
+<p>不在 Markdown 涵盖范围之内的标签，都可以直接在文档里面用 HTML 撰写。</p>
+<p>目前支持的 HTML 元素有：等 ，如：</p>
+<pre><code class="language-html">使用 &lt;kbd&gt;Ctrl&lt;/kbd&gt;+&lt;kbd&gt;Alt&lt;/kbd&gt;+&lt;kbd&gt;Del&lt;/kbd&gt; 重启电脑
+</code></pre>
+<p>输出结果为：</p>
+<p>使用 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Del</kbd> 重启电脑</p>
+</li>
+<li>
+<h3 id="转义">转义</h3>
+<p>Markdown 使用了很多特殊符号来表示特定的意义，如果需要显示特定的符号则需要使用转义字符，Markdown 使用反斜杠转义特殊字符：</p>
+<pre><code class="language-markdown">**文本加粗** 
+\*\* 正常显示星号 \*\*
+</code></pre>
+<p>输出结果为：</p>
+<p><strong>文本加粗</strong><br>
+** 正常显示星号 **</p>
+<p>Markdown 支持以下这些符号前面加上反斜杠来帮助插入普通的符号：</p>
+<pre><code class="language-markdown">\   反斜线
+`   反引号
+*   星号
+_   下划线
+{}  花括号
+[]  方括号
+()  小括号
+#   井字号
++   加号
+-   减号
+.   英文句点
+!   感叹号
+</code></pre>
+</li>
+<li>
+<h3 id="公式">公式</h3>
+<p>当你需要在编辑器中插入数学公式时，可以使用两个美元符 $$ 包裹 TeX 或 LaTeX 格式的数学公式来实现。提交后，问答和文章页会根据需要加载 Mathjax 对数学公式进行渲染。如：</p>
+<pre><code class="language-markdown">$$
+\mathbf{V}_1 \times \mathbf{V}_2 =  \begin{vmatrix} 
+\mathbf{i} &amp; \mathbf{j} &amp; \mathbf{k} \\
+\frac{\partial X}{\partial u} &amp;  \frac{\partial Y}{\partial u} &amp; 0 \\
+\frac{\partial X}{\partial v} &amp;  \frac{\partial Y}{\partial v} &amp; 0 \\
+\end{vmatrix}
+${$tep1}{\style{visibility:hidden}{(x+1)(x+1)}}
+$$
+</code></pre>
+<p>输出结果为：</p>
+<p class='katex-block katex-error' title='ParseError: KaTeX parse error: Can&#039;t use function &#039;$&#039; in math mode at position 248: …
+\end{vmatrix}
+$̲{$tep1}{\style{…'>\mathbf{V}_1 \times \mathbf{V}_2 =  \begin{vmatrix} 
+\mathbf{i} &amp; \mathbf{j} &amp; \mathbf{k} \\
+\frac{\partial X}{\partial u} &amp;  \frac{\partial Y}{\partial u} &amp; 0 \\
+\frac{\partial X}{\partial v} &amp;  \frac{\partial Y}{\partial v} &amp; 0 \\
+\end{vmatrix}
+${$tep1}{\style{visibility:hidden}{(x+1)(x+1)}}
+</p>
+</li>
+</ul>
+]]></content>
+    </entry>
+</feed>
