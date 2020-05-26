@@ -30,42 +30,17 @@
       
         <div class="animated fadeInLeft" style="animation-delay: 0.4s">
           <p class="my-4 text-gray-600 font-light hidden lg:block">
-            峰子的博客
+            文章目录
           </p>
-          <div class="animated fadeInLeft social-container hidden lg:block" style="animation-delay: 0.6s">
-            
-              
-                <a href="https://github.com/mtdhllf" target="_blank" class="mr-4 text-xl text-gray-400 font-light hover:text-gray-900">
-                  <i class="ri-github-line"></i>
-                </a>
-              
-            
-              
-            
-              
-            
-              
-                <a href="https://www.jianshu.com/u/a056511da06a" target="_blank" class="mr-4 text-xl text-gray-400 font-light hover:text-gray-900">
-                  <i class="ri-zhihu-line"></i>
-                </a>
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-                <a href="http://wpa.qq.com/msgrd?v=3&amp;uin=1228551440&amp;site=qq&amp;menu=yes" target="_blank" class="mr-4 text-xl text-gray-400 font-light hover:text-gray-900">
-                  <i class="ri-qq-line"></i>
-                </a>
-              
-            
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#102-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%B1%82%E5%BA%8F%E9%81%8D%E5%8E%86">102. 二叉树的层序遍历</a></li>
+</ul>
+</li>
+</ul>
+
           </div>
         </div>
       
@@ -109,101 +84,125 @@
 </div>
 <div class="mask" onclick="closeMenu()">
 </div>
-      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4">
-        <h2 class="text-lg text-gray-700 mb-8">
-          <i class="ri-archive-line"></i> 文章归档
-        </h2>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">102. 二叉树的层序遍历</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2020-05-26 / 2 min read
+        </div>
+        
+        <div class="post-content yue">
+          <h2 id="102-二叉树的层序遍历"><a href="https://leetcode-cn.com/problems/binary-tree-level-order-traversal/">102. 二叉树的层序遍历</a></h2>
+<p>从上到下按层打印二叉树，同一层的节点按从左到右的顺序打印，每一层打印到一行。</p>
+<p>例如:<br>
+给定二叉树: [3,9,20,null,null,15,7],</p>
+<pre><code>    3
+   / \
+  9  20
+    /  \
+   15   7
+</code></pre>
+<p>返回其层次遍历结果：</p>
+<pre><code>[
+  [3],
+  [9,20],
+  [15,7]
+]
+</code></pre>
+<p>提示：</p>
+<ol>
+<li>节点总数 &lt;= 1000</li>
+</ol>
+<p>注意：本题与主站 102 题相同：https://leetcode-cn.com/problems/binary-tree-level-order-traversal/</p>
+<p><strong>题解：</strong></p>
+<p>使用队列的方式</p>
+<pre><code class="language-go">func levelOrder(root *TreeNode) [][]int {
+	var res [][]int
+	if root == nil {
+		return res
+	}
+	queue := []*TreeNode{root}
+	//层级
+	var level = 0
+	for len(queue) != 0 {
+		//临时队列，暂存每个节点的左右子树
+		var temp []*TreeNode
+		//每层加一个数组
+		res = append(res, []int{})
+		//遍历队列，追加队列元素到切片同一层，追加队列元素左右子树到临时队列
+		for _, v := range queue {
+			res[level] = append(res[level], v.Val)
+			if v.Left != nil {
+				temp = append(temp, v.Left)
+			}
+			if v.Right != nil {
+				temp = append(temp, v.Right)
+			}
+		}
+		//层级+1，队列重新复制为队列的左右子树集
+		level++
+		//队列赋值
+		queue = temp
+	}
+	return res
+}
+</code></pre>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://mtdhllf.github.io/tag/_HVh5iE5S/">
+            <span class="flex-auto">算法</span>
+          </a>
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://mtdhllf.github.io/tag/3ubJ1F65DP/">
+            <span class="flex-auto">go</span>
+          </a>
         
 
-        <div class="archives-container">
+
+        <div class="flex justify-between py-8">
           
-            <h2 class="text-gray-600 py-4 animated fadeIn">
-              <i class="ri-map-pin-time-line"></i>
-              2020
-            </h2>
-            
-              
-                <a href="https://mtdhllf.github.io/levelOrder/" class="post">
-                  <h2 class="inline-block font-bold text-lg post-title animated fadeIn">
-                    102. 二叉树的层序遍历
-                  </h2>
-                </a>
-                <div class="text-sm font-light mt-3 mb-6 text-gray-400 animated fadeInDown" style="animation-delay: 0.4s">2020-05-26</div>
-              
-            
-              
-                <a href="https://mtdhllf.github.io/findDuplicate/" class="post">
-                  <h2 class="inline-block font-bold text-lg post-title animated fadeIn">
-                    287. 寻找重复数
-                  </h2>
-                </a>
-                <div class="text-sm font-light mt-3 mb-6 text-gray-400 animated fadeInDown" style="animation-delay: 0.4s">2020-05-26</div>
-              
-            
-              
-                <a href="https://mtdhllf.github.io/alipay/" class="post">
-                  <h2 class="inline-block font-bold text-lg post-title animated fadeIn">
-                    支付宝实现自定义金额转账收款
-                  </h2>
-                </a>
-                <div class="text-sm font-light mt-3 mb-6 text-gray-400 animated fadeInDown" style="animation-delay: 0.4s">2020-05-17</div>
-              
-            
-              
-                <a href="https://mtdhllf.github.io/palette/" class="post">
-                  <h2 class="inline-block font-bold text-lg post-title animated fadeIn">
-                    Android识别图片中的颜色
-                  </h2>
-                </a>
-                <div class="text-sm font-light mt-3 mb-6 text-gray-400 animated fadeInDown" style="animation-delay: 0.4s">2020-04-29</div>
-              
-            
-              
-                <a href="https://mtdhllf.github.io/vertical_seekbar/" class="post">
-                  <h2 class="inline-block font-bold text-lg post-title animated fadeIn">
-                    几行代码完美实现VerticalSeekBar
-                  </h2>
-                </a>
-                <div class="text-sm font-light mt-3 mb-6 text-gray-400 animated fadeInDown" style="animation-delay: 0.4s">2020-04-28</div>
-              
-            
-              
-                <a href="https://mtdhllf.github.io/ringview/" class="post">
-                  <h2 class="inline-block font-bold text-lg post-title animated fadeIn">
-                    Android自定义环形进度条
-                  </h2>
-                </a>
-                <div class="text-sm font-light mt-3 mb-6 text-gray-400 animated fadeInDown" style="animation-delay: 0.4s">2020-04-27</div>
-              
-            
-              
-                <a href="https://mtdhllf.github.io/analyze_image_color/" class="post">
-                  <h2 class="inline-block font-bold text-lg post-title animated fadeIn">
-                    Android/JAVA 图像分析-主要颜色
-                  </h2>
-                </a>
-                <div class="text-sm font-light mt-3 mb-6 text-gray-400 animated fadeInDown" style="animation-delay: 0.4s">2020-04-26</div>
-              
-            
-              
-                <a href="https://mtdhllf.github.io/markdown-study-notes/" class="post">
-                  <h2 class="inline-block font-bold text-lg post-title animated fadeIn">
-                    Markdown学习笔记
-                  </h2>
-                </a>
-                <div class="text-sm font-light mt-3 mb-6 text-gray-400 animated fadeInDown" style="animation-delay: 0.4s">2020-04-26</div>
-              
-            
+
+          
+            <div class="next-post">
+              <a href="https://mtdhllf.github.io/findDuplicate/">
+                <h3 class="post-title">
+                  287. 寻找重复数
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
           
         </div>
 
-        <div>
-          <div class="pagination-container animated fadeIn">
-  
-  
-</div>
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
 
-        </div>
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '17fd0fe4f1fbb793d275',
+    clientSecret: '7fe45b7c5d49c05c0ef71521e1c01c5fd23a6981',
+    repo: 'gitalk',
+    owner: 'mtdhllf',
+    admin: ['mtdhllf'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
       </div>
     </div>
 
