@@ -30,42 +30,17 @@
       
         <div class="animated fadeInLeft" style="animation-delay: 0.4s">
           <p class="my-4 text-gray-600 font-light hidden lg:block">
-            峰子的博客
+            文章目录
           </p>
-          <div class="animated fadeInLeft social-container hidden lg:block" style="animation-delay: 0.6s">
-            
-              
-                <a href="https://github.com/mtdhllf" target="_blank" class="mr-4 text-xl text-gray-400 font-light hover:text-gray-900">
-                  <i class="ri-github-line"></i>
-                </a>
-              
-            
-              
-            
-              
-            
-              
-                <a href="https://www.jianshu.com/u/a056511da06a" target="_blank" class="mr-4 text-xl text-gray-400 font-light hover:text-gray-900">
-                  <i class="ri-zhihu-line"></i>
-                </a>
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-                <a href="http://wpa.qq.com/msgrd?v=3&amp;uin=1228551440&amp;site=qq&amp;menu=yes" target="_blank" class="mr-4 text-xl text-gray-400 font-light hover:text-gray-900">
-                  <i class="ri-qq-line"></i>
-                </a>
-              
-            
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#287-%E5%AF%BB%E6%89%BE%E9%87%8D%E5%A4%8D%E6%95%B0">287. 寻找重复数</a></li>
+</ul>
+</li>
+</ul>
+
           </div>
         </div>
       
@@ -109,33 +84,113 @@
 </div>
 <div class="mask" onclick="closeMenu()">
 </div>
-      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4">
-        <h2 class="text-lg text-gray-700 mb-8">
-          <i class="ri-bookmark-line"></i> 图像处理
-        </h2>
-        
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${0 * 0.2}s` }">
-    
-      <a href="https://mtdhllf.github.io/palette/" class="feature-image-wrapper bg-gray-100 rounded-lg flex-shrink-0 mr-8 w-full h-56 h-32 md:w-56 md:h-40">
-        <div class="post-feature-image lazy w-full h-56 h-32 md:w-56 md:h-40" data-bg="'http://yanxuan.nosdn.127.net/e2a7735e25ee73fbfdd543018b85e97b.png'">
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">287. 寻找重复数</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2020-05-26 / 1 min read
         </div>
-      </a>
-    
-    <div class="content">
-      <a href="https://mtdhllf.github.io/palette/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">Android识别图片中的颜色</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
         
-      </div>
-      <div class="text-gray-400 text-sm font-light">2020-04-29 / 2 min read</div>
-    </div>
-  </section>
+        <div class="post-content yue">
+          <h2 id="287-寻找重复数"><a href="https://leetcode-cn.com/problems/find-the-duplicate-number/">287. 寻找重复数</a></h2>
+<p>给定一个包含 <em>n</em> + 1 个整数的数组 <em>nums</em>，其数字都在 1 到 <em>n</em> 之间（包括 1 和 <em>n</em>），可知至少存在一个重复的整数。假设只有一个重复的整数，找出这个重复的数。</p>
+<p><strong>示例 1:</strong></p>
+<pre><code>输入: [1,3,4,2,2]
+输出: 2
+</code></pre>
+<p><strong>示例 2:</strong></p>
+<pre><code>输入: [3,1,3,4,2]
+输出: 3
+</code></pre>
+<p><strong>说明：</strong></p>
+<ol>
+<li><strong>不能</strong>更改原数组（假设数组是只读的）。</li>
+<li>只能使用额外的 <em>O</em>(1) 的空间。</li>
+<li>时间复杂度小于 <em>O</em>(<em>n</em>2) 。</li>
+<li>数组中只有一个重复的数字，但它可能不止重复出现一次。</li>
+</ol>
+<p><strong>题解：</strong></p>
+<ol>
+<li>快慢指针法</li>
+</ol>
+<pre><code class="language-go">func findDuplicate(nums []int) int {
+    var slow = nums[0]
+	var fast = nums[nums[0]]
+	//寻找相遇点
+	for {
+		if slow == fast {
+			break
+		}
+		slow = nums[slow]
+		fast = nums[nums[fast]]
+	}
+	slow=0
+	for {
+		if slow == fast {
+			break
+		}
+		//slow从起点,fast从相遇点开始,步进为1进行遍历
+		slow = nums[slow]
+		fast = nums[fast]
+	}
+	return slow
+}
+</code></pre>
 
-        <div class="pagination-container animated fadeIn">
-  
-  
-</div>
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://mtdhllf.github.io/tag/_HVh5iE5S/">
+            <span class="flex-auto">算法</span>
+          </a>
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://mtdhllf.github.io/tag/3ubJ1F65DP/">
+            <span class="flex-auto">go</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+
+          
+            <div class="next-post">
+              <a href="https://mtdhllf.github.io/alipay/">
+                <h3 class="post-title">
+                  支付宝实现自定义金额转账收款
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '17fd0fe4f1fbb793d275',
+    clientSecret: '7fe45b7c5d49c05c0ef71521e1c01c5fd23a6981',
+    repo: 'gitalk',
+    owner: 'mtdhllf',
+    admin: ['mtdhllf'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
 
       </div>
     </div>

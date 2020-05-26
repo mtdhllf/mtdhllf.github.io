@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://mtdhllf.github.io/</id>
     <title>Gopher&apos;s Blog</title>
-    <updated>2020-05-20T10:07:35.784Z</updated>
+    <updated>2020-05-26T06:07:29.617Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://mtdhllf.github.io/"/>
     <link rel="self" href="https://mtdhllf.github.io/atom.xml"/>
@@ -10,6 +10,58 @@
     <logo>https://mtdhllf.github.io/images/avatar.png</logo>
     <icon>https://mtdhllf.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Gopher&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[287. 寻找重复数]]></title>
+        <id>https://mtdhllf.github.io/findDuplicate/</id>
+        <link href="https://mtdhllf.github.io/findDuplicate/">
+        </link>
+        <updated>2020-05-26T12:02:39.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="287-寻找重复数"><a href="https://leetcode-cn.com/problems/find-the-duplicate-number/">287. 寻找重复数</a></h2>
+<p>给定一个包含 <em>n</em> + 1 个整数的数组 <em>nums</em>，其数字都在 1 到 <em>n</em> 之间（包括 1 和 <em>n</em>），可知至少存在一个重复的整数。假设只有一个重复的整数，找出这个重复的数。</p>
+<p><strong>示例 1:</strong></p>
+<pre><code>输入: [1,3,4,2,2]
+输出: 2
+</code></pre>
+<p><strong>示例 2:</strong></p>
+<pre><code>输入: [3,1,3,4,2]
+输出: 3
+</code></pre>
+<p><strong>说明：</strong></p>
+<ol>
+<li><strong>不能</strong>更改原数组（假设数组是只读的）。</li>
+<li>只能使用额外的 <em>O</em>(1) 的空间。</li>
+<li>时间复杂度小于 <em>O</em>(<em>n</em>2) 。</li>
+<li>数组中只有一个重复的数字，但它可能不止重复出现一次。</li>
+</ol>
+<p><strong>题解：</strong></p>
+<ol>
+<li>快慢指针法</li>
+</ol>
+<pre><code class="language-go">func findDuplicate(nums []int) int {
+    var slow = nums[0]
+	var fast = nums[nums[0]]
+	//寻找相遇点
+	for {
+		if slow == fast {
+			break
+		}
+		slow = nums[slow]
+		fast = nums[nums[fast]]
+	}
+	slow=0
+	for {
+		if slow == fast {
+			break
+		}
+		//slow从起点,fast从相遇点开始,步进为1进行遍历
+		slow = nums[slow]
+		fast = nums[fast]
+	}
+	return slow
+}
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[支付宝实现自定义金额转账收款]]></title>
         <id>https://mtdhllf.github.io/alipay/</id>
