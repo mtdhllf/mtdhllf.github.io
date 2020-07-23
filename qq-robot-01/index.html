@@ -34,12 +34,24 @@
           </p>
           <div class="toc-container hidden lg:block">
             <ul class="markdownIt-TOC">
-<li><a href="#android%E8%AF%86%E5%88%AB%E5%9B%BE%E7%89%87%E4%B8%AD%E7%9A%84%E9%A2%9C%E8%89%B2">Android识别图片中的颜色</a><br>
-*
+<li>
 <ul>
-<li><a href="#%E6%95%88%E6%9E%9C%E5%9B%BE">效果图</a></li>
-<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
-<li><a href="#demo">Demo</a></li>
+<li>
+<ul>
+<li><a href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87">环境准备</a>
+<ul>
+<li><a href="#%E6%88%AA%E5%9B%BE%E5%8F%82%E8%80%83">截图参考:</a></li>
+</ul>
+</li>
+<li><a href="#%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA">项目搭建</a></li>
+<li><a href="#%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91">插件开发</a></li>
+<li><a href="#%E6%8F%92%E4%BB%B6%E6%B5%8B%E8%AF%95">插件测试</a>
+<ul>
+<li><a href="#demo%E4%B8%8B%E8%BD%BD">Demo下载</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -88,103 +100,87 @@
 <div class="mask" onclick="closeMenu()">
 </div>
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
-        <h1 class="text-3xl font-bold lg:mt-16">Android识别图片中的颜色</h1>
+        <h1 class="text-3xl font-bold lg:mt-16">QQ机器人插件开发实践(一)</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2020-04-29 / 2 min read
+          2020-07-21 / 2 min read
         </div>
         
-          <img class="post-feature-image rounded-lg mx-auto my-4" src="http://yanxuan.nosdn.127.net/e2a7735e25ee73fbfdd543018b85e97b.png" alt="">
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://img04.sogoucdn.com/app/a/100520146/aa26781edce576567f5c620989126505" alt="">
         
         <div class="post-content yue">
-          <h1 id="android识别图片中的颜色">Android识别图片中的颜色</h1>
-<p>Java的同学可参考<a href="https://mtdhllf.github.io/analyze_image_color/">JAVA 图像分析-主要颜色</a></p>
-<p>前端的同学可参考<a href="https://github.com/google/palette.js">palette.js</a></p>
-<p>IOS的同学可参考<a href="https://www.jianshu.com/p/b7f79c55b066">Google Palette算法详解以及OC化</a></p>
-<p>本篇使用谷歌的Palette库来实现</p>
-<h3 id="效果图">效果图</h3>
-<p><img src="http://yanxuan.nosdn.127.net/4edfd99250d652e0a2bafc2ce76dfc1d.jpg" alt="" loading="lazy"><br>
-<img src="http://yanxuan.nosdn.127.net/227567e78c31690f5ed8a94df1fd849c.jpg" alt="" loading="lazy"></p>
-<p>添加依赖</p>
-<pre><code class="language-scss">//Android
-implementation 'com.android.support:palette-v7:29.0.0'
-//AndroidX
-implementation 'androidx.palette:palette:1.0.0'
+          <p>平台选择：<a href="https://cqp.cc/">酷Q</a></p>
+<p>使用此平台的原因是个人觉得易用性、稳定性方面要比其他平台好一些。</p>
+<p>开发语言：<a href="https://golang.google.cn/">Go</a>，其他其他平台可参考<a href="https://cqp.cc/t/15124">社区</a></p>
+<h3 id="环境准备">环境准备</h3>
+<ol>
+<li>
+<p>从社区发布板块下载最新的平台软件，我的安装路径(C:\酷Q Air)为例</p>
+</li>
+<li>
+<p>GCC编译环境搭建(有的话可忽略)</p>
+<ul>
+<li>
+<p>下载<a href="https://sourceforge.net/projects/tdm-gcc/">GCC</a>编译器，如链接失效则<a href="https://www.baidu.com/s?wd=tdm-gcc&amp;ie=UTF-8">点此</a>中并安装，我的安装路径(C:\TDM-GCC-64)为例</p>
+</li>
+<li>
+<p>将GCC的bin目录添加到环境变量(我的是C:\TDM-GCC-64\bin)</p>
+</li>
+<li>
+<p>最后使用cmd 验证有效即可</p>
+<pre><code>gcc -v
 </code></pre>
-<h3 id="代码">代码</h3>
-<pre><code class="language-kotlin">object PaletteUtils {
-	/**
-	* 回调接口
-	*/
-    interface IAnalyzeColor {
-        fun result(result: ArrayList&lt;ColorInfo&gt;)
-    }
-
-    data class ColorInfo(
-            //颜色
-            val color: Int,
-            //颜色占比
-            val percentage: Float
-    )
-
-    /**
-     * 从bitmap获取主色调及权重
-     */
-    fun paletteColor(bitmap: Bitmap, iColor: IAnalyzeColor?) {
-        val builder = Palette.from(bitmap)
-        builder.maximumColorCount(8)
-        builder.generate { palette -&gt;
-            palette?.let {
-                val swatches = palette.swatches
-                swatches.forEach {
-                    ALog.v(&quot;Palette&quot;, &quot;${it.bodyTextColor} ${it.population}&quot;)
-                }
-                //这里取权重靠前的五个颜色
-                val take = swatches.toMutableList().sortedByDescending { it.population }.take(5)
-                val sum = take.sumBy { it.population }
-                val result = ArrayList&lt;ColorInfo&gt;(take.size)
-                take.forEach {
-                    result.add(ColorInfo(it.rgb, it.population.toFloat() / sum))
-                }
-                iColor?.result(result)
-            }
-
-        }
-    }
-}
-</code></pre>
-<h3 id="demo">Demo</h3>
-<p>由于代码不多,想实践的话可复用此<a href="https://github.com/mtdhllf/ImageColorSample">demo</a></p>
+<h4 id="截图参考">截图参考:</h4>
+<p><img src="http://yanxuan.nosdn.127.net/0f518a84a80ae0d2b7367c97c0ebdf08.png" alt="" loading="lazy"><br>
+<img src="http://yanxuan.nosdn.127.net/8982bf749221da4803a30dacf783997d.png" alt="" loading="lazy"></p>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="项目搭建">项目搭建</h3>
+<ol>
+<li>打开<a href="https://github.com/Tnze/CoolQ-Golang-SDK">CoolQ Golang SDK</a>，根据教程fork一个<a href="https://github.com/Tnze/CoolQ-Golang-Plugin">模板</a>分支到自己的github仓库(也可直接下载到本地开发)</li>
+<li>至此，开发的前期工作就准备完毕了。</li>
+</ol>
+<h3 id="插件开发">插件开发</h3>
+<p>模板已经默认实现了复读机的功能，只需要简单的配置插件信息，即可完成编译。</p>
+<ol>
+<li>
+<p>在app.go中修改插件信息及包名</p>
+<figure data-type="image" tabindex="1"><img src="http://yanxuan.nosdn.127.net/2469cc238269db490ae9f45d46526a65.png" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>在build.bat中修改酷Q中的插件目录(插件打包后直接拷贝到酷Q，最后目录为插件包名)</p>
+<figure data-type="image" tabindex="2"><img src="http://yanxuan.nosdn.127.net/62cec614f131988bf8aa295c9e3838a0.png" alt="" loading="lazy"></figure>
+<p>3.然后在控制台输入build后回车，即可执行build.bat进行编译。结果如下图：</p>
+<figure data-type="image" tabindex="3"><img src="http://yanxuan.nosdn.127.net/3f19f9e5744ed11bc3bdc7646ce80538.png" alt="" loading="lazy"></figure>
+</li>
+</ol>
+<h3 id="插件测试">插件测试</h3>
+<p>插件的测试及使用可参考酷Q社区的相关文档</p>
+<p>下一篇将会分享接入智能聊天的功能</p>
+<p><strong>测试截图:</strong></p>
+<figure data-type="image" tabindex="4"><img src="http://yanxuan.nosdn.127.net/d0a9f466b43f646e3b2646363e174c0e.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="http://yanxuan.nosdn.127.net/e391e37f02b884808ffd78cc1f27b018.png" alt="" loading="lazy"></figure>
+<h4 id="demo下载">Demo下载</h4>
+<p><a href="https://github.com/mtdhllf/QQRobot">点我</a></p>
 
         </div>
 
         
-          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://mtdhllf.github.io/tag/v8-cDsPl4/">
-            <span class="flex-auto">图像处理</span>
-          </a>
-        
-          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://mtdhllf.github.io/tag/android/">
-            <span class="flex-auto">Android</span>
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://mtdhllf.github.io/tag/3ubJ1F65DP/">
+            <span class="flex-auto">go</span>
           </a>
         
 
 
         <div class="flex justify-between py-8">
           
-            <div class="prev-post">
-              <a href="https://mtdhllf.github.io/alipay/">
-                <h3 class="post-title">
-                  <i class="ri-arrow-left-line"></i>
-                  支付宝实现自定义金额转账收款
-                </h3>
-              </a>
-            </div>
-          
 
           
             <div class="next-post">
-              <a href="https://mtdhllf.github.io/vertical_seekbar/">
+              <a href="https://mtdhllf.github.io/levelOrder/">
                 <h3 class="post-title">
-                  几行代码完美实现VerticalSeekBar
+                  102. 二叉树的层序遍历
                   <i class="ri-arrow-right-line"></i>
                 </h3>
               </a>
