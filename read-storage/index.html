@@ -30,42 +30,22 @@
       
         <div class="animated fadeInLeft" style="animation-delay: 0.4s">
           <p class="my-4 text-gray-600 font-light hidden lg:block">
-            峰子的博客
+            文章目录
           </p>
-          <div class="animated fadeInLeft social-container hidden lg:block" style="animation-delay: 0.6s">
-            
-              
-                <a href="https://github.com/mtdhllf" target="_blank" class="mr-4 text-xl text-gray-400 font-light hover:text-gray-900">
-                  <i class="ri-github-line"></i>
-                </a>
-              
-            
-              
-            
-              
-            
-              
-                <a href="https://www.jianshu.com/u/a056511da06a" target="_blank" class="mr-4 text-xl text-gray-400 font-light hover:text-gray-900">
-                  <i class="ri-zhihu-line"></i>
-                </a>
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-                <a href="http://wpa.qq.com/msgrd?v=3&amp;uin=1228551440&amp;site=qq&amp;menu=yes" target="_blank" class="mr-4 text-xl text-gray-400 font-light hover:text-gray-900">
-                  <i class="ri-qq-line"></i>
-                </a>
-              
-            
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E5%AE%89%E5%8D%93%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%82%A8%E7%A9%BA%E9%97%B4%E6%83%85%E5%86%B5%E8%AF%BB%E5%8F%96">安卓系统存储空间情况读取</a></li>
+<li><a href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">注意事项</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
           </div>
         </div>
       
@@ -109,33 +89,100 @@
 </div>
 <div class="mask" onclick="closeMenu()">
 </div>
-      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4">
-        <h2 class="text-lg text-gray-700 mb-8">
-          <i class="ri-bookmark-line"></i> 图像处理
-        </h2>
-        
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${0 * 0.2}s` }">
-    
-      <a href="https://mtdhllf.github.io/palette/" class="feature-image-wrapper bg-gray-100 rounded-lg flex-shrink-0 mr-8 w-full h-56 h-32 md:w-56 md:h-40">
-        <div class="post-feature-image lazy w-full h-56 h-32 md:w-56 md:h-40" data-bg="'http://yanxuan.nosdn.127.net/e2a7735e25ee73fbfdd543018b85e97b.png'">
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">安卓存储空间读取</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2020-11-26 / 2 min read
         </div>
-      </a>
-    
-    <div class="content">
-      <a href="https://mtdhllf.github.io/palette/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">Android识别图片中的颜色</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
         
-      </div>
-      <div class="text-gray-400 text-sm font-light">2020-04-29 / 2 min read</div>
-    </div>
-  </section>
+        <div class="post-content yue">
+          <h3 id="安卓系统存储空间情况读取">安卓系统存储空间情况读取</h3>
+<p>安卓系统分区大致可分为系统分区、用户分区，网上的常规方法如读取SD卡路径等方法其实都是不太准确的，这里使用系统api读取。</p>
+<p>这里先上个代码</p>
+<pre><code class="language-java">StorageManager sm = getSystemService(StorageManager.class);
+StorageStatsManager ssm = getSystemService(StorageStatsManager.class);
+long privateFreeBytes = 0;
+long privateTotalBytes = 0;
+List&lt;VolumeInfo&gt; volumes = ReflectUtils.reflect(sm).method(&quot;getVolumes&quot;).get();
+for (VolumeInfo volume : volumes) {
+    //note type==1为用户卷,type==2为系统卷，一般读取用户卷即可
+    if (volume.getType() == 1) {
+        privateTotalBytes += ssm.getTotalBytes(volume.getFsUuid());
+        privateFreeBytes += ssm.getFreeBytes(volume.getFsUuid());
+    }
+    break;
+}
+LogUtils.i(&quot;设备空间读取&quot;,
+           &quot;可用空间--&quot;+Formatter.formatFileSize(Utils.getApp(),privateFreeBytes),
+           &quot;闪存空间--&quot;+Formatter.formatFileSize(Utils.getApp(),privateTotalBytes));
+return new long[]{privateTotalBytes-privateFreeBytes, privateTotalBytes};
+</code></pre>
+<p>打印结果：跟原生系统设置看到的数据应该是一致的，图就不上了</p>
+<pre><code>┌──────────────────────────────
+│ args[0] = 设备空间读取
+│ args[1] = 可用空间--4.48 GB
+│ args[2] = 闪存空间--8.00 GB
+└──────────────────────────────
+</code></pre>
+<p>代码中使用了StorageManager、StorageStatsManager两个系统服务，其中StorageManager的getVolumes方法是隐藏的，需要使用反射获取，返回的是分区卷的相关信息。然后配合使用StorageStatsManager的相关方法即可实现对分区使用情况的读取。</p>
+<h3 id="注意事项">注意事项</h3>
+<ol>
+<li>读取是个耗时操作，需要在子线程执行并做好兼容异常等处理。</li>
+<li>getTotalBytes(String uuid)在Api 28已经移除(也有可能更早)，本文使用Api版本为26。</li>
+<li>getTotalBytes(UUID storageUuid)是更好的选择，只需要StorageManager.convert(uuid)做一下转行即可。</li>
+</ol>
 
-        <div class="pagination-container animated fadeIn">
-  
-  
-</div>
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://mtdhllf.github.io/tag/android/">
+            <span class="flex-auto">Android</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+
+          
+            <div class="next-post">
+              <a href="https://mtdhllf.github.io/wechat-robot/">
+                <h3 class="post-title">
+                  安卓自动朋友圈？--广告机器人
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '17fd0fe4f1fbb793d275',
+    clientSecret: '7fe45b7c5d49c05c0ef71521e1c01c5fd23a6981',
+    repo: 'gitalk',
+    owner: 'mtdhllf',
+    admin: ['mtdhllf'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
 
       </div>
     </div>
