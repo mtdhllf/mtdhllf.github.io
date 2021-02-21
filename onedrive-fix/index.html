@@ -30,41 +30,9 @@
       
         <div class="animated fadeInLeft" style="animation-delay: 0.4s">
           <p class="my-4 text-gray-600 font-light hidden lg:block">
-            峰子的博客
+            文章目录
           </p>
-          <div class="animated fadeInLeft social-container hidden lg:block" style="animation-delay: 0.6s">
-            
-              
-                <a href="https://github.com/mtdhllf" target="_blank" class="mr-4 text-xl text-gray-400 font-light hover:text-gray-900">
-                  <i class="ri-github-line"></i>
-                </a>
-              
-            
-              
-            
-              
-            
-              
-                <a href="https://www.jianshu.com/u/a056511da06a" target="_blank" class="mr-4 text-xl text-gray-400 font-light hover:text-gray-900">
-                  <i class="ri-zhihu-line"></i>
-                </a>
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-                <a href="http://wpa.qq.com/msgrd?v=3&amp;uin=1228551440&amp;site=qq&amp;menu=yes" target="_blank" class="mr-4 text-xl text-gray-400 font-light hover:text-gray-900">
-                  <i class="ri-qq-line"></i>
-                </a>
-              
+          <div class="toc-container hidden lg:block">
             
           </div>
         </div>
@@ -109,41 +77,129 @@
 </div>
 <div class="mask" onclick="closeMenu()">
 </div>
-      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4">
-        <h2 class="text-lg text-gray-700 mb-8">
-          <i class="ri-bookmark-line"></i> 算法
-        </h2>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">OneDrive 显示右键上下文菜单</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2021-02-21 / 2 min read
+        </div>
         
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${0 * 0.2}s` }">
-    
-    <div class="content">
-      <a href="https://mtdhllf.github.io/levelOrder/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">102. 二叉树的层序遍历</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
-        
-      </div>
-      <div class="text-gray-400 text-sm font-light">2020-05-26 / 2 min read</div>
-    </div>
-  </section>
+        <div class="post-content yue">
+          <p>如果你在 Windows 文件资源管理器中(右键)缺少 OneDrive 上下文菜单项，你将看不到 &quot;共享&quot; 或 &quot;联机查看&quot; 选项。(如Administrator账户下)</p>
+<ol>
+<li>按win+R打开运行，bai在运行中输入“gpedit.msc”并回车。</li>
+<li>展开 &quot;<strong>本地策略</strong>&quot;，然后打开 &quot;<strong>安全选项</strong>&quot;。</li>
+<li>检查有关<strong>用户帐户控制</strong>的策略并设置它们，如下所示：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">设置</th>
+<th style="text-align:left">安全设置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">将文件和注册表写入错误虚拟化到每用户位置</td>
+<td style="text-align:left">已启用</td>
+</tr>
+<tr>
+<td style="text-align:left">提示提升时切换到安全桌面</td>
+<td style="text-align:left">已禁用</td>
+</tr>
+<tr>
+<td style="text-align:left">在管理员批准模式下运行所有管理员</td>
+<td style="text-align:left">已启用</td>
+</tr>
+<tr>
+<td style="text-align:left">仅提升安装在安全位置的 UIAccess 应用程序</td>
+<td style="text-align:left">已启用</td>
+</tr>
+<tr>
+<td style="text-align:left">仅提升已签名和已验证的可执行文件</td>
+<td style="text-align:left">已禁用</td>
+</tr>
+<tr>
+<td style="text-align:left">检测应用程序安装并提示提升</td>
+<td style="text-align:left">已启用</td>
+</tr>
+<tr>
+<td style="text-align:left">标准用户的提升提示行为</td>
+<td style="text-align:left">提示输入凭据</td>
+</tr>
+<tr>
+<td style="text-align:left">管理员批准模式中管理员的提升提示行为</td>
+<td style="text-align:left">在不提示的情况下提升</td>
+</tr>
+<tr>
+<td style="text-align:left">允许 UIAccess 应用程序在不使用安全桌面的情况下提示提升</td>
+<td style="text-align:left">已禁用</td>
+</tr>
+<tr>
+<td style="text-align:left">内置管理员帐户的管理员批准模式</td>
+<td style="text-align:left">已启用</td>
+</tr>
+</tbody>
+</table>
+<ol start="4">
+<li>重启计算机。</li>
+</ol>
+<hr>
+<p><strong>相关图示：</strong></p>
+<figure data-type="image" tabindex="1"><img src="https://ae01.alicdn.com/kf/U133390e74c084f0dbb21b146453df0b1w.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://ae01.alicdn.com/kf/U4e4f3c6f5df0479982434cd63025d1ceL.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="C:%5CUsers%5CAdministrator%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20210221122039808.png" alt="image-20210221122039808" loading="lazy"></figure>
 
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${1 * 0.2}s` }">
-    
-    <div class="content">
-      <a href="https://mtdhllf.github.io/findDuplicate/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">287. 寻找重复数</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
-        
-      </div>
-      <div class="text-gray-400 text-sm font-light">2020-05-26 / 1 min read</div>
-    </div>
-  </section>
+        </div>
 
-        <div class="pagination-container animated fadeIn">
-  
-  
-</div>
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://mtdhllf.github.io/tag/7SSsuee1u/">
+            <span class="flex-auto">网盘</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+
+          
+            <div class="next-post">
+              <a href="https://mtdhllf.github.io/read-storage/">
+                <h3 class="post-title">
+                  安卓存储空间读取
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '17fd0fe4f1fbb793d275',
+    clientSecret: '7fe45b7c5d49c05c0ef71521e1c01c5fd23a6981',
+    repo: 'gitalk',
+    owner: 'mtdhllf',
+    admin: ['mtdhllf'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
 
       </div>
     </div>

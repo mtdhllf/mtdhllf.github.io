@@ -2,14 +2,86 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://mtdhllf.github.io/</id>
     <title>Gopher&apos;s Blog</title>
-    <updated>2020-11-29T02:14:37.440Z</updated>
+    <updated>2021-02-21T04:23:04.600Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://mtdhllf.github.io/"/>
     <link rel="self" href="https://mtdhllf.github.io/atom.xml"/>
     <subtitle>峰子的博客</subtitle>
     <logo>https://mtdhllf.github.io/images/avatar.png</logo>
     <icon>https://mtdhllf.github.io/favicon.ico</icon>
-    <rights>All rights reserved 2020, Gopher&apos;s Blog</rights>
+    <rights>All rights reserved 2021, Gopher&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[OneDrive 显示右键上下文菜单]]></title>
+        <id>https://mtdhllf.github.io/onedrive-fix/</id>
+        <link href="https://mtdhllf.github.io/onedrive-fix/">
+        </link>
+        <updated>2021-02-21T04:21:03.000Z</updated>
+        <content type="html"><![CDATA[<p>如果你在 Windows 文件资源管理器中(右键)缺少 OneDrive 上下文菜单项，你将看不到 &quot;共享&quot; 或 &quot;联机查看&quot; 选项。(如Administrator账户下)</p>
+<ol>
+<li>按win+R打开运行，bai在运行中输入“gpedit.msc”并回车。</li>
+<li>展开 &quot;<strong>本地策略</strong>&quot;，然后打开 &quot;<strong>安全选项</strong>&quot;。</li>
+<li>检查有关<strong>用户帐户控制</strong>的策略并设置它们，如下所示：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">设置</th>
+<th style="text-align:left">安全设置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">将文件和注册表写入错误虚拟化到每用户位置</td>
+<td style="text-align:left">已启用</td>
+</tr>
+<tr>
+<td style="text-align:left">提示提升时切换到安全桌面</td>
+<td style="text-align:left">已禁用</td>
+</tr>
+<tr>
+<td style="text-align:left">在管理员批准模式下运行所有管理员</td>
+<td style="text-align:left">已启用</td>
+</tr>
+<tr>
+<td style="text-align:left">仅提升安装在安全位置的 UIAccess 应用程序</td>
+<td style="text-align:left">已启用</td>
+</tr>
+<tr>
+<td style="text-align:left">仅提升已签名和已验证的可执行文件</td>
+<td style="text-align:left">已禁用</td>
+</tr>
+<tr>
+<td style="text-align:left">检测应用程序安装并提示提升</td>
+<td style="text-align:left">已启用</td>
+</tr>
+<tr>
+<td style="text-align:left">标准用户的提升提示行为</td>
+<td style="text-align:left">提示输入凭据</td>
+</tr>
+<tr>
+<td style="text-align:left">管理员批准模式中管理员的提升提示行为</td>
+<td style="text-align:left">在不提示的情况下提升</td>
+</tr>
+<tr>
+<td style="text-align:left">允许 UIAccess 应用程序在不使用安全桌面的情况下提示提升</td>
+<td style="text-align:left">已禁用</td>
+</tr>
+<tr>
+<td style="text-align:left">内置管理员帐户的管理员批准模式</td>
+<td style="text-align:left">已启用</td>
+</tr>
+</tbody>
+</table>
+<ol start="4">
+<li>重启计算机。</li>
+</ol>
+<hr>
+<p><strong>相关图示：</strong></p>
+<figure data-type="image" tabindex="1"><img src="https://ae01.alicdn.com/kf/U133390e74c084f0dbb21b146453df0b1w.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://ae01.alicdn.com/kf/U4e4f3c6f5df0479982434cd63025d1ceL.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="C:%5CUsers%5CAdministrator%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20210221122039808.png" alt="image-20210221122039808" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[安卓存储空间读取]]></title>
         <id>https://mtdhllf.github.io/read-storage/</id>
@@ -654,83 +726,6 @@ implementation 'androidx.palette:palette:1.0.0'
 </code></pre>
 <h3 id="demo">Demo</h3>
 <p>由于代码不多,想实践的话可复用此<a href="https://github.com/mtdhllf/ImageColorSample">demo</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[几行代码完美实现VerticalSeekBar]]></title>
-        <id>https://mtdhllf.github.io/vertical_seekbar/</id>
-        <link href="https://mtdhllf.github.io/vertical_seekbar/">
-        </link>
-        <updated>2020-04-28T04:40:32.000Z</updated>
-        <content type="html"><![CDATA[<h3 id="有哪些优点">有哪些优点</h3>
-<ul>
-<li>继承自原生SeekBar，显示效果与原生相当</li>
-<li>核心代码只有20行左右，无侵入，使用Api跟原生别无二致</li>
-<li>兼容性好，不同于网上使用旋转实现的方案，某些场景下有各种各样的bug</li>
-</ul>
-<h3 id="上个效果图参考miui12配色">上个效果图(参考MIUI12配色)</h3>
-<h3 id=""><a href="https://github.com/mtdhllf/VerticalSeekBar"><strong>Demo点我</strong></a></h3>
-<figure data-type="image" tabindex="1"><img src="http://yanxuan.nosdn.127.net/04b4f0c033a7775420ee37f508bfd7d5.jpg" alt="" loading="lazy"></figure>
-<h3 id="代码">代码</h3>
-<pre><code class="language-kotlin">/**
- * author: mtdhllf
- * time  : 2020/04/28 9:57
- * desc  :
- */
-class VerticalSeekBar : AppCompatSeekBar {
-
-    private var mOnSeekBarChangeListener: OnSeekBarChangeListener? = null
-
-    override fun setOnSeekBarChangeListener(l: OnSeekBarChangeListener) {
-        mOnSeekBarChangeListener = l
-        super.setOnSeekBarChangeListener(l)
-    }
-
-    @SuppressLint(&quot;ClickableViewAccessibility&quot;)
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        if (!isEnabled) {
-            return false
-        }
-        parent.requestDisallowInterceptTouchEvent(true)
-        when (event!!.action) {
-            MotionEvent.ACTION_DOWN -&gt; {
-                mOnSeekBarChangeListener?.onStartTrackingTouch(this)
-                val i = max - (max * event.y * 1f / height).toInt()
-                progress = i
-                if (event.action == MotionEvent.ACTION_UP || event.action == MotionEvent.ACTION_CANCEL) {
-                    parent.requestDisallowInterceptTouchEvent(false)
-                    mOnSeekBarChangeListener?.onStopTrackingTouch(this)
-                }
-            }
-            MotionEvent.ACTION_MOVE, MotionEvent.ACTION_UP -&gt; {
-                val i = max - (max * event.y * 1f / height).toInt()
-                progress = i
-                if (event.action == MotionEvent.ACTION_UP || event.action == MotionEvent.ACTION_CANCEL) {
-                    parent.requestDisallowInterceptTouchEvent(false)
-                    mOnSeekBarChangeListener?.onStopTrackingTouch(this)
-                }
-            }
-        }
-        return true
-    }
-
-    constructor(ctx: Context) : super(ctx)
-
-    constructor(ctx: Context, attrs: AttributeSet?) : this(ctx, attrs, 0)
-
-    constructor(ctx: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(ctx, attrs, defStyleAttr)
-
-    init {
-        thumb = null
-    }
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        mOnSeekBarChangeListener = null
-    }
-
-}
-</code></pre>
 ]]></content>
     </entry>
 </feed>
