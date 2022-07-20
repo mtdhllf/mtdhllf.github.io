@@ -1,0 +1,406 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Gopher&#39;s Blog</title>
+<meta name="description" content="峰子的博客" />
+<link rel="shortcut icon" href="https://mtdhllf.github.io/favicon.ico?v=1658298337319">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://mtdhllf.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://mtdhllf.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://mtdhllf.github.io/images/avatar.png?v=1658298337319" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Gopher&#39;s Blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#1%E8%B7%B3%E8%BD%AC%E5%90%8E%E5%8F%AF%E4%BF%AE%E6%94%B9%E9%87%91%E9%A2%9D%E5%92%8C%E5%A4%87%E6%B3%A8%E7%9A%84%E6%96%B9%E5%BC%8F">1.跳转后可修改金额和备注的方式</a></li>
+<li><a href="#2%E8%B7%B3%E8%BD%AC%E5%90%8E%E4%B8%8D%E5%8F%AF%E4%BF%AE%E6%94%B9%E9%87%91%E9%A2%9D%E5%92%8C%E5%A4%87%E6%B3%A8%E7%9A%84%E6%96%B9%E5%BC%8F">2.跳转后不可修改金额和备注的方式</a></li>
+<li><a href="#%E5%8F%82%E8%80%83">参考</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu" style="animation-delay: 0.2s">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu" style="animation-delay: 0.4s">
+          标签
+        </a>
+      
+    
+      
+        <a href="/about" class="menu" style="animation-delay: 0.6000000000000001s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Hey~</div>
+    <a class="rss" href="https://mtdhllf.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">支付宝实现自定义金额转账收款</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2020-05-17 / 4 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://mtdhllf.github.io/post-images/alipay.jpg" alt="">
+        
+        <div class="post-content yue">
+          <h4 id="1跳转后可修改金额和备注的方式">1.跳转后可修改金额和备注的方式</h4>
+<p>先来个二维码举例:</p>
+<figure data-type="image" tabindex="1"><img src="https://mtdhllf.github.io/post-images/1656821130162.png" alt="" loading="lazy"></figure>
+<p>识别之后的内容:</p>
+<pre><code>alipays://platformapi/startapp?appId=09999988&amp;actionType=toAccount&amp;goBack=NO&amp;amount=1.00&amp;userId=2088502148745835&amp;memo=备注
+</code></pre>
+<p>这里边有几个重要的参数:</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>amount</td>
+<td>价格(元)</td>
+</tr>
+<tr>
+<td>userId</td>
+<td>支付宝用户Id</td>
+</tr>
+<tr>
+<td>memo</td>
+<td>转账备注</td>
+</tr>
+</tbody>
+</table>
+<p>效果图就没有了,你可以扫上面的码打赏我试试</p>
+<h4 id="2跳转后不可修改金额和备注的方式">2.跳转后不可修改金额和备注的方式</h4>
+<p>先来个二维码</p>
+<figure data-type="image" tabindex="2"><img src="https://mtdhllf.github.io/post-images/1656821144558.png" alt="" loading="lazy"></figure>
+<p>识别之后的内容:</p>
+<pre><code>alipays://platformapi/startapp?appId=20000067&amp;url=http%3a%2f%2fwww.baidu.com
+</code></pre>
+<p>参数讲解:</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>appId</td>
+<td>固定即可,支付宝内部定义的一种类型</td>
+</tr>
+<tr>
+<td>url</td>
+<td>跳转的网址(UrlEncode)</td>
+</tr>
+</tbody>
+</table>
+<p>这种方式需要配合一个网页:通过支付宝<a href="http://myjsapi.alipay.com/jsapi/events/alipay-js-bridge-ready.html">AlipayJSBridge</a>的能力来发起支付</p>
+<p>网页代码参考(界面部分省略,参数都类似),<a href="http://www.ezhifu.org/tiyan?qqdrsign=00aca">点我测试</a></p>
+<pre><code class="language-html">&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot; /&gt;
+    &lt;meta content=&quot;width=device-width,initial-scale=1.0&quot; name=&quot;viewport&quot; /&gt;
+    &lt;title&gt;支付宝收银台&lt;/title&gt;
+    &lt;script src=&quot;https://gw.alipayobjects.com/as/g/h5-lib/alipayjsapi/3.1.1/alipayjsapi.min.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+
+    &lt;script&gt;
+
+        var money = 1;
+        money = &quot;&quot; + money.toFixed(2);
+        var num = &quot;306318921589965701775TSD&quot;;
+        var userId = &quot;2088502148745835&quot;;
+
+        document.getElementById(&quot;money&quot;).innerText = money;
+        document.getElementById(&quot;num1&quot;).innerText = num;
+        document.getElementById(&quot;num2&quot;).innerText = num;
+
+        function returnApp() {
+            AlipayJSBridge.call(&quot;exitApp&quot;)
+        }
+
+        function closeAlert() {
+            document.getElementById(&quot;alert&quot;).style.display = &quot;none&quot;;
+        }
+
+        function closeTip() {
+            document.getElementById(&quot;tip&quot;).style.display = &quot;none&quot;;
+        }
+
+        function closeDialog() {
+            document.getElementById(&quot;dialog-mask&quot;).style.display = &quot;none&quot;;
+            document.getElementById(&quot;dialog&quot;).style.display = &quot;none&quot;;
+        }
+
+        function ready(a) {
+            window.AlipayJSBridge ? a &amp;&amp; a() : document.addEventListener(&quot;AlipayJSBridgeReady&quot;, a, !1)
+        }
+
+        function openAlipay() {
+            var u = navigator.userAgent, app = navigator.appVersion;
+            var isAndroid = u.indexOf('Android') &gt; -1 || u.indexOf('Linux') &gt; -1; //g
+            var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+            if (isAndroid) {
+                setTimeout(function () {
+
+                    var a = {
+                        actionType: &quot;scan&quot;,
+                        u: userId,
+                        a: money,
+                        m: num,
+                        biz_data: {
+                            s: &quot;money&quot;,
+                            u: userId,
+                            a: money,
+                            m: num
+                        }
+                    }
+                    AlipayJSBridge.call(&quot;startApp&quot;, {
+                        appId: &quot;20000123&quot;,
+                        param: a
+                    },
+                        function (a) {
+                        });
+
+
+                }, 50);
+
+            }
+            if (isIOS) {
+                $payurl = 'alipays://platformapi/startapp?appId=20000123&amp;actionType=scan&amp;biz_data={&quot;s&quot;: &quot;money&quot;,&quot;u&quot;: &quot;' + userId + '&quot;,&quot;a&quot;: &quot;' + money + '&quot;,&quot;m&quot;: &quot;' + num + '&quot;}';
+                AlipayJSBridge.call('scan', {
+                    &quot;type&quot;: &quot;qr&quot;,
+                    &quot;actionType&quot;: &quot;scanAndRoute&quot;,
+                    &quot;qrcode&quot;: 'alipays://platformapi/startapp?appId=20000123&amp;actionType=scan&amp;biz_data={&quot;s&quot;: &quot;money&quot;,&quot;u&quot;: &quot;' + userId + '&quot;,&quot;a&quot;: &quot;' + money + '&quot;,&quot;m&quot;: &quot;' + num + '&quot;}'
+                }, function (result) {
+
+                });
+            }
+        }
+
+        ready(function () {
+            openAlipay();
+            document.addEventListener('resume', function (event) {
+                AlipayJSBridge.call('popWindow');
+            });
+        });
+
+
+    &lt;/script&gt;
+
+&lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+<h4 id="参考">参考</h4>
+<ul>
+<li><a href="https://blog.csdn.net/qq_32524177/article/details/105792306">如何获取支付宝UserId</a></li>
+<li><a href="http://myjsapi.alipay.com/index.html">支付宝H5开放文档</a></li>
+</ul>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://mtdhllf.github.io/tag/Q-WFD-NjA/">
+            <span class="flex-auto">支付</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://mtdhllf.github.io/findDuplicate/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  287. 寻找重复数
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://mtdhllf.github.io/palette/">
+                <h3 class="post-title">
+                  Android识别图片中的颜色
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://mtdhllf.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

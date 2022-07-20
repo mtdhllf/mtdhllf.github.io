@@ -1,0 +1,1492 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://mtdhllf.github.io</id>
+    <title>Gopher&apos;s Blog</title>
+    <updated>2022-07-20T06:25:41.762Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://mtdhllf.github.io"/>
+    <link rel="self" href="https://mtdhllf.github.io/atom.xml"/>
+    <subtitle>峰子的博客</subtitle>
+    <logo>https://mtdhllf.github.io/images/avatar.png</logo>
+    <icon>https://mtdhllf.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2022, Gopher&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[安卓Maven仓库使用不安全协议(http)]]></title>
+        <id>https://mtdhllf.github.io/maven_record1/</id>
+        <link href="https://mtdhllf.github.io/maven_record1/">
+        </link>
+        <updated>2022-07-10T15:04:54.000Z</updated>
+        <content type="html"><![CDATA[<p>APG7.0后增加了这一限制，找了很久才找到，纪录一下</p>
+<pre><code class="language-groovy">repositories {
+        maven {
+            //这一行关键
+            allowInsecureProtocol = true
+            url &quot;http://maven.geelib.360.cn/nexus/repository/replugin/&quot;
+        }
+        mavenCentral()
+        google()
+    }
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[宝塔-网站文件夹无法删除]]></title>
+        <id>https://mtdhllf.github.io/bt_web_root_remove/</id>
+        <link href="https://mtdhllf.github.io/bt_web_root_remove/">
+        </link>
+        <updated>2022-07-10T15:00:28.000Z</updated>
+        <content type="html"><![CDATA[<p>宝塔在Linux上建站的时候会生成一个.user.ini文件，而且这个文件不能被删除，即使是root用户也删除不了。</p>
+<p>使用下面命令的时候，发现文件多了一个i属性。</p>
+<pre><code class="language-sh">lsattr .user.ini
+</code></pre>
+<p>经过查证，i代表不得任意更动文件或目录，是为了防止重要文件被误删除，因此root也删除不了。<br>
+如果真想要删除文件，可以使用</p>
+<pre><code class="language-sh">chattr -i .user.ini
+</code></pre>
+<p>去掉文件的i属性，这样就可以删除该文件了。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[安卓版本适配差异]]></title>
+        <id>https://mtdhllf.github.io/android_adaptive/</id>
+        <link href="https://mtdhllf.github.io/android_adaptive/">
+        </link>
+        <updated>2022-06-03T04:06:55.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="安卓40">安卓4.0</h2>
+<p>UI更新线程检查机制（区分UI线程，其他线程），非创建UI的线程不能更新UI</p>
+<h2 id="安卓50">安卓5.0</h2>
+<p>Dalvike虚拟机改成Android核心库集和ART（Android Runtime）模式，带来了预编译，从动态编译到预编译，程序打开速度提升了几倍，缺点是安装后需要等待预编译，安装程序时间及占用内存翻倍。</p>
+<h2 id="安卓60">安卓6.0</h2>
+<h3 id="1-动态权限">1.    动态权限</h3>
+<p>运行下列危险权限需要动态申请</p>
+<table>
+<thead>
+<tr>
+<th>权限组</th>
+<th>权限名称</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CALENDAR</td>
+<td>android.permission.READ_CALENDAR</td>
+</tr>
+<tr>
+<td></td>
+<td>android.permission.WRITE_CALENDAR</td>
+</tr>
+<tr>
+<td>CAMERA</td>
+<td>android.permission.CAMERA</td>
+</tr>
+<tr>
+<td>CONTACTS</td>
+<td>android.permission.READ_CONTACTS</td>
+</tr>
+<tr>
+<td></td>
+<td>android.permission.WRITE_CONTACTS</td>
+</tr>
+<tr>
+<td></td>
+<td>android.permission.GET_ACCOUNTS</td>
+</tr>
+<tr>
+<td>LOCATION</td>
+<td>android.permission.ACCESS_FINE_LOCATION</td>
+</tr>
+<tr>
+<td></td>
+<td>android.permission.ACCESS_COARSE_LOCATION</td>
+</tr>
+<tr>
+<td>MICROPHONE</td>
+<td>android.permission.RECORD_AUDIO</td>
+</tr>
+<tr>
+<td>PHONE</td>
+<td>android.permission.READ_PHONE_STATE</td>
+</tr>
+<tr>
+<td></td>
+<td>android.permission.CALL_PHONE</td>
+</tr>
+<tr>
+<td></td>
+<td>android.permission.READ_CALL_LOG</td>
+</tr>
+<tr>
+<td></td>
+<td>android.permission.ADD_VOICEMAIL</td>
+</tr>
+<tr>
+<td></td>
+<td>android.permission.WRITE_CALL_LOG</td>
+</tr>
+<tr>
+<td></td>
+<td>android.permission.USE_SIP</td>
+</tr>
+<tr>
+<td></td>
+<td>android.permission.PROCESS_OUTGOING_CALLS</td>
+</tr>
+<tr>
+<td></td>
+<td>android.permission.ANSWER_PHONE_CALLS（8.0新增）</td>
+</tr>
+<tr>
+<td></td>
+<td>android.permission.READ_PHONE_NUMBERS（8.0新增）</td>
+</tr>
+<tr>
+<td>SENSORS</td>
+<td>android.permission.BODY_SENSORS</td>
+</tr>
+<tr>
+<td>SMS</td>
+<td>android.permission.SEND_SMS</td>
+</tr>
+<tr>
+<td></td>
+<td>android.permission.RECEIVE_SMS</td>
+</tr>
+<tr>
+<td></td>
+<td>android.permission.READ_SMS</td>
+</tr>
+<tr>
+<td></td>
+<td>android.permission.RECEIVE_WAP_PUSH</td>
+</tr>
+<tr>
+<td></td>
+<td>android.permission.RECEIVE_MMS</td>
+</tr>
+<tr>
+<td>STORAGE</td>
+<td>android.permission.READ_EXTERNAL_STORAGE</td>
+</tr>
+<tr>
+<td></td>
+<td>android.permission.WRITE_EXTERNAL_STORAGE</td>
+</tr>
+</tbody>
+</table>
+<h3 id="2wifi相关操作">2.Wifi相关操作</h3>
+<pre><code>Android6.0之后，Wifi的使用更加严格。需要动态获取LOCATION权限，如果还想获取Wifi列表的话还需要打开GPS(位置信息)。
+
+</code></pre>
+<h2 id="安卓70">安卓7.0</h2>
+<h3 id="1fileprovider">1.FileProvider</h3>
+<blockquote>
+<p>在官方7.0的以上的系统中，尝试传递 file://URI可能会触发FileUriExposedException。<br>
+要应用间共享文件，您应发送一项 content:// URI，并授予 URI 临时访问权限。进行此授权的最简单方式是使用 FileProvider类。</p>
+</blockquote>
+<ol>
+<li>
+<p>创建新的FileProvider</p>
+<pre><code class="language-java">/**
+ * 继承FileProvider，防止冲突
+ */
+public class RoProvider extends FileProvider {
+
+}
+</code></pre>
+</li>
+<li>
+<p>创建file_path.xml</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;paths xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&gt;
+    &lt;root-path name=&quot;root&quot; path=&quot;.&quot; /&gt;
+    &lt;files-path name=&quot;files&quot; path=&quot;&quot; /&gt;
+    &lt;cache-path name=&quot;cache&quot; path=&quot;&quot; /&gt;
+    &lt;external-path name=&quot;external&quot; path=&quot;&quot; /&gt;
+    &lt;external-files-path name=&quot;external-files&quot; path=&quot;&quot; /&gt;
+    &lt;external-cache-path name=&quot;external-cache&quot; path=&quot;&quot; /&gt;
+&lt;/paths&gt;
+</code></pre>
+<p><strong>各个标签代表的意义</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">name</th>
+<th>path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">path名称标志字符串，不可以同名</td>
+<td>文件夹“相对路径”，完整路径取决于当前的标签类型</td>
+</tr>
+<tr>
+<td style="text-align:left">标签</td>
+<td>路径</td>
+</tr>
+<tr>
+<td style="text-align:left">--</td>
+<td>--</td>
+</tr>
+<tr>
+<td style="text-align:left">root-path</td>
+<td>代表设备的根目录new File(&quot;/&quot;)</td>
+</tr>
+<tr>
+<td style="text-align:left">files-path</td>
+<td>代表context.getFilesDir()</td>
+</tr>
+<tr>
+<td style="text-align:left">cache-path</td>
+<td>代表context.getCacheDir()</td>
+</tr>
+<tr>
+<td style="text-align:left">external-path</td>
+<td>代表Environment.getExternalStorageDirectory()</td>
+</tr>
+<tr>
+<td style="text-align:left">external-files-path</td>
+<td>代表context.getExternalFilesDirs()</td>
+</tr>
+<tr>
+<td style="text-align:left">external-cache-path</td>
+<td>代表context.getExternalCacheDirs()</td>
+</tr>
+</tbody>
+</table>
+<p><strong>禁用FileProvider授权</strong></p>
+<pre><code class="language-java">/**
+ * 需要在Application中执行
+ */
+private void detectFileUriExposure() {
+    Builder builder = new Builder();
+    StrictMode.setVmPolicy(builder.build());
+    builder.detectFileUriExposure();
+}
+</code></pre>
+</li>
+</ol>
+<h3 id="2apk-signature-scheme-v2">2.APK signature scheme v2</h3>
+<blockquote>
+<p>Android 7.0 引入一项新的应用签名方案 APK Signature Scheme v2，它能提供更快的应用安装时间和更多针对未授权 APK 文件更改的保护。在默认情况下，Android Studio 2.2 和 Android Plugin for Gradle 2.2 会使用 APK Signature Scheme v2 和传统签名方案来签署您的应用。</p>
+</blockquote>
+<ul>
+<li>只勾选V1签名就是传统方案签署，但是在 Android 7.0 上不会使用V2安全的验证方式。</li>
+<li>只勾选V2签名7.0以下会显示未安装，Android 7.0 上则会使用了V2安全的验证方式。</li>
+<li>同时勾选V1和V2则所有版本都没问题。</li>
+</ul>
+<h3 id="3orgapache不支持问题">3.org.apache不支持问题</h3>
+<p>安卓源码已经去除了，这部分网络请求的代码，解决办法是build.gradle里面加上这句话</p>
+<pre><code class="language-groovy">defaultConfig {
+    useLibrary 'org.apache.http.legacy'
+}
+</code></pre>
+<p>或者在AndroidManifest.xml添加下面的配置</p>
+<pre><code class="language-xml">&lt;uses-library
+    android:name=&quot;org.apache.http.legacy&quot;
+    android:required=&quot;false&quot; /&gt;
+</code></pre>
+<h3 id="4sharedpreferences调整">4.SharedPreferences调整</h3>
+<pre><code class="language-java">// MODE_WORLD_READABLE：Android 7.0以后不能使用这个获取，会闪退
+// 应修改成MODE_PRIVATE
+SharedPreferences read = getSharedPreferences(RELEASE_POOL_DATA, MODE_WORLD_READABLE);
+</code></pre>
+<h3 id="5三个广播被禁止监听或发送">5.三个广播被禁止监听或发送</h3>
+<pre><code>在后台时不再能接收到 CONNECTIVITY_CHANGE 广播，前台不影响。
+不能发送或是接收新增图片(ACTION_NEW_PICTURE)和新增视频(ACTION_NEW_VIDEO) 的广播。
+</code></pre>
+<h3 id="6动态运行so库">6.动态运行SO库</h3>
+<p>会报错，需要targetApi23及以下才可运行。8.0后会彻底失去支持，实测华为8.0后不能支持，小米等大部分国产手机还是支持的，可能厂家自己App有这个需求。</p>
+<h2 id="安卓80">安卓8.0</h2>
+<h3 id="1notification通知权限">1.Notification通知权限</h3>
+<blockquote>
+<p>Android 8.0之后通知权限默认都是关闭的，无法默认开启以及通过程序去主动开启，需要程序员读取权限开启情况，然后提示用户去开启。</p>
+</blockquote>
+<ul>
+<li>判断权限是否开启<pre><code class="language-java">/**
+ * 判断通知权限是否开启
+ * @param context 上下文
+ */
+public static boolean isNotificationEnabled(Context context){
+    if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.N) {
+        return ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).areNotificationsEnabled();
+    } else if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.KITKAT) {
+        AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+        ApplicationInfo appInfo = context.getApplicationInfo();
+        String pkg = context.getApplicationContext().getPackageName();
+        int uid = appInfo.uid;
+
+        try {
+            Class&lt;?&gt; appOpsClass = Class.forName(AppOpsManager.class.getName());
+            Method checkOpNoThrowMethod = appOpsClass.getMethod(&quot;checkOpNoThrow&quot;, Integer.TYPE, Integer.TYPE, String.class);
+            Field opPostNotificationValue = appOpsClass.getDeclaredField(&quot;OP_POST_NOTIFICATION&quot;);
+            int value = (Integer) opPostNotificationValue.get(Integer.class);
+            return (Integer) checkOpNoThrowMethod.invoke(appOps, value, uid, pkg) == 0;
+        } catch (NoSuchMethodException | NoSuchFieldException | InvocationTargetException | IllegalAccessException | RuntimeException | ClassNotFoundException ignored) {
+            return true;
+        }
+    } else {
+        return true;
+    }
+}
+</code></pre>
+</li>
+<li>前往设置开启权限<pre><code class="language-java">/**
+ * 打开设置页面打开权限
+ *
+ * @param activity activity
+ * @param requestCode 这里的requestCode和onActivityResult中requestCode要一致
+ */
+public static void startSettingActivity(@NonNull Activity activity, int requestCode) {
+    try {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse(&quot;package:&quot; + activity.getPackageName()));
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        activity.startActivityForResult(intent, requestCode);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+
+</code></pre>
+</li>
+</ul>
+<h3 id="2notification通知适配">2.Notification(通知适配)</h3>
+<blockquote>
+<p>Android 8.0中，为了更好的管制通知的提醒，不想一些不重要的通知打扰用户，新增了通知渠道，用户可以根据渠道来屏蔽一些不想要的通知。</p>
+</blockquote>
+<ul>
+<li>创建通知<pre><code class="language-java">private void createNotificationChannel() {
+    if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.O) {
+        NotificationManager notificationManager = (NotificationManager)
+                getSystemService(Context.NOTIFICATION_SERVICE);
+        //分组（可选）
+        //groupId要唯一
+        String groupId = &quot;group_001&quot;;
+        NotificationChannelGroup group = new NotificationChannelGroup(groupId, &quot;广告&quot;);
+        //创建group
+        notificationManager.createNotificationChannelGroup(group);
+        //channelId要唯一
+        String channelId = &quot;channel_001&quot;;
+        NotificationChannel adChannel = new NotificationChannel(channelId,
+                &quot;推广信息&quot;, NotificationManager.IMPORTANCE_DEFAULT);
+        //补充channel的含义（可选）
+        adChannel.setDescription(&quot;推广信息&quot;);
+        //将渠道添加进组（先创建组才能添加）
+        adChannel.setGroup(groupId);
+        //创建channel
+        notificationManager.createNotificationChannel(adChannel);
+        //创建通知时，标记你的渠道id
+        Notification notification = new Notification.Builder(MainActivity.this, channelId)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+                .setContentTitle(&quot;一条新通知&quot;)
+                .setContentText(&quot;这是一条测试消息&quot;)
+                .setAutoCancel(true)
+                .build();
+        notificationManager.notify(1, notification);
+    }
+}
+</code></pre>
+</li>
+</ul>
+<h3 id="3自适应启动图标">3.自适应启动图标</h3>
+<blockquote>
+<p>从Android 8.0系统开始，应用程序的图标被分为了两层：前景层和背景层。</p>
+<p>前景用来展示应用图标的Logo，背景用来衬托应用图标的Logo。需要注意的是，背景层在设计的时候只允许定义颜色和纹理，但是不能定义形状。</p>
+<p>注意图标图层的大小，两层的尺寸必须为108x108dp，前景图层中间的72x72dp图层就是在手机界面上展示的应用图标范围。这样系统在四面各留出18dp以产生有趣的视觉效果。</p>
+</blockquote>
+<ul>
+<li>mipmap-anydpi-v26文件夹<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;adaptive-icon xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&gt;
+    &lt;background android:drawable=&quot;@drawable/ic_launcher_background&quot; /&gt;
+    &lt;foreground android:drawable=&quot;@drawable/ic_launcher_foreground&quot; /&gt;
+&lt;/adaptive-icon&gt;
+
+</code></pre>
+</li>
+</ul>
+<h3 id="4安装apk">4.安装APK</h3>
+<blockquote>
+<p>Android 8.0去除了“允许未知来源”选项，如果我们的App具备安装App的功能，那么AndroidManifest文件需要包含REQUEST_INSTALL_PACKAGES权限，未声明此权限的应用将无法安装其他应用。当然，如果你不想添加这个权限，也可以通过getPackageManager().canRequestPackageInstalls()查询是否有此权限，没有的话使用Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES这个action将用户引导至安装未知应用权限界面去授权。</p>
+</blockquote>
+<pre><code class="language-xml">&lt;uses-permission android:name=&quot;android.permission.REQUEST_INSTALL_PACKAGES&quot;/&gt;
+</code></pre>
+<h3 id="5静态广播无法正常接收">5.静态广播无法正常接收</h3>
+<ul>
+<li>发送静态广播的特殊处理<pre><code class="language-java">Intent intent = new Intent( &quot;广播的action&quot; );
+intent.setComponent( new ComponentName( &quot;包名(如:com.yhd.rocket)&quot;,&quot;接收器的完整路径(如:com.yhd.rocket.receiver.RoReceiver)&quot; ) );
+sendBroadcast(intent);
+</code></pre>
+</li>
+</ul>
+<h2 id="安卓90">安卓9.0</h2>
+<h3 id="1刘海屏api支持">1.刘海屏API支持</h3>
+<blockquote>
+<p>Android 9 支持最新的全面屏，其中包含为摄像头和扬声器预留空间的屏幕缺口。 通过 DisplayCutout类可确定非功能区域的位置和形状，这些区域不应显示内容。 要确定这些屏幕缺口区域是否存在及其位置，使用 getDisplayCutout() 函数。</p>
+</blockquote>
+<ul>
+<li>取区域位置及位置<pre><code class="language-java">if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.P) {
+    View decorView = getWindow().getDecorView();
+    WindowInsets rootWindowInsets = decorView.getRootWindowInsets();
+    if (rootWindowInsets != null) {
+        DisplayCutout cutout = rootWindowInsets.getDisplayCutout();
+        List&lt;Rect&gt; boundingRects = cutout.getBoundingRects();
+        if (boundingRects != null &amp;&amp; boundingRects.size() &gt; 0) {
+            String msg = &quot;&quot;;
+            for (Rect rect : boundingRects) {
+                msg = msg +&quot;left-&quot; + rect.left;
+                Log.d(TAG, msg);
+            }
+         }
+    }
+}
+
+</code></pre>
+</li>
+<li>新窗口布局模式，允许应用程序请求是否在挖孔区域布局<pre><code class="language-java">class WindowManager.LayoutParams {
+    //布局参数
+    int layoutInDisplayCutoutMode;
+    //默认情况下，全屏窗口不会使用到挖孔区域，非全屏窗口可正常使用挖孔区域。
+    final int LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT;
+    //窗口声明使用挖孔区域
+    final int LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS;
+    //窗口声明不使用挖孔区域
+    final int LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER;
+}
+</code></pre>
+</li>
+<li>设置代码<pre><code class="language-java">WindowManager.LayoutParams lp = getWindow().getAttributes();
+lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT;
+getWindow().setAttributes(lp);
+</code></pre>
+</li>
+</ul>
+<h3 id="2使用不安全网络">2.使用不安全网络</h3>
+<p>使用非https加密网络会报异常，需要manifest的application进下列配置</p>
+<pre><code class="language-xml">android:networkSecurityConfig=&quot;@xml/nsc&quot;
+</code></pre>
+<pre><code class="language-xml">&lt;network-security-config&gt;
+    　&lt;!--默认允许所有网址使用非安全连接--&gt;
+    &lt;base-config cleartextTrafficPermitted=&quot;true&quot; /&gt;
+&lt;/network-security-config&gt;
+</code></pre>
+<h3 id="3view绘制api">3.View绘制api</h3>
+<blockquote>
+<p>在自定义绘制View过程中会遇到 Android 9.0 兼容问题导致的Crash，解决方案：</p>
+</blockquote>
+<pre><code class="language-java">if (Build.VERSION.SDK_INT &gt;= 26){
+  canvas.clipPath(mPath); 
+} else {
+  canvas.clipPath(mPath, Region.Op.REPLACE);
+}
+</code></pre>
+<h3 id="4前台服务需要添加权限">4.前台服务需要添加权限</h3>
+<blockquote>
+<p>在安卓9.0版本之后，必须要授予FOREGROUND_SERVICE权限，才能够使用前台服务，否则会抛出异常。对此，我们只需要在AndroidManifest添加对应的权限即可，这个权限是普通权限，不需要动态申请。</p>
+</blockquote>
+<pre><code class="language-xml">&lt;uses-permission android:name=&quot;android.permission.FOREGROUND_SERVICE&quot; /&gt;
+</code></pre>
+<h3 id="5全面限制静态广播的接收">5.全面限制静态广播的接收</h3>
+<blockquote>
+<p>升级安卓9.0之后，隐式广播将会被全面禁止，在AndroidManifest中注册的Receiver将不能够生效，你需要在应用中进行动态注册。</p>
+</blockquote>
+<pre><code class="language-java">MyReceiver myReceiver = new MyReceiver();
+IntentFilter intentFilter = new IntentFilter();
+intentFilter.addAction(MY_ACTION);
+registerReceiver(myReceiver, intentFilter);
+</code></pre>
+<h3 id="6非-sdk-接口访问限制反射修改hide变量或者私有方法">6.非 SDK 接口访问限制(反射修改Hide变量或者私有方法)</h3>
+<blockquote>
+<p>此方法在安卓9.0版本将不能够正常运行，会抛出NoSuchFieldException，对于诸如此类的调用官方private方法或者@hide方法，都将不能使用。</p>
+</blockquote>
+<pre><code class="language-java">try {
+    //通过反射的方式来更改dialog中文字大小、颜色
+    Field mAlert = AlertDialog.class.getDeclaredField(&quot;mAlert&quot;);
+    mAlert.setAccessible(true);
+    Object mAlertController = mAlert.get(normalDialog);
+    Field mMessage = mAlertController.getClass().getDeclaredField(&quot;mMessageView&quot;);
+    mMessage.setAccessible(true);
+    TextView mMessageView = (TextView) mMessage.get(mAlertController);
+    mMessageView.setTextSize(23);
+    mMessageView.setTextColor(Color.RED);
+    Field mTitle = mAlertController.getClass().getDeclaredField(&quot;mTitleView&quot;);
+    mTitle.setAccessible(true);
+    TextView mTitleView = (TextView) mTitle.get(mAlertController);
+    mTitleView.setTextSize(20);
+    mTitleView.setTextColor(Color.RED);
+} catch (Exception e){
+    Toast.makeText(NotSDKInterfaceActivity.this,e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
+}
+</code></pre>
+<h2 id="安卓100">安卓10.0</h2>
+<h3 id="scoped-storage分区存储">Scoped Storage（分区存储）</h3>
+<ul>
+<li>特定目录（App-specific），使用getExternalFilesDir(String type)或 getExternalCacheDir()方法访问。无需权限，且卸载应用时会自动删除。</li>
+<li>照片、视频、音频这类媒体文件。使用MediaStore 访问，访问其他应用的媒体文件时需要READ_EXTERNAL_STORAGE权限。</li>
+<li>其他目录，使用存储访问框架SAF（Storage Access Framwork）</li>
+</ul>
+<h3 id="权限变化">权限变化</h3>
+<ul>
+<li>
+<p><strong>在后台运行时访问设备位置信息需要权限</strong></p>
+<p>Android 10 引入了 ACCESS_BACKGROUND_LOCATION 权限（危险权限）。该权限允许应用程序在后台访问位置。如果请求此权限，则还必须请求ACCESS_FINE_LOCATION 或 ACCESS_COARSE_LOCATION权限。只请求此权限无效果。官方推荐使用前台服务来实现，在前台服务中获取位置信息。</p>
+<pre><code class="language-xml">&lt;service
+    android:name=&quot;MyNavigationService&quot;
+    android:foregroundServiceType=&quot;location&quot;&gt;
+&lt;/service&gt;
+</code></pre>
+</li>
+<li>
+<p><strong>电话、蓝牙和WLAN的API需要精确位置权限</strong></p>
+<p>上述部分类和方法中必须具有 ACCESS_FINE_LOCATION 权限才能使用。</p>
+</li>
+<li>
+<p><strong>新增ACCESS_MEDIA_LOCATION权限</strong></p>
+<p>如果你要获取图片中的地理位置信息，需要申请ACCESS_MEDIA_LOCATION权限，并使用MediaStore.setRequireOriginal()获取。</p>
+</li>
+<li>
+<p><strong>废弃PROCESS_OUTGOING_CALLS权限</strong></p>
+<p>呼出电话的监听</p>
+</li>
+</ul>
+<h3 id="后台启动-activity-的限制">后台启动 Activity 的限制</h3>
+<p>简单解释就是应用处于后台时，无法启动Activity。因为此项行为变更适用于在 Android 10 上运行的所有应用，所以这一限制导致最明显的问题就是点击推送信息时，有些应用无法进行正常的跳转（具体的实现问题导致）。所以针对这类问题，全屏 intent，注意设置最高优先级和添加USE_FULL_SCREEN_INTENT权限，这是一个普通权限。比如微信来语音或者视频通话时，弹出的接听页面就是使用这一功能。</p>
+<h3 id="深色主题">深色主题</h3>
+<p>Android 10 新增了一个系统级的深色主题（在系统设置中开启）。虽然深色主题并不是强制适配项，但是它可以带给用户更好的体验：</p>
+<ul>
+<li>可大幅减少耗电量。 OLED 屏幕中每个像素都是自主发光，所以在显示深色元素时像素所消耗的电流更低，尤其在纯黑颜色时像素点可以完全关闭来达到省电的效果。</li>
+<li>为弱视以及对强光敏感的用户提高可视性。深色可以降低屏幕的整体视觉亮度，减少对眼睛的视觉压力。</li>
+<li>让所有人都可以在光线较暗的环境中更轻松地使用设备<pre><code class="language-java">// 获取uimode系统服务
+UiModeManager uiModeManager = (UiModeManager)
+getSystemService(Context.UI_MODE_SERVICE);                                             
+// 获取设置状态
+int currentMode = uiModeManager.getNightMode();                                               
+// 设置夜间状态
+uiModeManager.setNightMode(UiModeManager.MODE_NIGHT_AUTO); // ⾃动
+uiModeManager.setNightMode(UiModeManager.MODE_NIGHT_YES); // 启⽤
+uiModeManager.setNightMode(UiModeManager.MODE_NIGHT_NO); // 停⽤
+</code></pre>
+</li>
+</ul>
+<h3 id="标识符和数据">标识符和数据</h3>
+<ul>
+<li>
+<p><strong>对不可重置的设备标识符实施了限制</strong></p>
+<p>Build.getSerial()、TelephonyManager.getImei()/getXXId()/getXXNumber()等唯一标识符方法应用必须具有 READ_PRIVILEGED_PHONE_STATE 特许权限才能正常使用。</p>
+</li>
+<li>
+<p><strong>限制了对剪贴板数据的访问权限</strong></p>
+<p>除非您的应用是默认输入法 (IME) 或是目前处于焦点的应用，否则它无法访问 Android 10 或更高版本平台上的剪贴板数据。</p>
+</li>
+<li>
+<p><strong>对启用和停用 WLAN 实施了限制</strong></p>
+<p>以 Android 10 或更高版本为目标平台的应用无法启用或停用 WLAN。WifiManager.setWifiEnabled()方法始终返回 false。如果您需要提示用户启用或停用 WLAN，请使用设置面板。</p>
+</li>
+</ul>
+<h2 id="android110">Android11.0</h2>
+<h3 id="scoped-storage分区存储-2">Scoped Storage（分区存储）</h3>
+<p>当您将应用更新为以 Android 11 为目标平台后，将无法使用 requestLegacyExternalStorage 来停用分区存储。</p>
+<p><strong>使用原始路径访问文件</strong></p>
+<p>从 Android 11 开始，具有 <strong>READ_EXTERNAL_STORAGE</strong> 权限的应用可以使用直接文件路径和原生库来读取设备的媒体文件。通过这项新功能，应用可以更顺畅地使用第三方媒体库。</p>
+<p>当您访问现有<strong>媒体文件</strong>时，您可以使用您的逻辑中** DATA** 列的值。这是因为，此值包含有效的文件路径。但是，不要假设文件始终可用。请准备好处理可能发生的任何基于文件的 I/O 错误。另一方面，如需创建或更新媒体文件，请勿使用 <strong>DATA</strong> 列的值。请改用** DISPLAY_NAME** 和 RELATIVE_PATH 列的值。</p>
+<p>详见：https://developer.android.google.cn/preview/privacy/storage#change-details。</p>
+<h3 id="系统分区使用ab双分区">系统分区使用A/B双分区</h3>
+<p>A/B 设置是指包含系统映像、启动映像等的重复分区。具有重复的 A/B 分区的设备允许无缝更新过程，因为包含相同系统映像的非活动分区会在后台更新，而设备仍然可用，这要归功于包含工作区映像的活动分区。但是，在更新过程中，没有 A/B 分区的设备会将用户锁定在手机之外。<br>
+<img src="https://mtdhllf.github.io/post-images/1657479041349.jpg" alt="" loading="lazy"><br>
+如果更新成功，则两个分区在重新引导后会交换位置，从而将以前的非活动分区转换为使用最新软件的活动分区。但是，在更新失败的情况下，设备仍可以使用旧的活动分区启动。</p>
+<h3 id="所有文件访问权限手机sd卡下任意路径"><strong>所有文件访问权限</strong>(手机sd卡下任意路径)</h3>
+<p>某些应用的核心用例需要访问大量的文件，如文件管理操作或备份和恢复操作。这些应用可通过执行以下操作来获取“所有文件访问权限”：</p>
+<ol>
+<li>声明 <strong>MANAGE_EXTERNAL_STORAGE</strong> 权限。</li>
+<li>使用 <strong>ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION</strong> intent 操作将用户引导至一个系统设置页面，在该页面上，用户可以为应用启用以下选项：授予所有文件的管理权限。</li>
+</ol>
+<h2 id="android120">Android12.0</h2>
+<h3 id="动态颜色"><strong>动态颜色</strong></h3>
+<p>在安卓12的系统中，Material Design主题将支持动态主题颜色，将根据用户桌面壁纸的主题色，自动应用白天、黑夜两套主题色。</p>
+<figure data-type="image" tabindex="1"><img src="https://mtdhllf.github.io/post-images/1657465084100.png" alt="" loading="lazy"></figure>
+<h3 id="新功能和api">新功能和API</h3>
+<ol>
+<li>
+<p>用于接收内容的统一API</p>
+<p>当前，用户更喜欢图片、视频等富有表现力的内容，但在应用中插入和移动并非易事。为了使应用能够轻松地接收富媒体内容，</p>
+<p>Android 12 引入了全新的统一 API，您可以从任何可用来源（剪贴板粘贴、键盘或拖放操作）接收富媒体内容。</p>
+</li>
+<li>
+<p>实现代码</p>
+<p>如需使用该 API，请先指定您的应用可以处理哪些类型的内容，以开始实现该监听器：</p>
+<pre><code class="language-java">public class MyReceiver implements OnReceiveContentListener {
+     public static final String[] MIME_TYPES = new String[] 
+     {&quot;image/*&quot;, &quot;video/*&quot;};
+     // ...
+</code></pre>
+</li>
+<li>
+<p>实现效果</p>
+</li>
+</ol>
+<figure data-type="image" tabindex="2"><img src="https://mtdhllf.github.io/post-images/1657465052493.gif" alt="" loading="lazy"></figure>
+<h2 id="android130">Android13.0</h2>
+<h3 id="通知的运行时权限">通知的运行时权限</h3>
+<p>在之前版本中我们应用如果需要弹通知的话只需要通过 NotificationManager 即可直接进行弹出，不需要任何权限，当然后面用户可以手动关闭通知，在 Android 13（T-33）中终于引入了新的运行时权限——通知权限：POST_NOTIFICATIONS。</p>
+<p>如果用户拒绝通知权限，他们仍会在前台服务 (FGS) 任务管理器中看到与这些前台服务相关的通知，但不会在抽屉式通知栏中看到这些通知。</p>
+<p>这个更改对许多应用都有关系，只要你的应用会弹通知，那么如果要适配 Android 13 的话就都需要进行适配，当然适配方法很简单，再按照别的运行时权限适配下新的通知权限即可。</p>
+<p><strong>检查您的应用能否发送通知</strong></p>
+<p>如果想要确认用户是否已启用通知，可以调用</p>
+<p>NotificationManager.areNotificationsEnabled() 来进行判断。</p>
+<h3 id="附近-wi-fi-设备的新运行时权限">附近 Wi-Fi 设备的新运行时权限</h3>
+<p>在以前的 Android 版本中，需要 ACCESS_FINE_LOCATION 权限，应用才能完成与热点相关的多个常见 Wi-Fi 用例、Wi-Fi 直连、Wi-Fi RTT 等。</p>
+<p>由于用户很难将位置信息权限与 Wi-Fi 功能相关联，因此 Android 13（T-33）在 NEARBY_DEVICES 权限组中引入了新的运行时权限，适用于管理设备与附近 Wi-Fi 接入点连接情况的应用。此权限 (NEARBY_WIFI_DEVICES) 可满足这些 Wi-Fi 用例。</p>
+<p>只要应用不通过 Wi-Fi API 推导物理位置，那么在 Android 13 或更高版本为目标平台并使用 Wi-Fi API 的时候就可以请求 NEARBY_WIFI_DEVICES 而不是 ACCESS_FINE_LOCATION。</p>
+<h3 id="细化的媒体权限">细化的媒体权限</h3>
+<p>如果要将应用升级为 Android 13 ，必须请求一个或多个新权限，Android 13 中将媒体权限细分为了图片、视频和音频文件，而不是之前的 <strong>READ_EXTERNAL_STORAGE</strong> 和 WR<strong>ITE_EXTERNAL_STORAGE</strong> 权限。请求的权限集取决于应用需要访问的媒体类型，如下图所示：</p>
+<table>
+<thead>
+<tr>
+<th>媒体类型</th>
+<th>请求权限</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>图片和照片</td>
+<td>READ_MEDIA_IMAGES</td>
+</tr>
+<tr>
+<td>视频</td>
+<td>READ_MEDIA_VIDEO</td>
+</tr>
+<tr>
+<td>音频文件</td>
+<td>READ_MEDIA_AUDIO</td>
+</tr>
+</tbody>
+</table>
+<p>注意：如果应用只需要访问图片、照片和视频，应该考虑使用照片选择器（下面会介绍），而不是声明 <strong>READ_MEDIA_IMAGES</strong> 和 <strong>READ_MEDIA_VIDEO</strong> 权限，还有，申请了最新的三个权限的话应用就无需再声明 <strong>WRITE_EXTERNAL_STORAGE</strong> 权限了。</p>
+<p>下面来看下在 AndroidManifest.xml 中应该如何进行修改：</p>
+<pre><code class="language-xml">&lt;manifest ...&gt;
+    &lt;!-- Android 13 --&gt;
+    &lt;uses-permission android:name=&quot;android.permission.READ_MEDIA_IMAGES&quot; /&gt;
+    &lt;uses-permission android:name=&quot;android.permission.READ_MEDIA_AUDIO&quot; /&gt;
+    &lt;uses-permission android:name=&quot;android.permission.READ_MEDIA_VIDEO&quot; /&gt;
+
+    &lt;!-- Required to maintain app compatibility. --&gt;
+    &lt;uses-permission android:name=&quot;android.permission.READ_EXTERNAL_STORAGE&quot;
+                     android:maxSdkVersion=&quot;32&quot; /&gt;
+    &lt;application ...&gt;
+        ...
+    &lt;/application&gt;
+&lt;/manifest&gt;
+</code></pre>
+<h3 id="精确闹钟的新权限">精确闹钟的新权限</h3>
+<p>如果升级到 Android 13 ，可以使用自动授予应用的 USE_EXACT_ALARM 权限。不过，一般是系统应用才可以使用，因为即将推出的 Google Play 政策会阻止应用使用 USE_EXACT_ALARM 权限，除非应用为日历或者时钟这样的系统应用（国内另说）。</p>
+<p>如果应用设置了精确闹钟，但又不是系统日历或时钟的话，还是继续声明 SCHEDULE_EXACT_ALARM权限，并要为用户拒绝授予应用相应访问权限的情况做好准备。</p>
+<h3 id="开发者可降级权限">开发者可降级权限</h3>
+<p>从 Android 13 开始，应用可以撤消先前由系统或用户授予的运行时权限。开发者可以：</p>
+<ul>
+<li>撤消未使用的权限。</li>
+<li>遵循权限最佳做法，从而提高用户信任度。可以向用户显示一个对话框，其中会显示应用主动撤消的权限。</li>
+</ul>
+<p>如需撤消特定运行时权限，请将该权限的名称传入 revokeSelfPermissionOnKill()。如需同时撤消一组运行时权限，请将这组权限的名称传入 revokeSelfPermissionsOnKill() 。撤消是异步发生的，会终止与应用的 UID 相关联的所有进程。</p>
+<p>为了使系统撤消权限，必须终止与应用关联的所有进程。当调用该 API 时，系统会确定何时可以安全终止这些进程。通常，系统会等待应用有较长时间在后台运行，而不是在前台运行时。</p>
+<h3 id="后台使用身体传感器新的权限">后台使用身体传感器新的权限</h3>
+<p>Android 13 中引入了“在使用时”访问身体传感器（例如心率、体温和血氧饱和度）的概念，如果要升级为 Android 13，并且在后台运行时需要访问身体传感器信息，那么除了现有的 <strong>BODY_SENSORS</strong> 权限外，还必须声明新的 BO<strong>DY_SENSORS_BACKGROUND</strong> 权限。</p>
+<h3 id="如何申请运行时权限">如何申请运行时权限</h3>
+<p>官方对申请权限这块的代码进行了重写，使用起来并不比那些三方库复杂，甚至更加简单，下面来看下使用方法吧：</p>
+<p><strong>申请单个权限</strong></p>
+<pre><code class="language-kotlin">val requestPermissionLauncher =
+    registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean -&gt;
+        if (isGranted) {
+            // 同意
+        } else {
+            // 拒绝
+        }
+    }
+
+when {
+    ContextCompat.checkSelfPermission(
+        this,
+        Manifest.permission.CAMERA
+    ) == PackageManager.PERMISSION_GRANTED -&gt; {
+        // 当前拥有这个权限
+    }
+    shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) -&gt; {
+        // 告诉用户为啥要申请这个权限
+    }
+    else -&gt; {
+        // 申请权限
+        requestPermissionLauncher.launch(
+            Manifest.permission.CAMERA
+        )
+    }
+}
+</code></pre>
+<p>代码比较容易理解，官方新封装的权限申请代码还是挺好的，无需咱们再自己处理 onRequestPermissionsResult 中的回调信息。</p>
+<p><strong>申请多个权限</strong></p>
+<pre><code class="language-kotlin">val requestPermissionsLauncher =
+    registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) {
+        it.forEach { (name, success) -&gt;
+            if (success) {
+                // 同意
+            } else {
+                // 拒绝
+            }
+        }
+    }
+when {
+    // ... 
+    // 这块和上面基本一致
+    else -&gt; {
+        // 申请多个权限，数组展示
+        requestPermissionsLauncher.launch(
+            arrayOf(Manifest.permission.CAMERA)
+        )
+    }
+}
+</code></pre>
+<h3 id="剪贴板中隐藏敏感内容">剪贴板中隐藏敏感内容</h3>
+<p>从 Android 13 开始，将内容添加到剪贴板时，系统会显示标准视觉确认界面。新确认界面会执行以下操作：</p>
+<ul>
+<li>确认内容已成功复制。</li>
+<li>提供所复制内容的预览。</li>
+</ul>
+<p>在 Android 12L（32）及更低版本中，用户经常不确定他们是否成功复制了内容或者复制了什么内容。</p>
+<p>此功能可将应用在用户复制内容后显示的各种通知标准化，并让用户可以更好地控制剪贴板。</p>
+<p>如果应用允许用户将敏感内容（例如密码或信用卡信息）复制到剪贴板，则必须在调用 ClipboardManager.setPrimaryClip() 之前向 ClipData 的 ClipDescription 添加一个标志。添加此标志可阻止敏感内容出现在内容预览中。</p>
+<pre><code class="language-kotlin">val clipboardManager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+
+// When your app targets API level 33 or higher
+clipData.apply {
+    description.extras = PersistableBundle().apply {
+        putBoolean(ClipDescription.EXTRA_IS_SENSITIVE, true)
+    }
+}
+
+// If your app targets a lower API level
+clipData.apply {
+    description.extras = PersistableBundle().apply {
+        putBoolean(&quot;android.content.extra.IS_SENSITIVE&quot;, true)
+    }
+}
+</code></pre>
+<h3 id="照片选择器">照片选择器</h3>
+<p>Android 13（T-33）支持新的照片选择器工具。此工具为用户提供了一种安全的内置媒体文件选择方式，让其无需向应用授予对整个媒体库的访问权限。</p>
+<figure data-type="image" tabindex="3"><img src="https://mtdhllf.github.io/post-images/1658197668513.gif" alt="" loading="lazy"></figure>
+<p>照片选择器提供了一个可浏览、可搜索的界面，其中按日期（从最近到最早）顺序向用户呈现其媒体库中的文件。可以指定用户只能看到照片或只能看到视频，并且默认情况下，允许的媒体选择量上限设置为 1。</p>
+<p><strong>定义分享限制</strong></p>
+<p>应用可以声明 android.provider.extra.PICK_IMAGES_MAX 的值，该值表示在向用户显示时照片选择器中显示的媒体文件数量上限。</p>
+<p>需要注意的是：如果选择的上限为 1 张，照片选择器会以半屏模式打开。</p>
+<p><strong>选择单张照片或单个视频</strong></p>
+<p>先来看看如何选择单张照片吧：</p>
+<pre><code class="language-kotlin">val intent = Intent(MediaStore.ACTION_PICK_IMAGES)
+// 用户可以选择一张照片或一个视频。
+startActivityForResult(intent, PHOTO_PICKER_REQUEST_CODE)
+</code></pre>
+<p><strong>选择多张照片或多个视频</strong></p>
+<p>如果应用的用例需要用户选择多张照片或多个视频，可以使用 EXTRA_PICK_IMAGES_MAX extra 指定照片选择器中应显示照片的数量上限，如以下代码段中所示：</p>
+<pre><code class="language-kotlin">// 最大选择数量
+val maxNumPhotosAndVideos = 10
+val intent = Intent(MediaStore.ACTION_PICK_IMAGES)
+intent.putExtra(MediaStore.EXTRA_PICK_IMAGES_MAX, maxNumPhotosAndVideos)
+startActivityForResult(intent, PHOTO_PICKER_MULTI_SELECT_REQUEST_CODE)
+</code></pre>
+<p>请注意，可指定为文件数量上限的最大数字存在平台限制。如需访问此限制，请调用 MediaStore.getPickImagesMaxLimit()。</p>
+<p><strong>处理照片选择器结果</strong></p>
+<p>照片选择器启动后，使用新的 ACTION_PICK_IMAGES intent 来处理结果。该选择器会返回一组 URI：</p>
+<pre><code class="language-kotlin">// 处理来自照片选择器的回调。
+override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    super.onActivityResult(requestCode, resultCode, data)
+    if (resultCode != Activity.RESULT_OK) return
+    when (requestCode) {
+            REQUEST_PHOTO_PICKER_SINGLE_SELECT -&gt; {
+            // 获取单个选择的照片选择器响应
+            val currentUri: Uri = data.data
+            // 处理照片或视频的URI.
+            return
+        }
+                REQUEST_PHOTO_PICKER_MULTI_SELECT -&gt; {
+            // Get photo picker response for multi select.
+            var i = 0
+            while (i &lt; data.clipData!!.itemCount) {
+                val uri = data.clipData.getItemAt[i]
+                // 处理照片或视频的URI.
+        }
+            return
+</code></pre>
+<p>默认情况下，照片选择器会既显示照片又显示视频。咱们可以在 setType() 方法中设置 MIME 类型，以便按“仅显示照片”或“仅显示视频”进行过滤。来看看代码如何实现吧：</p>
+<pre><code class="language-kotlin">val intent = Intent(MediaStore.ACTION_PICK_IMAGES)
+// 只显示视频
+intent.type = &quot;video/*&quot;
+startActivityForResult(intent, PHOTO_PICKER_VIDEO_SINGLE_SELECT_REQUEST_CODE)
+
+// 只显示图片
+// images only - intent.type = &quot;images/*&quot;
+</code></pre>
+<h3 id="应用内语言选择器">应用内语言选择器</h3>
+<p>Android 13 在手机设置中新增了一个集中设置选项，用于设置各应用语言偏好设定。如果你的应用支持多种语言，官方强烈建议我们在应用的清单中声明 android:localeConfig 属性，这样用户就可以在同一位置像更改其他应用的语言设置一样更改应用的语言设置。</p>
+<p>此外，当前使用自定义应用内语言选择器的应用应改用适用于各应用语言偏好设定功能的新 API。使用这些新 API 有助于确保用户无论是继续通过应用内语言选择器选择语言，还是通过手机设置选择语言，都能以其首选语言查看应用。当然，如果不支持多种语言的应用将不受这些变更的影响。</p>
+<p><strong>如何使用</strong></p>
+<ol>
+<li>创建一个名为 res/xml/locales_config.xml 的文件，并指定您的应用的语言，如下所示：<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;locale-config xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&gt;
+   &lt;locale android:name=&quot;zh&quot;/&gt;
+   &lt;locale android:name=&quot;en&quot;/&gt;
+&lt;/locale-config&gt;
+</code></pre>
+</li>
+<li>在清单中，添加一行指向这个新文件的代码：<pre><code class="language-xml">&lt;manifest
+    ...
+    &lt;application
+        ...
+        android:localeConfig=&quot;@xml/locales_config&quot;&gt;
+    &lt;/application&gt;
+&lt;/manifest&gt;
+</code></pre>
+</li>
+</ol>
+<p><strong>如何在设置中进行设置</strong></p>
+<p>用户可以通过新的系统设置为每个应用选择首选语言。他们可以通过以下两种方式访问这些设置：</p>
+<p><strong>通过系统设置访问</strong></p>
+<p>设置 &gt; 系统 &gt; 语言和输入法 &gt; 应用语言 &gt;（选择一款应用）</p>
+<p><strong>通过应用设置访问</strong></p>
+<p>设置 &gt; 应用 &gt;（选择一款应用）&gt; 语言</p>
+<p><strong>处理应用内语言选择器</strong></p>
+<p>如需设置用户的首选语言，需要让用户在语言选择器中选择语言区域，然后在系统中设置该值：</p>
+<pre><code class="language-kotlin">val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(&quot;xx-YY&quot;)
+// 注意：需要在主线程上调用它，因为它可能需要Activity.restart()
+AppCompatDelegate.setApplicationLocales(appLocale)
+</code></pre>
+<p>如需支持搭载 Android 12（S-32）及更低版本的设备，请在应用的 AppLocalesMetadataHolderService 服务的清单条目中将 autoStoreLocales 值设置为 true 并将 android:enabled 设置为 false，以指示 AndroidX 处理语言区域存储空间，如以下代码段所示：</p>
+<pre><code class="language-xml">&lt;application
+  ...
+  &lt;service
+    android:name=&quot;androidx.appcompat.app.AppLocalesMetadataHolderService&quot;
+    android:enabled=&quot;false&quot;
+    android:exported=&quot;false&quot;&gt;
+    &lt;meta-data
+      android:name=&quot;autoStoreLocales&quot;
+      android:value=&quot;true&quot; /&gt;
+  &lt;/service&gt;
+  ...
+&lt;/application&gt;
+</code></pre>
+<h2 id="android130-2">Android13.0</h2>
+<h3 id="通知的运行时权限-2">通知的运行时权限</h3>
+<p>在之前版本中我们应用如果需要弹通知的话只需要通过 NotificationManager 即可直接进行弹出，不需要任何权限，当然后面用户可以手动关闭通知，在 Android 13（T-33）中终于引入了新的运行时权限——通知权限：POST_NOTIFICATIONS。</p>
+<p>如果用户拒绝通知权限，他们仍会在前台服务 (FGS) 任务管理器中看到与这些前台服务相关的通知，但不会在抽屉式通知栏中看到这些通知。</p>
+<p>这个更改对许多应用都有关系，只要你的应用会弹通知，那么如果要适配 Android 13 的话就都需要进行适配，当然适配方法很简单，再按照别的运行时权限适配下新的通知权限即可。</p>
+<p><strong>检查您的应用能否发送通知</strong></p>
+<p>如果想要确认用户是否已启用通知，可以调用</p>
+<p>NotificationManager.areNotificationsEnabled() 来进行判断。</p>
+<h3 id="附近-wi-fi-设备的新运行时权限-2">附近 Wi-Fi 设备的新运行时权限</h3>
+<p>在以前的 Android 版本中，需要 ACCESS_FINE_LOCATION 权限，应用才能完成与热点相关的多个常见 Wi-Fi 用例、Wi-Fi 直连、Wi-Fi RTT 等。</p>
+<p>由于用户很难将位置信息权限与 Wi-Fi 功能相关联，因此 Android 13（T-33）在 NEARBY_DEVICES 权限组中引入了新的运行时权限，适用于管理设备与附近 Wi-Fi 接入点连接情况的应用。此权限 (NEARBY_WIFI_DEVICES) 可满足这些 Wi-Fi 用例。</p>
+<p>只要应用不通过 Wi-Fi API 推导物理位置，那么在 Android 13 或更高版本为目标平台并使用 Wi-Fi API 的时候就可以请求 NEARBY_WIFI_DEVICES 而不是 ACCESS_FINE_LOCATION。</p>
+<h3 id="细化的媒体权限-2">细化的媒体权限</h3>
+<p>如果要将应用升级为 Android 13 ，必须请求一个或多个新权限，Android 13 中将媒体权限细分为了图片、视频和音频文件，而不是之前的 <strong>READ_EXTERNAL_STORAGE</strong> 和 WR<strong>ITE_EXTERNAL_STORAGE</strong> 权限。请求的权限集取决于应用需要访问的媒体类型，如下图所示：</p>
+<table>
+<thead>
+<tr>
+<th>媒体类型</th>
+<th>请求权限</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>图片和照片</td>
+<td>READ_MEDIA_IMAGES</td>
+</tr>
+<tr>
+<td>视频</td>
+<td>READ_MEDIA_VIDEO</td>
+</tr>
+<tr>
+<td>音频文件</td>
+<td>READ_MEDIA_AUDIO</td>
+</tr>
+</tbody>
+</table>
+<p>注意：如果应用只需要访问图片、照片和视频，应该考虑使用照片选择器（下面会介绍），而不是声明 <strong>READ_MEDIA_IMAGES</strong> 和 <strong>READ_MEDIA_VIDEO</strong> 权限，还有，申请了最新的三个权限的话应用就无需再声明 <strong>WRITE_EXTERNAL_STORAGE</strong> 权限了。</p>
+<p>下面来看下在 AndroidManifest.xml 中应该如何进行修改：</p>
+<pre><code class="language-xml">&lt;manifest ...&gt;
+    &lt;!-- Android 13 --&gt;
+    &lt;uses-permission android:name=&quot;android.permission.READ_MEDIA_IMAGES&quot; /&gt;
+    &lt;uses-permission android:name=&quot;android.permission.READ_MEDIA_AUDIO&quot; /&gt;
+    &lt;uses-permission android:name=&quot;android.permission.READ_MEDIA_VIDEO&quot; /&gt;
+
+    &lt;!-- Required to maintain app compatibility. --&gt;
+    &lt;uses-permission android:name=&quot;android.permission.READ_EXTERNAL_STORAGE&quot;
+                     android:maxSdkVersion=&quot;32&quot; /&gt;
+    &lt;application ...&gt;
+        ...
+    &lt;/application&gt;
+&lt;/manifest&gt;
+</code></pre>
+<h3 id="精确闹钟的新权限-2">精确闹钟的新权限</h3>
+<p>如果升级到 Android 13 ，可以使用自动授予应用的 USE_EXACT_ALARM 权限。不过，一般是系统应用才可以使用，因为即将推出的 Google Play 政策会阻止应用使用 USE_EXACT_ALARM 权限，除非应用为日历或者时钟这样的系统应用（国内另说）。</p>
+<p>如果应用设置了精确闹钟，但又不是系统日历或时钟的话，还是继续声明 SCHEDULE_EXACT_ALARM权限，并要为用户拒绝授予应用相应访问权限的情况做好准备。</p>
+<h3 id="开发者可降级权限-2">开发者可降级权限</h3>
+<p>从 Android 13 开始，应用可以撤消先前由系统或用户授予的运行时权限。开发者可以：</p>
+<ul>
+<li>撤消未使用的权限。</li>
+<li>遵循权限最佳做法，从而提高用户信任度。可以向用户显示一个对话框，其中会显示应用主动撤消的权限。</li>
+</ul>
+<p>如需撤消特定运行时权限，请将该权限的名称传入 revokeSelfPermissionOnKill()。如需同时撤消一组运行时权限，请将这组权限的名称传入 revokeSelfPermissionsOnKill() 。撤消是异步发生的，会终止与应用的 UID 相关联的所有进程。</p>
+<p>为了使系统撤消权限，必须终止与应用关联的所有进程。当调用该 API 时，系统会确定何时可以安全终止这些进程。通常，系统会等待应用有较长时间在后台运行，而不是在前台运行时。</p>
+<h3 id="后台使用身体传感器新的权限-2">后台使用身体传感器新的权限</h3>
+<p>Android 13 中引入了“在使用时”访问身体传感器（例如心率、体温和血氧饱和度）的概念，如果要升级为 Android 13，并且在后台运行时需要访问身体传感器信息，那么除了现有的 <strong>BODY_SENSORS</strong> 权限外，还必须声明新的 BO<strong>DY_SENSORS_BACKGROUND</strong> 权限。</p>
+<h3 id="如何申请运行时权限-2">如何申请运行时权限</h3>
+<p>官方对申请权限这块的代码进行了重写，使用起来并不比那些三方库复杂，甚至更加简单，下面来看下使用方法吧：</p>
+<p><strong>申请单个权限</strong></p>
+<pre><code class="language-kotlin">val requestPermissionLauncher =
+    registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean -&gt;
+        if (isGranted) {
+            // 同意
+        } else {
+            // 拒绝
+        }
+    }
+
+when {
+    ContextCompat.checkSelfPermission(
+        this,
+        Manifest.permission.CAMERA
+    ) == PackageManager.PERMISSION_GRANTED -&gt; {
+        // 当前拥有这个权限
+    }
+    shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) -&gt; {
+        // 告诉用户为啥要申请这个权限
+    }
+    else -&gt; {
+        // 申请权限
+        requestPermissionLauncher.launch(
+            Manifest.permission.CAMERA
+        )
+    }
+}
+</code></pre>
+<p>代码比较容易理解，官方新封装的权限申请代码还是挺好的，无需咱们再自己处理 onRequestPermissionsResult 中的回调信息。</p>
+<p><strong>申请多个权限</strong></p>
+<pre><code class="language-kotlin">val requestPermissionsLauncher =
+    registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) {
+        it.forEach { (name, success) -&gt;
+            if (success) {
+                // 同意
+            } else {
+                // 拒绝
+            }
+        }
+    }
+when {
+    // ... 
+    // 这块和上面基本一致
+    else -&gt; {
+        // 申请多个权限，数组展示
+        requestPermissionsLauncher.launch(
+            arrayOf(Manifest.permission.CAMERA)
+        )
+    }
+}
+</code></pre>
+<h3 id="剪贴板中隐藏敏感内容-2">剪贴板中隐藏敏感内容</h3>
+<p>从 Android 13 开始，将内容添加到剪贴板时，系统会显示标准视觉确认界面。新确认界面会执行以下操作：</p>
+<ul>
+<li>确认内容已成功复制。</li>
+<li>提供所复制内容的预览。</li>
+</ul>
+<p>在 Android 12L（32）及更低版本中，用户经常不确定他们是否成功复制了内容或者复制了什么内容。</p>
+<p>此功能可将应用在用户复制内容后显示的各种通知标准化，并让用户可以更好地控制剪贴板。</p>
+<p>如果应用允许用户将敏感内容（例如密码或信用卡信息）复制到剪贴板，则必须在调用 ClipboardManager.setPrimaryClip() 之前向 ClipData 的 ClipDescription 添加一个标志。添加此标志可阻止敏感内容出现在内容预览中。</p>
+<pre><code class="language-kotlin">val clipboardManager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+
+// When your app targets API level 33 or higher
+clipData.apply {
+    description.extras = PersistableBundle().apply {
+        putBoolean(ClipDescription.EXTRA_IS_SENSITIVE, true)
+    }
+}
+
+// If your app targets a lower API level
+clipData.apply {
+    description.extras = PersistableBundle().apply {
+        putBoolean(&quot;android.content.extra.IS_SENSITIVE&quot;, true)
+    }
+}
+</code></pre>
+<h3 id="照片选择器-2">照片选择器</h3>
+<p>Android 13（T-33）支持新的照片选择器工具。此工具为用户提供了一种安全的内置媒体文件选择方式，让其无需向应用授予对整个媒体库的访问权限。</p>
+<figure data-type="image" tabindex="4"><img src="https://mtdhllf.github.io/post-images/1658249370766.gif" alt="" loading="lazy"></figure>
+<p>照片选择器提供了一个可浏览、可搜索的界面，其中按日期（从最近到最早）顺序向用户呈现其媒体库中的文件。可以指定用户只能看到照片或只能看到视频，并且默认情况下，允许的媒体选择量上限设置为 1。</p>
+<p><strong>定义分享限制</strong></p>
+<p>应用可以声明 android.provider.extra.PICK_IMAGES_MAX 的值，该值表示在向用户显示时照片选择器中显示的媒体文件数量上限。</p>
+<p>需要注意的是：如果选择的上限为 1 张，照片选择器会以半屏模式打开。</p>
+<p><strong>选择单张照片或单个视频</strong></p>
+<p>先来看看如何选择单张照片吧：</p>
+<pre><code class="language-kotlin">val intent = Intent(MediaStore.ACTION_PICK_IMAGES)
+// 用户可以选择一张照片或一个视频。
+startActivityForResult(intent, PHOTO_PICKER_REQUEST_CODE)
+</code></pre>
+<p><strong>选择多张照片或多个视频</strong></p>
+<p>如果应用的用例需要用户选择多张照片或多个视频，可以使用 EXTRA_PICK_IMAGES_MAX extra 指定照片选择器中应显示照片的数量上限，如以下代码段中所示：</p>
+<pre><code class="language-kotlin">// 最大选择数量
+val maxNumPhotosAndVideos = 10
+val intent = Intent(MediaStore.ACTION_PICK_IMAGES)
+intent.putExtra(MediaStore.EXTRA_PICK_IMAGES_MAX, maxNumPhotosAndVideos)
+startActivityForResult(intent, PHOTO_PICKER_MULTI_SELECT_REQUEST_CODE)
+</code></pre>
+<p>请注意，可指定为文件数量上限的最大数字存在平台限制。如需访问此限制，请调用 MediaStore.getPickImagesMaxLimit()。</p>
+<p><strong>处理照片选择器结果</strong></p>
+<p>照片选择器启动后，使用新的 ACTION_PICK_IMAGES intent 来处理结果。该选择器会返回一组 URI：</p>
+<pre><code class="language-kotlin">// 处理来自照片选择器的回调。
+override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    super.onActivityResult(requestCode, resultCode, data)
+    if (resultCode != Activity.RESULT_OK) return
+    when (requestCode) {
+            REQUEST_PHOTO_PICKER_SINGLE_SELECT -&gt; {
+            // 获取单个选择的照片选择器响应
+            val currentUri: Uri = data.data
+            // 处理照片或视频的URI.
+            return
+        }
+                REQUEST_PHOTO_PICKER_MULTI_SELECT -&gt; {
+            // Get photo picker response for multi select.
+            var i = 0
+            while (i &lt; data.clipData!!.itemCount) {
+                val uri = data.clipData.getItemAt[i]
+                // 处理照片或视频的URI.
+        }
+            return
+</code></pre>
+<p>默认情况下，照片选择器会既显示照片又显示视频。咱们可以在 setType() 方法中设置 MIME 类型，以便按“仅显示照片”或“仅显示视频”进行过滤。来看看代码如何实现吧：</p>
+<pre><code class="language-kotlin">val intent = Intent(MediaStore.ACTION_PICK_IMAGES)
+// 只显示视频
+intent.type = &quot;video/*&quot;
+startActivityForResult(intent, PHOTO_PICKER_VIDEO_SINGLE_SELECT_REQUEST_CODE)
+
+// 只显示图片
+// images only - intent.type = &quot;images/*&quot;
+</code></pre>
+<h3 id="应用内语言选择器-2">应用内语言选择器</h3>
+<p>Android 13 在手机设置中新增了一个集中设置选项，用于设置各应用语言偏好设定。如果你的应用支持多种语言，官方强烈建议我们在应用的清单中声明 android:localeConfig 属性，这样用户就可以在同一位置像更改其他应用的语言设置一样更改应用的语言设置。</p>
+<p>此外，当前使用自定义应用内语言选择器的应用应改用适用于各应用语言偏好设定功能的新 API。使用这些新 API 有助于确保用户无论是继续通过应用内语言选择器选择语言，还是通过手机设置选择语言，都能以其首选语言查看应用。当然，如果不支持多种语言的应用将不受这些变更的影响。</p>
+<p><strong>如何使用</strong></p>
+<ol>
+<li>创建一个名为 res/xml/locales_config.xml 的文件，并指定您的应用的语言，如下所示：<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;locale-config xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&gt;
+   &lt;locale android:name=&quot;zh&quot;/&gt;
+   &lt;locale android:name=&quot;en&quot;/&gt;
+&lt;/locale-config&gt;
+</code></pre>
+</li>
+<li>在清单中，添加一行指向这个新文件的代码：<pre><code class="language-xml">&lt;manifest
+    ...
+    &lt;application
+        ...
+        android:localeConfig=&quot;@xml/locales_config&quot;&gt;
+    &lt;/application&gt;
+&lt;/manifest&gt;
+</code></pre>
+</li>
+</ol>
+<p><strong>如何在设置中进行设置</strong></p>
+<p>用户可以通过新的系统设置为每个应用选择首选语言。他们可以通过以下两种方式访问这些设置：</p>
+<p><strong>通过系统设置访问</strong></p>
+<p>设置 &gt; 系统 &gt; 语言和输入法 &gt; 应用语言 &gt;（选择一款应用）</p>
+<p><strong>通过应用设置访问</strong></p>
+<p>设置 &gt; 应用 &gt;（选择一款应用）&gt; 语言</p>
+<p><strong>处理应用内语言选择器</strong></p>
+<p>如需设置用户的首选语言，需要让用户在语言选择器中选择语言区域，然后在系统中设置该值：</p>
+<pre><code class="language-kotlin">val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(&quot;xx-YY&quot;)
+// 注意：需要在主线程上调用它，因为它可能需要Activity.restart()
+AppCompatDelegate.setApplicationLocales(appLocale)
+</code></pre>
+<p>如需支持搭载 Android 12（S-32）及更低版本的设备，请在应用的 AppLocalesMetadataHolderService 服务的清单条目中将 autoStoreLocales 值设置为 true 并将 android:enabled 设置为 false，以指示 AndroidX 处理语言区域存储空间，如以下代码段所示：</p>
+<pre><code class="language-xml">&lt;application
+  ...
+  &lt;service
+    android:name=&quot;androidx.appcompat.app.AppLocalesMetadataHolderService&quot;
+    android:enabled=&quot;false&quot;
+    android:exported=&quot;false&quot;&gt;
+    &lt;meta-data
+      android:name=&quot;autoStoreLocales&quot;
+      android:value=&quot;true&quot; /&gt;
+  &lt;/service&gt;
+  ...
+&lt;/application&gt;
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[安卓OpenGL矩阵变换]]></title>
+        <id>https://mtdhllf.github.io/opengl_matrix/</id>
+        <link href="https://mtdhllf.github.io/opengl_matrix/">
+        </link>
+        <updated>2022-03-22T12:40:10.000Z</updated>
+        <content type="html"><![CDATA[<p>最近做音视频，需要做缩放位移等手势操作。</p>
+<p>但OpenGL的坐标体系跟安卓View不一样，屏幕中点（0，0）如图</p>
+<figure data-type="image" tabindex="1"><img src="https://mtdhllf.github.io/post-images/1656820355926.png" alt="" loading="lazy"></figure>
+<p>捣鼓了一天，顺利解决了，纪录一下，主要方法如下</p>
+<pre><code class="language-kotlin">object MatrixUtils {
+
+    //&lt;editor-fold defaultstate=&quot;collapsed&quot; desc=&quot;矩阵转换&quot;&gt;
+    private val mMatrix = Matrix()
+    private val mMatrixValues = FloatArray(9)
+    private val transformMapTemp = floatArrayOf(0f, 0f)
+    /**
+     * SDK矩阵数据转换
+     * @param matrix 矩阵
+     * @param width 宽
+     * @param height 高
+     * @return [缩放,位移,偏移X,偏移Y]
+     */
+    fun transformSDKMatrix(matrix: Matrix, width: Int, height: Int): FloatArray {
+        val halfWidth = width / 2f
+        val halfHeight = height / 2f
+        val angle = getMatrixAngle(matrix)
+        val scale = getMatrixScale(matrix)
+        val tranX = getMatrixTransX(matrix) / halfWidth
+        val tranY = getMatrixTransY(matrix) / halfHeight
+        //目标矩阵中心点
+        var fixX = scale * halfWidth
+        var fixY = scale * halfHeight
+        //处理旋转
+        mMatrix.setRotate(angle, 0f, 0f)
+        transformMapTemp[0] = fixX
+        transformMapTemp[1] = fixY
+        mMatrix.mapPoints(transformMapTemp)
+        //计算目标矩阵与中点距离差
+        fixX = transformMapTemp[0] - halfWidth
+        fixY = transformMapTemp[1] - halfHeight
+        //比例换算
+        fixX /= halfWidth
+        fixY /= halfHeight
+        return floatArrayOf(scale, angle, tranX + fixX, tranY + fixY)
+    }
+    // &lt;/editor-fold&gt;
+
+    /**
+     * 获取矩阵偏移X
+     */
+    fun getMatrixTransX(matrix: Matrix): Float {
+        return getMatrixValue(matrix, Matrix.MTRANS_X)
+    }
+
+    /**
+     * 获取矩阵偏移Y
+     */
+    fun getMatrixTransY(matrix: Matrix): Float {
+        return getMatrixValue(matrix, Matrix.MTRANS_Y)
+    }
+
+    /**
+     * This method calculates rotation angle for given Matrix object.
+     */
+    fun getMatrixAngle(matrix: Matrix): Float {
+        return (-(atan2(
+            getMatrixValue(matrix, Matrix.MSKEW_X).toDouble(),
+            getMatrixValue(matrix, Matrix.MSCALE_X).toDouble()
+        ) * (180 / Math.PI))).toFloat()
+    }
+
+    /**
+     * @return - current image scale value.
+     * [1.0f - for original image, 2.0f - for 200% scaled image, etc.]
+     */
+    fun getMatrixScale(matrix: Matrix): Float {
+        return sqrt(
+            getMatrixValue(matrix, Matrix.MSCALE_X).toDouble().pow(2.0)
+                    + getMatrixValue(matrix, Matrix.MSKEW_Y).toDouble().pow(2.0)
+        ).toFloat()
+    }
+
+    /**
+     * This method returns Matrix value for given index.
+     *
+     * @param matrix     - valid Matrix object
+     * @param valueIndex - index of needed value. See [Matrix.MSCALE_X] and others.
+     * @return - matrix value for index
+     */
+    private fun getMatrixValue(matrix: Matrix, @IntRange(from = 0, to = 9) valueIndex: Int): Float {
+        matrix.getValues(mMatrixValues)
+        return mMatrixValues[valueIndex]
+    }
+
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Magisk + Xposed新版教程]]></title>
+        <id>https://mtdhllf.github.io/xposed/</id>
+        <link href="https://mtdhllf.github.io/xposed/">
+        </link>
+        <updated>2022-01-24T11:31:33.000Z</updated>
+        <summary type="html"><![CDATA[<p>好久没更新了，可能是最近比较忙。有点空闲时，可能也是想当国家一级废物了🙂。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>好久没更新了，可能是最近比较忙。有点空闲时，可能也是想当国家一级废物了🙂。</p>
+<!-- more -->
+<p>早期我发过一篇《集赞？防撤回？偷能量?！--玩机必看必知-Xposed 插件管理》的文章，有讲解关于配合面具使用Xposed的教程。</p>
+<p>但是去年年底的时候，Magisk更新了2</p>
+<p>4版本，那时小米12新机也刚发布一会，安卓12的手机开始进入市场。更新新版后有不少粉丝不会使用Xposed了，旧版又不支持安卓12。</p>
+<p>好消息是面具新版本开始正式支持安卓12了，但此版本开始移除了自带的类似Xposed模块仓库功能，作者的意思就是想专注于做核心功能，模块等维护的工作开放给一些第三方。</p>
+<p>设置中提供了一个叫Zygisk的功能的开关，想要设置隐藏面具的应用也是在Zygisk功能旁边设置忽略清单，避免一些银行应用检测到，也能更加保证各大Xposed搞机爱好者的安全。</p>
+<p>而此次教程就是关于面具（Zygisk） + LSPosed的新版教程。</p>
+<hr>
+<p><strong>准备工作：(公众号:憨憨der)</strong></p>
+<ol>
+<li>通过安装Magisk(24版本以上)并完成Root</li>
+<li>在公众号回复  “Xposed” 获取本教程所需的工具</li>
+<li>还没有Root的可以看下以前的教程，没有Root的话哒咩哦</li>
+</ol>
+<p>PS，已Root但是没有安装Magisk的可以直接安装Magisk后再继续。无法root的可以看下以前的教程，以前教程讲的太极方案也可以使用xposed。</p>
+<p><strong>下面我们正式开始吧</strong></p>
+<hr>
+<p>下载并解压Riru工具集合（准备工作2），把下图两个文件，通过数据线拷贝到手机Download目录下</p>
+<figure data-type="image" tabindex="1"><img src="https://mtdhllf.github.io/post-images/1656820466097.png" alt="" loading="lazy"></figure>
+<p>如已安装Magisk24以上的版本，则可忽略Magisk的安装包</p>
+<p>打开Magisk，点击右上角的设置：</p>
+<figure data-type="image" tabindex="2"><img src="https://mtdhllf.github.io/post-images/1656820475674.png" alt="" loading="lazy"></figure>
+<p>按照图中设置，把Zygisk功能打开，有需要排除的App可以勾选中，以避免安全风险</p>
+<p>然后打开模块页面 ，将最新的LSPosed模块刷入（前面准备工作2），参考如图：</p>
+<figure data-type="image" tabindex="3"><img src="https://mtdhllf.github.io/post-images/1656820501369.png" alt="" loading="lazy"></figure>
+<p>刷入后点击重启即，手机桌面</p>
+<!-- more -->
+<p>就会多一个LSPosed的管理App，如图：</p>
+<figure data-type="image" tabindex="4"><img src="https://mtdhllf.github.io/post-images/1656820510967.png" alt="" loading="lazy"></figure>
+<p>到此，教程基本就已经完成了。手机上有同时装太极App的最好关闭避免冲突。</p>
+<p>仓库可以找到你一些常见的插件。工具集合里面打包了小编用到的两个防撤回的插件，还有蚂蚁能量的插件，具体自行探索吧。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[OneDrive 显示右键上下文菜单]]></title>
+        <id>https://mtdhllf.github.io/onedrive-fix/</id>
+        <link href="https://mtdhllf.github.io/onedrive-fix/">
+        </link>
+        <updated>2021-02-21T04:21:03.000Z</updated>
+        <content type="html"><![CDATA[<p>如果你在 Windows 文件资源管理器中(右键)缺少 OneDrive 上下文菜单项，你将看不到 &quot;共享&quot; 或 &quot;联机查看&quot; 选项。(如Administrator账户下)</p>
+<ol>
+<li>按win+R打开运行，bai在运行中输入“gpedit.msc”并回车。</li>
+<li>展开 &quot;<strong>本地策略</strong>&quot;，然后打开 &quot;<strong>安全选项</strong>&quot;。</li>
+<li>检查有关<strong>用户帐户控制</strong>的策略并设置它们，如下所示：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">设置</th>
+<th style="text-align:left">安全设置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">将文件和注册表写入错误虚拟化到每用户位置</td>
+<td style="text-align:left">已启用</td>
+</tr>
+<tr>
+<td style="text-align:left">提示提升时切换到安全桌面</td>
+<td style="text-align:left">已禁用</td>
+</tr>
+<tr>
+<td style="text-align:left">在管理员批准模式下运行所有管理员</td>
+<td style="text-align:left">已启用</td>
+</tr>
+<tr>
+<td style="text-align:left">仅提升安装在安全位置的 UIAccess 应用程序</td>
+<td style="text-align:left">已启用</td>
+</tr>
+<tr>
+<td style="text-align:left">仅提升已签名和已验证的可执行文件</td>
+<td style="text-align:left">已禁用</td>
+</tr>
+<tr>
+<td style="text-align:left">检测应用程序安装并提示提升</td>
+<td style="text-align:left">已启用</td>
+</tr>
+<tr>
+<td style="text-align:left">标准用户的提升提示行为</td>
+<td style="text-align:left">提示输入凭据</td>
+</tr>
+<tr>
+<td style="text-align:left">管理员批准模式中管理员的提升提示行为</td>
+<td style="text-align:left">在不提示的情况下提升</td>
+</tr>
+<tr>
+<td style="text-align:left">允许 UIAccess 应用程序在不使用安全桌面的情况下提示提升</td>
+<td style="text-align:left">已禁用</td>
+</tr>
+<tr>
+<td style="text-align:left">内置管理员帐户的管理员批准模式</td>
+<td style="text-align:left">已启用</td>
+</tr>
+</tbody>
+</table>
+<ol start="4">
+<li>重启计算机。</li>
+</ol>
+<hr>
+<p><strong>相关图示：</strong></p>
+<figure data-type="image" tabindex="1"><img src="https://mtdhllf.github.io/post-images/1656820603589.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://mtdhllf.github.io/post-images/1656820618611.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[安卓存储空间读取]]></title>
+        <id>https://mtdhllf.github.io/read-storage/</id>
+        <link href="https://mtdhllf.github.io/read-storage/">
+        </link>
+        <updated>2020-11-26T07:24:17.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="安卓系统存储空间情况读取">安卓系统存储空间情况读取</h3>
+<p>安卓系统分区大致可分为系统分区、用户分区，网上的常规方法如读取SD卡路径等方法其实都是不太准确的，这里使用系统api读取。</p>
+<p>这里先上个代码</p>
+<pre><code class="language-java">StorageManager sm = getSystemService(StorageManager.class);
+StorageStatsManager ssm = getSystemService(StorageStatsManager.class);
+long privateFreeBytes = 0;
+long privateTotalBytes = 0;
+List&lt;VolumeInfo&gt; volumes = ReflectUtils.reflect(sm).method(&quot;getVolumes&quot;).get();
+for (VolumeInfo volume : volumes) {
+    //note type==1为用户卷,type==2为系统卷，一般读取用户卷即可
+    if (volume.getType() == 1) {
+        privateTotalBytes += ssm.getTotalBytes(volume.getFsUuid());
+        privateFreeBytes += ssm.getFreeBytes(volume.getFsUuid());
+    }
+    break;
+}
+LogUtils.i(&quot;设备空间读取&quot;,
+           &quot;可用空间--&quot;+Formatter.formatFileSize(Utils.getApp(),privateFreeBytes),
+           &quot;闪存空间--&quot;+Formatter.formatFileSize(Utils.getApp(),privateTotalBytes));
+return new long[]{privateTotalBytes-privateFreeBytes, privateTotalBytes};
+</code></pre>
+<p>打印结果：跟原生系统设置看到的数据应该是一致的，图就不上了</p>
+<pre><code>┌──────────────────────────────
+│ args[0] = 设备空间读取
+│ args[1] = 可用空间--4.48 GB
+│ args[2] = 闪存空间--8.00 GB
+└──────────────────────────────
+</code></pre>
+<p>代码中使用了StorageManager、StorageStatsManager两个系统服务，其中StorageManager的getVolumes方法是隐藏的，需要使用反射获取，返回的是分区卷的相关信息。然后配合使用StorageStatsManager的相关方法即可实现对分区使用情况的读取。</p>
+<h3 id="注意事项">注意事项</h3>
+<ol>
+<li>读取是个耗时操作，需要在子线程执行并做好兼容异常等处理。</li>
+<li>getTotalBytes(String uuid)在Api 28已经移除(也有可能更早)，本文使用Api版本为26。</li>
+<li>getTotalBytes(UUID storageUuid)是更好的选择，只需要StorageManager.convert(uuid)做一下转换即可。</li>
+</ol>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[安卓自动朋友圈？--广告机器人]]></title>
+        <id>https://mtdhllf.github.io/wechat-robot/</id>
+        <link href="https://mtdhllf.github.io/wechat-robot/">
+        </link>
+        <updated>2020-11-25T17:20:41.000Z</updated>
+        <content type="html"><![CDATA[<p>先占个坑，有时间更新</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[adb 常用命令]]></title>
+        <id>https://mtdhllf.github.io/adb_command/</id>
+        <link href="https://mtdhllf.github.io/adb_command/">
+        </link>
+        <updated>2020-11-25T13:24:16.000Z</updated>
+        <summary type="html"><![CDATA[<p>开关机</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>开关机</p>
+<!-- more -->
+<pre><code>adb reboot 重启
+adb reboot -p 关机
+adb reboot bootloader 重启到线刷模式(fastboot)
+adb reboot recovery 重启到恢复模式(recovery)
+adb reboot edl(高通qfil刷机)
+</code></pre>
+<p>adb 查看最上层成activity名字</p>
+<pre><code>adb shell dumpsys activity | findstr &quot;mFocusedActivity&quot; (这个兼容性好一点)
+adb shell dumpsys activity | findstr &quot;mResumedActivity&quot;
+</code></pre>
+<p>设备相关</p>
+<pre><code>adb shell shell模式
+adb root 指定root权限执行进程
+adb remount 挂载
+adb devices 查看设备列表
+adb connect &lt;host&gt;:&lt;port&gt; 连接改端口的模拟器可以会用到(如蓝蝶模拟器127.0.0.1:5555)
+adb oem unlock 解除oem锁
+adb disable-verity 去除签名验证(签名是防止用户修改系统分区)
+adb push &lt;localPath&gt; &lt;targetPath&gt; 推送文件至设备
+adb pull &lt;devicePath&gt; &lt;localPath&gt; 从设备下载文件到本地
+adb shell getprop &lt;key&gt; 读取build/system.prop配置(key如ro.build.type)
+</code></pre>
+<p>组件相关</p>
+<pre><code>adb shell am start -n &quot;&lt;pkg&gt;/&lt;actName&gt;&quot; 启动activity
+adb shell am startservice -n &quot;&lt;pkg&gt;/&lt;serviceName&gt;&quot; 启动Service
+adb shell am broadcast -a &lt;Action&gt; 发送广播
+adb shell input keyevent &lt;keycode&gt; 按键模拟(返回的keycode是4)
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[QQ机器人插件开发实践(一)]]></title>
+        <id>https://mtdhllf.github.io/qq-robot-01/</id>
+        <link href="https://mtdhllf.github.io/qq-robot-01/">
+        </link>
+        <updated>2020-07-21T14:18:38.000Z</updated>
+        <content type="html"><![CDATA[<p>平台选择：<a href="https://cqp.cc/">酷Q</a></p>
+<p>使用此平台的原因是个人觉得易用性、稳定性方面要比其他平台好一些。</p>
+<p>开发语言：<a href="https://golang.google.cn/">Go</a>，其他其他平台可参考<a href="https://cqp.cc/t/15124">社区</a></p>
+<h3 id="环境准备">环境准备</h3>
+<ol>
+<li>
+<p>从社区发布板块下载最新的平台软件，我的安装路径(C:\酷Q Air)为例</p>
+</li>
+<li>
+<p>GCC编译环境搭建(有的话可忽略)</p>
+<ul>
+<li>
+<p>下载<a href="https://sourceforge.net/projects/tdm-gcc/">GCC</a>编译器，如链接失效则<a href="https://www.baidu.com/s?wd=tdm-gcc&amp;ie=UTF-8">点此</a>中并安装，我的安装路径(C:\TDM-GCC-64)为例</p>
+</li>
+<li>
+<p>将GCC的bin目录添加到环境变量(我的是C:\TDM-GCC-64\bin)</p>
+</li>
+<li>
+<p>最后使用cmd 验证有效即可</p>
+<pre><code>gcc -v
+</code></pre>
+<h4 id="截图参考">截图参考:</h4>
+<p><img src="https://mtdhllf.github.io/post-images/1656820721638.png" alt="" loading="lazy"><br>
+<img src="https://mtdhllf.github.io/post-images/1656820731787.png" alt="" loading="lazy"></p>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="项目搭建">项目搭建</h3>
+<ol>
+<li>打开<a href="https://github.com/Tnze/CoolQ-Golang-SDK">CoolQ Golang SDK</a>，根据教程fork一个<a href="https://github.com/Tnze/CoolQ-Golang-Plugin">模板</a>分支到自己的github仓库(也可直接下载到本地开发)</li>
+<li>至此，开发的前期工作就准备完毕了。</li>
+</ol>
+<h3 id="插件开发">插件开发</h3>
+<p>模板已经默认实现了复读机的功能，只需要简单的配置插件信息，即可完成编译。</p>
+<ol>
+<li>
+<p>在app.go中修改插件信息及包名</p>
+<figure data-type="image" tabindex="1"><img src="https://mtdhllf.github.io/post-images/1656820867326.png" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>在build.bat中修改酷Q中的插件目录(插件打包后直接拷贝到酷Q，最后目录为插件包名)</p>
+<figure data-type="image" tabindex="2"><img src="https://mtdhllf.github.io/post-images/1656820886622.png" alt="" loading="lazy"></figure>
+<p>3.然后在控制台输入build后回车，即可执行build.bat进行编译。结果如下图：</p>
+<figure data-type="image" tabindex="3"><img src="https://mtdhllf.github.io/post-images/1656820911112.png" alt="" loading="lazy"></figure>
+</li>
+</ol>
+<h3 id="插件测试">插件测试</h3>
+<p>插件的测试及使用可参考酷Q社区的相关文档</p>
+<p>下一篇将会分享接入智能聊天的功能</p>
+<p><strong>测试截图:</strong></p>
+<figure data-type="image" tabindex="4"><img src="https://mtdhllf.github.io/post-images/1656820928867.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://mtdhllf.github.io/post-images/1656820936731.png" alt="" loading="lazy"></figure>
+<h4 id="demo下载">Demo下载</h4>
+<p><a href="https://github.com/mtdhllf/QQRobot">点我</a></p>
+]]></content>
+    </entry>
+</feed>

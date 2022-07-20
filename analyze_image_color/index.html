@@ -1,0 +1,383 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Gopher&#39;s Blog</title>
+<meta name="description" content="峰子的博客" />
+<link rel="shortcut icon" href="https://mtdhllf.github.io/favicon.ico?v=1658298337319">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://mtdhllf.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://mtdhllf.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://mtdhllf.github.io/images/avatar.png?v=1658298337319" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Gopher&#39;s Blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#androidjava-%E5%9B%BE%E5%83%8F%E5%88%86%E6%9E%90-%E4%B8%BB%E8%A6%81%E9%A2%9C%E8%89%B2">Android/JAVA 图像分析-主要颜色</a></li>
+<li><a href="#%E5%85%88%E4%B8%8A%E4%B8%AA%E6%95%88%E6%9E%9C%E5%9B%BEdemo%E7%82%B9%E6%88%91">先上个效果图(Demo点我)</a></li>
+<li><a href="#rgb%E7%9A%84%E5%B1%80%E9%99%90%E6%80%A7">RGB的局限性</a></li>
+<li><a href="#hsv%E9%A2%9C%E8%89%B2%E7%A9%BA%E9%97%B4">HSV颜色空间</a></li>
+<li><a href="#%E9%A2%9C%E8%89%B2%E8%AF%86%E5%88%AB%E7%9A%84%E6%80%9D%E8%B7%AF">颜色识别的思路</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0">代码实现</a><br>
+*
+<ul>
+<li><a href="#%E9%A2%9C%E8%89%B2%E8%AF%86%E5%88%AB">颜色识别</a></li>
+<li><a href="#rgb%E8%BD%AChsv">RGB转HSV</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8F%82%E8%80%83">参考</a>
+<ul>
+<li><a href="#rgb-hsv%E5%92%8Chsl%E9%A2%9C%E8%89%B2%E7%A9%BA%E9%97%B4">RGB、HSV和HSL颜色空间</a></li>
+<li><a href="#rgb%E8%BD%AC-hsv">RGB转 HSV</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu" style="animation-delay: 0.2s">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu" style="animation-delay: 0.4s">
+          标签
+        </a>
+      
+    
+      
+        <a href="/about" class="menu" style="animation-delay: 0.6000000000000001s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Hey~</div>
+    <a class="rss" href="https://mtdhllf.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">Android/JAVA 图像分析-主要颜色</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2020-04-26 / 6 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://mtdhllf.github.io/post-images/analyze_image_color.png" alt="">
+        
+        <div class="post-content yue">
+          <h2 id="androidjava-图像分析-主要颜色">Android/JAVA 图像分析-主要颜色</h2>
+<p>有些项目可能会遇到这类需求，识别一套服装或者其他物体的颜色信息，以此来判定他的颜色风格。如果业务交由于后端的话压力可能会比较大，其实前端自行处理一下就好了，逻辑也不复杂。</p>
+<p>彩色图像的颜色模型有很多种形式，<a href="https://baike.baidu.com/item/RGB">RGB</a>、YUV、<a href="https://baike.baidu.com/item/HSV/547122">HSV</a>、CMYK，其中在图像处理以<a href="https://baike.baidu.com/item/RGB">RGB</a>最为直观理解且显示器系统采用就是此类模型，而<a href="https://baike.baidu.com/item/HSV/547122">HSV</a>更符合人眼的颜色分辨，通常在<a href="https://baike.baidu.com/item/HSV/547122">HSV</a>颜色空间下进行颜色识别。</p>
+<h2 id="先上个效果图demo点我">先上个效果图(<a href="https://github.com/mtdhllf/ImageColorSample">Demo点我</a>)</h2>
+<figure data-type="image" tabindex="1"><img src="https://mtdhllf.github.io/post-images/1656821351550.jpg" alt="" loading="lazy"></figure>
+<h2 id="rgb的局限性">RGB的局限性</h2>
+<p><a href="https://baike.baidu.com/item/RGB">RGB</a> 是我们接触最多的颜色空间，由三个通道表示一幅图像，分别为红色(R)，绿色(G)和蓝色(B)。这三种颜色的不同组合可以形成几乎所有的其他颜色。</p>
+<p><a href="https://baike.baidu.com/item/RGB">RGB</a> 颜色空间是图像处理中最基本、最常用、面向硬件的颜色空间，比较容易理解。</p>
+<p><a href="https://baike.baidu.com/item/RGB">RGB</a> 色空间利用三个颜色分量的线性组合来表示颜色，任何颜色都与这三个分量有关，而且这三个分量是高度相关的，所以连续变换颜色时并不直观，想对图像的颜色进行调整需要更改这三个分量才行。</p>
+<p>自然环境下获取的图像容易受自然光照、遮挡和阴影等情况的影响，即对亮度比较敏感。而 <a href="https://baike.baidu.com/item/RGB">RGB</a> 颜色空间的三个分量都与亮度密切相关，即只要亮度改变，三个分量都会随之相应地改变，而没有一种更直观的方式来表达。</p>
+<p>但是人眼对于这三种颜色分量的敏感程度是不一样的，在单色中，人眼对红色最不敏感，蓝色最敏感，所以 <a href="https://baike.baidu.com/item/RGB">RGB</a> 颜色空间是一种均匀性较差的颜色空间。如果颜色的相似性直接用欧氏距离来度量，其结果与人眼视觉会有较大的偏差。对于某一种颜色，我们很难推测出较为精确的三个分量数值来表示。</p>
+<p>所以，<a href="https://baike.baidu.com/item/RGB">RGB</a> 颜色空间适合于显示系统，却并不适合于图像处理。</p>
+<h2 id="hsv颜色空间">HSV颜色空间</h2>
+<p>基于上述理由，在图像处理中使用较多的是 <a href="https://baike.baidu.com/item/HSV/547122">HSV</a>颜色空间，它比 <a href="https://baike.baidu.com/item/RGB">RGB</a> 更接近人们对彩色的感知经验。非常直观地表达颜色的色调、鲜艳程度和明暗程度，方便进行颜色的对比。</p>
+<p>在 <a href="https://baike.baidu.com/item/HSV/547122">HSV</a> 颜色空间下，比<a href="https://baike.baidu.com/item/RGB">RGB</a>更容易跟踪某种颜色的物体，常用于分割指定颜色的物体。</p>
+<p><a href="https://baike.baidu.com/item/HSV/547122">HSV</a> 表达彩色图像的方式由三个部分组成：</p>
+<ul>
+<li>Hue（色调、色相）</li>
+<li>Saturation（饱和度、色彩纯净度）</li>
+<li>Value（明度）</li>
+</ul>
+<p>用下面这个圆柱体来表示 <a href="https://baike.baidu.com/item/HSV/547122">HSV</a> 颜色空间，圆柱体的横截面可以看做是一个极坐标系 ，H 用极坐标的极角表示，S 用极坐标的极轴长度表示，V 用圆柱中轴的高度表示。</p>
+<h2 id="颜色识别的思路">颜色识别的思路</h2>
+<ol>
+<li>统计图像中的颜色比重情况</li>
+<li>合并相近的颜色输</li>
+<li>得到新的结果</li>
+</ol>
+<h2 id="代码实现">代码实现</h2>
+<ul>
+<li>
+<h4 id="颜色识别">颜色识别</h4>
+<pre><code class="language-kotlin">/**
+     * 颜色分析
+     * @param bitmap 位图(建议分辨率先压缩到256基准,当quality为10耗时大概[100-200]ms)
+     * @param quality 质量(颜色合并遍历次数)
+     * @param take 取前几个结果
+     */
+    fun analyzeImageColor(bitmap: Bitmap, quality: Int = 10, take: Int) {
+
+        /**&lt;颜色,计数&gt;*/
+        val allColor = ConcurrentHashMap&lt;Int, Int&gt;()
+        //统计所有颜色,相同颜色计数累加
+        for (y in 0 until bitmap.height) {
+            for (x in 0 until bitmap.width) {
+                bitmap.getPixel(x, y).let {
+                    if (allColor.containsKey(it)) allColor[it]!! + 1 else 1
+                }
+            }
+        }
+        //倒序排序
+        val sortColor = allColor.toList().sortedByDescending { it.second }
+            .toMap().toMutableMap()
+
+        val hsv1 = FloatArray(3)
+        val hsv2 = FloatArray(3)
+        Log.i(&quot;合并前&quot;, &quot;${sortColor.size}&quot;)
+        for (i in 0 until min(quality, sortColor.size)) {
+            if (sortColor.size &gt; i) {
+                val iterator = sortColor.iterator()
+                var first = iterator.next()
+                //move head
+                for (j in (0 until i)) {
+                    first = iterator.next()
+                }
+                while (iterator.hasNext()) {
+                    val second = iterator.next()
+                    Color.colorToHSV(first.key, hsv1)
+                    Color.colorToHSV(second.key, hsv2)
+                    //颜色相似判断及合并
+                    if (checkColorSimilar(hsv1, hsv2)) {
+                        first.setValue(first.value + second.value)
+                        iterator.next()
+                    }
+                }
+
+            }
+        }
+        Log.i(&quot;合并后&quot;, &quot;${sortColor.size}&quot;)
+
+        //结果取数量最多的前[take]个数据,
+        //List&lt;颜色,数量&gt;,结合实际需求自行封装成想要的数据
+        val result = sortColor.toList().sortedByDescending { it.second }.take(take)
+    }
+
+    /**
+     * 颜色相似判定
+     */
+    fun checkColorSimilar(hsv1: FloatArray, hsv2: FloatArray): Boolean {
+        val similarH = 10f
+        val similarS = 0.05
+        val similarV = 0.05
+        return when {
+            abs(hsv1[0] - hsv2[0]) &lt; similarH -&gt; true
+
+            abs(hsv1[0] - hsv2[0]) &lt; similarH * 2
+            &amp;&amp; abs(hsv1[1] - hsv2[1]) &lt; similarS -&gt; true
+
+            abs(hsv1[0] - hsv2[0]) &lt; similarH * 2
+            &amp;&amp; abs(hsv1[2] - hsv2[2]) &lt; similarV -&gt; true
+
+            else-&gt;false
+        }
+    }
+</code></pre>
+</li>
+<li>
+<h4 id="rgb转hsv">RGB转HSV</h4>
+<pre><code class="language-java">public static HSV RGB2HSV(RGB rgb) {
+    float r =(float) rgb . getR () / 255;
+    float g =(float) rgb . getG () / 255;
+    float b =(float) rgb . getB () / 255;
+    float max = max (r, g, b);
+    float min = min (r, g, b);
+    float h = 0;
+    if (r == max)
+        h = (g - b) / (max - min);
+    if (g == max)
+        h = 2 + (b - r) / (max - min);
+    if (b == max)
+        h = 4 + (r - g) / (max - min);
+    h *= 60;
+    if (h &lt; 0) h += 360;
+    HSV hsv = new HSV(h, (max - min) / max, max);
+    return hsv;
+}
+</code></pre>
+</li>
+</ul>
+<h2 id="参考">参考</h2>
+<h3 id="rgb-hsv和hsl颜色空间"><a href="https://zhuanlan.zhihu.com/p/67930839">RGB、HSV和HSL颜色空间</a></h3>
+<h3 id="rgb转-hsv"><a href="http://www.360doc.com/content/17/0726/16/45531310_674302066.shtml">RGB转 HSV</a></h3>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://mtdhllf.github.io/tag/android/">
+            <span class="flex-auto">Android</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://mtdhllf.github.io/ringview/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  Android自定义环形进度条
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://mtdhllf.github.io/markdown-study-notes/">
+                <h3 class="post-title">
+                  Markdown学习笔记
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://mtdhllf.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

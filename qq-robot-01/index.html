@@ -1,0 +1,304 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Gopher&#39;s Blog</title>
+<meta name="description" content="峰子的博客" />
+<link rel="shortcut icon" href="https://mtdhllf.github.io/favicon.ico?v=1658298337319">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://mtdhllf.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://mtdhllf.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://mtdhllf.github.io/images/avatar.png?v=1658298337319" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Gopher&#39;s Blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87">环境准备</a>
+<ul>
+<li><a href="#%E6%88%AA%E5%9B%BE%E5%8F%82%E8%80%83">截图参考:</a></li>
+</ul>
+</li>
+<li><a href="#%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA">项目搭建</a></li>
+<li><a href="#%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91">插件开发</a></li>
+<li><a href="#%E6%8F%92%E4%BB%B6%E6%B5%8B%E8%AF%95">插件测试</a>
+<ul>
+<li><a href="#demo%E4%B8%8B%E8%BD%BD">Demo下载</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu" style="animation-delay: 0.2s">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu" style="animation-delay: 0.4s">
+          标签
+        </a>
+      
+    
+      
+        <a href="/about" class="menu" style="animation-delay: 0.6000000000000001s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Hey~</div>
+    <a class="rss" href="https://mtdhllf.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">QQ机器人插件开发实践(一)</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2020-07-21 / 2 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://mtdhllf.github.io/post-images/qq-robot-01.jpg" alt="">
+        
+        <div class="post-content yue">
+          <p>平台选择：<a href="https://cqp.cc/">酷Q</a></p>
+<p>使用此平台的原因是个人觉得易用性、稳定性方面要比其他平台好一些。</p>
+<p>开发语言：<a href="https://golang.google.cn/">Go</a>，其他其他平台可参考<a href="https://cqp.cc/t/15124">社区</a></p>
+<h3 id="环境准备">环境准备</h3>
+<ol>
+<li>
+<p>从社区发布板块下载最新的平台软件，我的安装路径(C:\酷Q Air)为例</p>
+</li>
+<li>
+<p>GCC编译环境搭建(有的话可忽略)</p>
+<ul>
+<li>
+<p>下载<a href="https://sourceforge.net/projects/tdm-gcc/">GCC</a>编译器，如链接失效则<a href="https://www.baidu.com/s?wd=tdm-gcc&amp;ie=UTF-8">点此</a>中并安装，我的安装路径(C:\TDM-GCC-64)为例</p>
+</li>
+<li>
+<p>将GCC的bin目录添加到环境变量(我的是C:\TDM-GCC-64\bin)</p>
+</li>
+<li>
+<p>最后使用cmd 验证有效即可</p>
+<pre><code>gcc -v
+</code></pre>
+<h4 id="截图参考">截图参考:</h4>
+<p><img src="https://mtdhllf.github.io/post-images/1656820721638.png" alt="" loading="lazy"><br>
+<img src="https://mtdhllf.github.io/post-images/1656820731787.png" alt="" loading="lazy"></p>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="项目搭建">项目搭建</h3>
+<ol>
+<li>打开<a href="https://github.com/Tnze/CoolQ-Golang-SDK">CoolQ Golang SDK</a>，根据教程fork一个<a href="https://github.com/Tnze/CoolQ-Golang-Plugin">模板</a>分支到自己的github仓库(也可直接下载到本地开发)</li>
+<li>至此，开发的前期工作就准备完毕了。</li>
+</ol>
+<h3 id="插件开发">插件开发</h3>
+<p>模板已经默认实现了复读机的功能，只需要简单的配置插件信息，即可完成编译。</p>
+<ol>
+<li>
+<p>在app.go中修改插件信息及包名</p>
+<figure data-type="image" tabindex="1"><img src="https://mtdhllf.github.io/post-images/1656820867326.png" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>在build.bat中修改酷Q中的插件目录(插件打包后直接拷贝到酷Q，最后目录为插件包名)</p>
+<figure data-type="image" tabindex="2"><img src="https://mtdhllf.github.io/post-images/1656820886622.png" alt="" loading="lazy"></figure>
+<p>3.然后在控制台输入build后回车，即可执行build.bat进行编译。结果如下图：</p>
+<figure data-type="image" tabindex="3"><img src="https://mtdhllf.github.io/post-images/1656820911112.png" alt="" loading="lazy"></figure>
+</li>
+</ol>
+<h3 id="插件测试">插件测试</h3>
+<p>插件的测试及使用可参考酷Q社区的相关文档</p>
+<p>下一篇将会分享接入智能聊天的功能</p>
+<p><strong>测试截图:</strong></p>
+<figure data-type="image" tabindex="4"><img src="https://mtdhllf.github.io/post-images/1656820928867.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://mtdhllf.github.io/post-images/1656820936731.png" alt="" loading="lazy"></figure>
+<h4 id="demo下载">Demo下载</h4>
+<p><a href="https://github.com/mtdhllf/QQRobot">点我</a></p>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://mtdhllf.github.io/tag/3ubJ1F65DP/">
+            <span class="flex-auto">go</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://mtdhllf.github.io/adb_command/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  adb 常用命令
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://mtdhllf.github.io/qq-robot-02/">
+                <h3 class="post-title">
+                  QQ机器人插件开发实践(二)
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://mtdhllf.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

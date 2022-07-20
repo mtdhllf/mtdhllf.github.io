@@ -1,0 +1,440 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Gopher&#39;s Blog</title>
+<meta name="description" content="峰子的博客" />
+<link rel="shortcut icon" href="https://mtdhllf.github.io/favicon.ico?v=1658298337319">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://mtdhllf.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://mtdhllf.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://mtdhllf.github.io/images/avatar.png?v=1658298337319" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Gopher&#39;s Blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E5%AE%9E%E7%8E%B0%E6%80%9D%E8%B7%AF">实现思路</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+<li><a href="#%E5%8F%82%E8%80%83">参考</a>
+<ul>
+<li><a href="#interpolator%E6%8F%92%E5%80%BC%E5%99%A8">Interpolator插值器</a></li>
+<li><a href="#scroller">Scroller</a></li>
+<li><a href="#valueanimator">ValueAnimator</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu" style="animation-delay: 0.2s">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu" style="animation-delay: 0.4s">
+          标签
+        </a>
+      
+    
+      
+        <a href="/about" class="menu" style="animation-delay: 0.6000000000000001s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Hey~</div>
+    <a class="rss" href="https://mtdhllf.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">Android自定义环形进度条</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2020-04-27 / 6 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://mtdhllf.github.io/post-images/ringview.png" alt="">
+        
+        <div class="post-content yue">
+          <p>手把手教你实现一个炫酷的环形进度条。</p>
+<p>支持纯色/渐变，可选线条样式，动画时长。</p>
+<p>可实现扇形进度条、多个进度叠加、最小/最大进度等。</p>
+<p>先上个效果图:	<a href="https://github.com/mtdhllf/RingProgressView">Demo点我</a></p>
+<figure data-type="image" tabindex="1"><a href="https://github.com/mtdhllf/RingProgressView"><img src="https://mtdhllf.github.io/post-images/1656821277349.gif" alt="" loading="lazy"></a></figure>
+<h3 id="实现思路">实现思路</h3>
+<p>环形进度条,本质就是根据角度、半径等条件实现画圆的过程</p>
+<ol>
+<li>创建一个类继承View，并实现几个构造方法</li>
+<li>定义样式属性，获取属性值</li>
+<li>创建画笔，设置线条等样式</li>
+<li>在onDraw方法中进行绘制</li>
+</ol>
+<ul>
+<li>
+<p>定义的属性样式</p>
+<pre><code class="language-xml">&lt;declare-styleable name=&quot;RingProgressView&quot;&gt;
+  &lt;!--前景环形是否使用渐变--&gt;
+  &lt;attr format=&quot;boolean&quot; name=&quot;f_useGradient&quot;/&gt;
+  &lt;!--前景环形渐变起始颜色--&gt;
+  &lt;attr format=&quot;color&quot; name=&quot;f_startColor&quot;/&gt;
+  &lt;!--前景环形渐变中间颜色--&gt;
+  &lt;attr format=&quot;color&quot; name=&quot;f_centerColor&quot;/&gt;
+  &lt;!--前景环形渐变结束颜色--&gt;
+  &lt;attr format=&quot;color&quot; name=&quot;f_endColor&quot;/&gt;
+  &lt;!--前景环形颜色--&gt;
+  &lt;attr format=&quot;color&quot; name=&quot;f_ringColor&quot;/&gt;
+  &lt;!--背景环形颜色--&gt;
+  &lt;attr format=&quot;color&quot; name=&quot;f_ringBgColor&quot;/&gt;
+  &lt;!--前景环形起始角度--&gt;
+  &lt;attr format=&quot;float&quot; name=&quot;f_startAngle&quot;/&gt;
+  &lt;!--前景环形结束角度--&gt;
+  &lt;attr format=&quot;float&quot; name=&quot;f_endAngle&quot;/&gt;
+  &lt;!--背景环形起始角度--&gt;
+  &lt;attr format=&quot;float&quot; name=&quot;f_startBgAngle&quot;/&gt;
+  &lt;!--背景环形结束角度--&gt;
+  &lt;attr format=&quot;float&quot; name=&quot;f_endBgAngle&quot;/&gt;
+  &lt;!--环形线宽--&gt;
+  &lt;attr format=&quot;dimension&quot; name=&quot;f_roundWidth&quot;/&gt;
+  &lt;!--进度变化动画时长--&gt;
+  &lt;attr format=&quot;integer&quot; name=&quot;f_duration&quot;/&gt;
+  &lt;!--前景环形开始进度--&gt;
+  &lt;attr format=&quot;float&quot; name=&quot;f_startProgress&quot;/&gt;
+  &lt;!--前景环形结束进度--&gt;
+  &lt;attr format=&quot;float&quot; name=&quot;f_endProgress&quot;/&gt;
+  &lt;!--前景环形目标进度(你想设置的)--&gt;
+  &lt;attr format=&quot;float&quot; name=&quot;f_progress&quot;/&gt;
+  &lt;!--环形线帽样式Paint.Cap--&gt;
+  &lt;attr format=&quot;enum&quot; name=&quot;f_strokeCap&quot;&gt;
+      &lt;!--默认没有--&gt;
+      &lt;enum name=&quot;butt&quot; value=&quot;0&quot;/&gt;
+      &lt;!--圆角--&gt;
+      &lt;enum name=&quot;round&quot; value=&quot;1&quot;/&gt;
+      &lt;!--直角--&gt;
+      &lt;enum name=&quot;square&quot; value=&quot;2&quot;/&gt;
+  &lt;/attr&gt;
+  &lt;!--环形描边样式,详见Paint.Join--&gt;
+  &lt;attr format=&quot;enum&quot; name=&quot;f_strokeJoin&quot;&gt;
+      &lt;enum name=&quot;miter&quot; value=&quot;0&quot;/&gt;
+      &lt;enum name=&quot;round&quot; value=&quot;1&quot;/&gt;
+      &lt;enum name=&quot;bevel&quot; value=&quot;2&quot;/&gt;
+  &lt;/attr&gt;
+&lt;/declare-styleable&gt;
+</code></pre>
+</li>
+<li>
+<p>定义的属性,及初始化</p>
+<p>xml属性的读取,变量含义可参考上面的属性定义</p>
+<pre><code class="language-kotlin">//属性配置
+val ta = context.obtainStyledAttributes(attrs, R.styleable.RingProgressView)
+ringColor = ta.getColor(R.styleable.RingProgressView_f_ringColor, ringColor)
+ringBgColor = ta.getColor(R.styleable.RingProgressView_f_ringBgColor, ringBgColor)
+startColor = ta.getColor(R.styleable.RingProgressView_f_startColor, startColor)
+centerColor = ta.getColor(R.styleable.RingProgressView_f_centerColor, centerColor)
+endColor = ta.getColor(R.styleable.RingProgressView_f_endColor, endColor)
+//渐变色设置检查
+if (startColor != Color.TRANSPARENT || startColor != Color.TRANSPARENT || startColor != Color.TRANSPARENT) {
+    useGradient = true
+}
+useGradient = ta.getBoolean(R.styleable.RingProgressView_f_useGradient, useGradient)
+startAngle = ta.getFloat(R.styleable.RingProgressView_f_startAngle, startAngle)
+endAngle = ta.getFloat(R.styleable.RingProgressView_f_endAngle, endAngle)
+startBgAngle = ta.getFloat(R.styleable.RingProgressView_f_startBgAngle, startBgAngle)
+endBgAngle = ta.getFloat(R.styleable.RingProgressView_f_endBgAngle, endBgAngle)
+roundWidth = ta.getDimensionPixelSize(R.styleable.RingProgressView_f_roundWidth, roundWidth)
+strokeCap = when (ta.getInteger(R.styleable.RingProgressView_f_strokeCap, 0)) {
+    0 -&gt; Paint.Cap.BUTT
+    1 -&gt; Paint.Cap.ROUND
+    else -&gt; Paint.Cap.SQUARE
+}
+strokeJoin = when (ta.getInteger(R.styleable.RingProgressView_f_strokeJoin, 0)) {
+    0 -&gt; Paint.Join.MITER
+    1 -&gt; Paint.Join.ROUND
+    else -&gt; Paint.Join.BEVEL
+}
+duration = ta.getInt(R.styleable.RingProgressView_f_duration, duration.toInt()).toLong()
+startProgress = ta.getFloat(R.styleable.RingProgressView_f_startProgress, startProgress)
+endProgress = ta.getFloat(R.styleable.RingProgressView_f_endProgress, endProgress)
+progress = ta.getFloat(R.styleable.RingProgressView_f_progress, progress)
+tempProgress = progress
+ta.recycle()
+</code></pre>
+</li>
+<li>
+<p>动画插值器及画笔</p>
+<p>这里使用的是线性插值器(LinearInterpolator)，插值器是控制动画过程的关键，也有其他可代替的方案有Scroller、ValueAnimator等</p>
+<p>有关插值器等了解看文章最后的参考部分</p>
+<pre><code class="language-kotlin">init {	
+        va.interpolator = LinearInterpolator()
+        va.setFloatValues(startProgress, progress)
+        va.duration = duration
+        va.addUpdateListener {
+            tempProgress = it.animatedValue as Float
+            postInvalidate()
+        }
+        va.start()
+    }
+
+/**
+ * 初始化参数
+ */
+private fun init() {
+    //设置画笔参数
+    bgPaint.strokeWidth = roundWidth.toFloat()
+    bgPaint.strokeCap = strokeCap
+    bgPaint.strokeJoin = Paint.Join.ROUND
+    bgPaint.style = Paint.Style.STROKE
+    bgPaint.isAntiAlias = true
+    bgPaint.color = ringBgColor
+    forePaint.strokeWidth = roundWidth.toFloat()
+    forePaint.strokeCap = strokeCap
+    forePaint.strokeJoin = Paint.Join.ROUND
+    forePaint.style = Paint.Style.STROKE
+    forePaint.isAntiAlias = true
+    //着色器颜色筛选
+    val filter = intArrayOf(startColor, centerColor, endColor).filter { it != Color.TRANSPARENT }
+    val colorArray:IntArray = when{
+        filter.isEmpty()-&gt; intArrayOf(startColor, centerColor, endColor)
+        filter.size&gt;1-&gt; filter.toIntArray()
+        else-&gt;{
+            intArrayOf(filter.first(),filter.first())
+        }
+    }
+    //着色器/颜色设置
+    if (useGradient) {
+        forePaint.shader = LinearGradient(
+            0f,
+            0f,
+            width.toFloat(),
+            height.toFloat(),
+            colorArray,
+            null,
+            Shader.TileMode.CLAMP
+        )
+    } else {
+        forePaint.shader = null
+        forePaint.color = ringColor
+    }
+    //矩形
+    rectF
+    .set(
+        0f + roundWidth / 2,
+        0f + roundWidth / 2,
+        width.toFloat() - roundWidth / 2,
+        height.toFloat() - roundWidth / 2
+    )
+    if (init) {
+        postInvalidate()
+    }
+}
+</code></pre>
+</li>
+<li>
+<p>绘制部分</p>
+<pre><code class="language-kotlin">override fun onDraw(canvas: Canvas) {
+    //画背景环形
+    canvas.drawArc(rectF, startBgAngle, endBgAngle - startBgAngle, false, bgPaint)
+    //计算前景环形角度
+    sweepAngle = tempProgress / (endProgress - startProgress) * (endAngle - startAngle)
+    //画前景环形
+    canvas.drawArc(rectF, startAngle, sweepAngle, false, forePaint)
+}
+</code></pre>
+</li>
+</ul>
+<h3 id="总结">总结</h3>
+<ul>
+<li>动画的实现主要依赖于插值器的配合</li>
+<li>渐变的功能实现在于着色器(Paint.shader及LinearGradient)的应用</li>
+</ul>
+<h3 id="参考">参考</h3>
+<h4 id="interpolator插值器"><a href="https://www.jianshu.com/p/a5750828003c">Interpolator插值器</a></h4>
+<h4 id="scroller"><a href="https://www.jianshu.com/p/d27c792c98b9">Scroller</a></h4>
+<h4 id="valueanimator"><a href="https://www.jianshu.com/p/7d70fedcef21%5D">ValueAnimator</a></h4>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://mtdhllf.github.io/tag/android/">
+            <span class="flex-auto">Android</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://mtdhllf.github.io/vertical_seekbar/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  几行代码完美实现VerticalSeekBar
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://mtdhllf.github.io/analyze_image_color/">
+                <h3 class="post-title">
+                  Android/JAVA 图像分析-主要颜色
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://mtdhllf.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

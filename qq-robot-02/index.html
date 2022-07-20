@@ -1,0 +1,378 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Gopher&#39;s Blog</title>
+<meta name="description" content="峰子的博客" />
+<link rel="shortcut icon" href="https://mtdhllf.github.io/favicon.ico?v=1658298337319">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://mtdhllf.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://mtdhllf.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://mtdhllf.github.io/images/avatar.png?v=1658298337319" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Gopher&#39;s Blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E6%8A%80%E6%9C%AF%E6%96%B9%E6%A1%88">技术方案</a></li>
+<li><a href="#%E5%8A%9F%E8%83%BD%E5%BC%80%E5%8F%91">功能开发</a>
+<ul>
+<li><a href="#%E8%81%8A%E5%A4%A9%E5%8A%9F%E8%83%BD">聊天功能</a></li>
+<li><a href="#%E5%85%B6%E4%BB%96%E6%B6%88%E6%81%AF%E5%A4%84%E7%90%86">其他消息处理</a></li>
+<li><a href="#%E5%AE%9A%E6%97%B6%E5%8A%9F%E8%83%BD">定时功能</a></li>
+</ul>
+</li>
+<li><a href="#%E6%B5%8B%E8%AF%95%E6%88%AA%E5%9B%BE">测试截图</a></li>
+<li><a href="#demo%E8%8E%B7%E5%8F%96">Demo获取</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu" style="animation-delay: 0.2s">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu" style="animation-delay: 0.4s">
+          标签
+        </a>
+      
+    
+      
+        <a href="/about" class="menu" style="animation-delay: 0.6000000000000001s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Hey~</div>
+    <a class="rss" href="https://mtdhllf.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">QQ机器人插件开发实践(二)</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2020-07-21 / 4 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://mtdhllf.github.io/post-images/qq-robot-02.jpg" alt="">
+        
+        <div class="post-content yue">
+          <p>上一篇完成了项目搭建，并实现了私聊机器人复读机的功能。</p>
+<p>本文主要实现一些群聊的功能：</p>
+<ol>
+<li>当群聊有人@机器人的时候，解析@消息的内容，并通过聊天机器人接口获取聊天应答的内容进行应答。</li>
+<li>添加一个定时任务，在每天7点及23点发送早安和晚安。</li>
+<li>一些特定指令的解析。</li>
+</ol>
+<h3 id="技术方案">技术方案</h3>
+<ul>
+<li>聊天机器人这里使用<a href="http://api.qingyunke.com/">青云客</a>免费机器人接口，无需注册申请，简单粗暴</li>
+<li>定时功能则使用一个开源库<a href="https://github.com/robfig/cron">cron</a></li>
+<li>部分指令解析等则使用一般正则</li>
+</ul>
+<h3 id="功能开发">功能开发</h3>
+<h4 id="聊天功能">聊天功能</h4>
+<ol>
+<li>
+<p>判断消息是否有@自己，at消息的格式==[CQ:at,qq=对方QQ]==，这里简单正则判断即可</p>
+<pre><code class="language-go">//是否@自己
+func hasAtSelf(msg string) bool {
+	reg := regexp.MustCompile(`\[CQ:at,qq=(\d+)\]`)
+	match := reg.FindStringSubmatch(msg)
+	for _, v := range match {
+		if strconv.FormatInt(cqp.GetLoginQQ(), 10) == v {
+			return true
+		}
+	}
+	return false
+}
+</code></pre>
+</li>
+<li>
+<p>从机器人接口获取应答内容并进行回复</p>
+<pre><code class="language-go">//机器人智能回复
+func robotAnswer(fromGroup, fromQQ int64, msg string) {
+   //get请求
+   //http.Get的参数必须是带http://协议头的完整url,不然请求结果为空
+   cqp.AddLog(cqp.Debug, &quot;robotAnswer-msg&quot;, msg)
+   resp, _ := http.Get(RobotUrl + msg)
+   defer resp.Body.Close()
+   body, _ := ioutil.ReadAll(resp.Body)
+   cqp.AddLog(cqp.Debug, &quot;robotAnswer-body&quot;, string(body))
+   var robotMsg RobotMsg
+   var jsonIterator = jsoniter.ConfigCompatibleWithStandardLibrary
+   if err := jsonIterator.Unmarshal(body, &amp;robotMsg); err == nil {
+      cqp.SendGroupMsg(fromGroup, util.CQCode(&quot;at&quot;, &quot;qq&quot;, fromQQ)+util.Escape(robotMsg.Content))
+   } else {
+      cqp.AddLog(cqp.Debug, &quot;robotAnswer-answer&quot;, err.Error())
+   }
+}
+</code></pre>
+</li>
+</ol>
+<h4 id="其他消息处理">其他消息处理</h4>
+<ol>
+<li>
+<p>普通指令。如菜单、帮助这种单一词汇，只需要简单判断消息内容即可。</p>
+<pre><code class="language-go">if strings.Contains(msg, &quot;帮助&quot;) {
+		code = 1
+		cqp.SendGroupMsg(fromGroup, &quot;帮助菜单:\n&quot;+&quot;巴拉巴拉~&quot;)
+	}
+</code></pre>
+</li>
+<li>
+<p>组合指令。先判断前缀，然后截取后面的内容。</p>
+<pre><code class="language-go">//一个搜题功能,不知接口是否还能正常工作
+if strings.HasPrefix(msg, &quot;搜题 &quot;) &amp;&amp; len(strings.Split(msg, &quot; &quot;)) &gt; 1 {
+	split := strings.Split(msg, &quot; &quot;)
+	cqp.AddLog(cqp.Debug, &quot;搜题&quot;, split[1])
+	resp, _ := http.Post(&quot;https://ninja.yua.im/ninja/qa&quot;,
+		&quot;application/x-www-form-urlencoded&quot;,
+		strings.NewReader(&quot;search=&quot;+split[1]))
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	response := string(body)
+	msg := &quot;搜题出错,请稍后再试~&quot;
+
+	var exam Exam
+	if err := json.Unmarshal([]byte(response), &amp;exam); err == nil {
+		if exam.IsSuc &amp;&amp; exam.Data.Total &gt; 0 {
+			all := make([]string, exam.Data.Total+1)
+			all[0] = &quot;小改改为你找到以下结果:&quot;
+			for index, v := range exam.Data.Rows {
+				title := strconv.Itoa(index+1) + &quot;. &quot; + v.Title
+				s1 := make([]string, len(v.Answers)+1)
+				s1[0] = title
+				for k, v := range v.Answers {
+					if v.IsCorrect {
+						//正确
+						s1[k+1] = v.Content + &quot; √&quot;
+					} else {
+						s1[k+1] = v.Content
+					}
+				}
+				//一条题目及回答
+				all[index+1] = strings.Join(s1, &quot;\n&quot;)
+			}
+			msg = strings.TrimSpace(strings.Join(all, &quot;\n&quot;))
+		} else {
+			msg = &quot;没有找到你要的题目哦~&quot;
+		}
+	}
+	cqp.SendGroupMsg(fromGroup, msg)
+}
+</code></pre>
+</li>
+</ol>
+<h4 id="定时功能">定时功能</h4>
+<p>这个比较简单，具体用法可参战相关文档。</p>
+<pre><code class="language-go">//定时任务
+func initJob() {
+	//早晨播报
+	err = c.AddFunc(&quot;5 0 7 * * ?&quot;, func() {
+		cqp.SendGroupMsg(816440954, &quot;早上好,今天也是充满希望的一天(●'◡'●)ﾉ&quot;)
+	})
+	//晚上播报
+	err = c.AddFunc(&quot;5 0 23 * * ?&quot;, func() {
+		cqp.SendGroupMsg(816440954, &quot;【碎觉碎觉】&quot;)
+	})
+
+	if err != nil {
+		cqp.AddLog(cqp.Debug, &quot;job&quot;, err.Error())
+		return
+	}
+	c.Start()
+}
+</code></pre>
+<h3 id="测试截图">测试截图</h3>
+<p>群聊截图。图床失效了，脑补一下吧。</p>
+<h3 id="demo获取">Demo获取</h3>
+<p><a href="https://github.com/mtdhllf/QQRobot">点我</a></p>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://mtdhllf.github.io/tag/3ubJ1F65DP/">
+            <span class="flex-auto">go</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://mtdhllf.github.io/qq-robot-01/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  QQ机器人插件开发实践(一)
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://mtdhllf.github.io/levelOrder/">
+                <h3 class="post-title">
+                  102. 二叉树的层序遍历
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://mtdhllf.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

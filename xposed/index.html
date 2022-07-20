@@ -1,0 +1,263 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Gopher&#39;s Blog</title>
+<meta name="description" content="峰子的博客" />
+<link rel="shortcut icon" href="https://mtdhllf.github.io/favicon.ico?v=1658298337319">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://mtdhllf.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://mtdhllf.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://mtdhllf.github.io/images/avatar.png?v=1658298337319" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Gopher&#39;s Blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu" style="animation-delay: 0.2s">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu" style="animation-delay: 0.4s">
+          标签
+        </a>
+      
+    
+      
+        <a href="/about" class="menu" style="animation-delay: 0.6000000000000001s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Hey~</div>
+    <a class="rss" href="https://mtdhllf.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">Magisk + Xposed新版教程</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-01-24 / 3 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://mtdhllf.github.io/post-images/xposed.jpg" alt="">
+        
+        <div class="post-content yue">
+          <p>好久没更新了，可能是最近比较忙。有点空闲时，可能也是想当国家一级废物了🙂。</p>
+<!-- more -->
+<p>早期我发过一篇《集赞？防撤回？偷能量?！--玩机必看必知-Xposed 插件管理》的文章，有讲解关于配合面具使用Xposed的教程。</p>
+<p>但是去年年底的时候，Magisk更新了2</p>
+<p>4版本，那时小米12新机也刚发布一会，安卓12的手机开始进入市场。更新新版后有不少粉丝不会使用Xposed了，旧版又不支持安卓12。</p>
+<p>好消息是面具新版本开始正式支持安卓12了，但此版本开始移除了自带的类似Xposed模块仓库功能，作者的意思就是想专注于做核心功能，模块等维护的工作开放给一些第三方。</p>
+<p>设置中提供了一个叫Zygisk的功能的开关，想要设置隐藏面具的应用也是在Zygisk功能旁边设置忽略清单，避免一些银行应用检测到，也能更加保证各大Xposed搞机爱好者的安全。</p>
+<p>而此次教程就是关于面具（Zygisk） + LSPosed的新版教程。</p>
+<hr>
+<p><strong>准备工作：(公众号:憨憨der)</strong></p>
+<ol>
+<li>通过安装Magisk(24版本以上)并完成Root</li>
+<li>在公众号回复  “Xposed” 获取本教程所需的工具</li>
+<li>还没有Root的可以看下以前的教程，没有Root的话哒咩哦</li>
+</ol>
+<p>PS，已Root但是没有安装Magisk的可以直接安装Magisk后再继续。无法root的可以看下以前的教程，以前教程讲的太极方案也可以使用xposed。</p>
+<p><strong>下面我们正式开始吧</strong></p>
+<hr>
+<p>下载并解压Riru工具集合（准备工作2），把下图两个文件，通过数据线拷贝到手机Download目录下</p>
+<figure data-type="image" tabindex="1"><img src="https://mtdhllf.github.io/post-images/1656820466097.png" alt="" loading="lazy"></figure>
+<p>如已安装Magisk24以上的版本，则可忽略Magisk的安装包</p>
+<p>打开Magisk，点击右上角的设置：</p>
+<figure data-type="image" tabindex="2"><img src="https://mtdhllf.github.io/post-images/1656820475674.png" alt="" loading="lazy"></figure>
+<p>按照图中设置，把Zygisk功能打开，有需要排除的App可以勾选中，以避免安全风险</p>
+<p>然后打开模块页面 ，将最新的LSPosed模块刷入（前面准备工作2），参考如图：</p>
+<figure data-type="image" tabindex="3"><img src="https://mtdhllf.github.io/post-images/1656820501369.png" alt="" loading="lazy"></figure>
+<p>刷入后点击重启即，手机桌面</p>
+<!-- more -->
+<p>就会多一个LSPosed的管理App，如图：</p>
+<figure data-type="image" tabindex="4"><img src="https://mtdhllf.github.io/post-images/1656820510967.png" alt="" loading="lazy"></figure>
+<p>到此，教程基本就已经完成了。手机上有同时装太极App的最好关闭避免冲突。</p>
+<p>仓库可以找到你一些常见的插件。工具集合里面打包了小编用到的两个防撤回的插件，还有蚂蚁能量的插件，具体自行探索吧。</p>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://mtdhllf.github.io/tag/RmLho3eZC/">
+            <span class="flex-auto">安卓</span>
+          </a>
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://mtdhllf.github.io/tag/hMmHTG96Pw/">
+            <span class="flex-auto">root</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://mtdhllf.github.io/opengl_matrix/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  安卓OpenGL矩阵变换
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://mtdhllf.github.io/onedrive-fix/">
+                <h3 class="post-title">
+                  OneDrive 显示右键上下文菜单
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://mtdhllf.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

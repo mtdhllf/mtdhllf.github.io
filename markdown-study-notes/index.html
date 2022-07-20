@@ -1,0 +1,624 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Gopher&#39;s Blog</title>
+<meta name="description" content="峰子的博客" />
+<link rel="shortcut icon" href="https://mtdhllf.github.io/favicon.ico?v=1658298337319">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://mtdhllf.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://mtdhllf.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://mtdhllf.github.io/images/avatar.png?v=1658298337319" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Gopher&#39;s Blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#markdown-%E6%A0%87%E9%A2%98">Markdown 标题</a></li>
+<li><a href="#%E6%98%BE%E7%A4%BA%E6%95%88%E6%9E%9C%E5%A6%82%E4%B8%8B">显示效果如下：</a></li>
+</ul>
+</li>
+<li><a href="#%E6%88%91%E5%B1%95%E7%A4%BA%E7%9A%84%E6%98%AF%E4%B8%80%E7%BA%A7%E6%A0%87%E9%A2%98">我展示的是一级标题</a>
+<ul>
+<li><a href="#%E6%88%91%E5%B1%95%E7%A4%BA%E7%9A%84%E6%98%AF%E4%BA%8C%E7%BA%A7%E6%A0%87%E9%A2%98">我展示的是二级标题</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%80%E7%BA%A7%E6%A0%87%E9%A2%98">一级标题</a>
+<ul>
+<li><a href="#%E4%BA%8C%E7%BA%A7%E6%A0%87%E9%A2%98">二级标题</a>
+<ul>
+<li><a href="#%E4%B8%89%E7%BA%A7%E6%A0%87%E9%A2%98">三级标题</a>
+<ul>
+<li><a href="#%E5%9B%9B%E7%BA%A7%E6%A0%87%E9%A2%98">四级标题</a>
+<ul>
+<li><a href="#%E4%BA%94%E7%BA%A7%E6%A0%87%E9%A2%98">五级标题</a>
+<ul>
+<li><a href="#%E5%85%AD%E7%BA%A7%E6%A0%87%E9%A2%98">六级标题</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#markdown%E6%AE%B5%E8%90%BD%E6%A0%B7%E5%BC%8F">Markdown段落样式</a>
+<ul>
+<li><a href="#markdown%E6%AE%B5%E8%90%BD">Markdown段落</a></li>
+<li><a href="#%E5%AD%97%E4%BD%93">字体</a></li>
+</ul>
+</li>
+<li><a href="#markdown-%E5%88%97%E8%A1%A8">Markdown 列表</a></li>
+<li><a href="#markdown-%E5%8C%BA%E5%9D%97">Markdown 区块</a></li>
+<li><a href="#markdown-%E4%BB%A3%E7%A0%81">Markdown 代码</a>
+<ul>
+<li><a href="#%E4%BB%A3%E7%A0%81%E5%8C%BA%E5%9D%97">代码区块</a></li>
+</ul>
+</li>
+<li><a href="#markdown-%E9%93%BE%E6%8E%A5">Markdown 链接</a></li>
+<li><a href="#markdown-%E5%9B%BE%E7%89%87">Markdown 图片</a></li>
+<li><a href="#markdown-%E8%A1%A8%E6%A0%BC">Markdown 表格</a></li>
+<li><a href="#markdown-%E9%AB%98%E7%BA%A7%E6%8A%80%E5%B7%A7">Markdown 高级技巧</a>
+<ul>
+<li><a href="#%E6%94%AF%E6%8C%81%E7%9A%84-html-%E5%85%83%E7%B4%A0">支持的 HTML 元素</a></li>
+<li><a href="#%E8%BD%AC%E4%B9%89">转义</a></li>
+<li><a href="#%E5%85%AC%E5%BC%8F">公式</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu" style="animation-delay: 0.2s">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu" style="animation-delay: 0.4s">
+          标签
+        </a>
+      
+    
+      
+        <a href="/about" class="menu" style="animation-delay: 0.6000000000000001s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Hey~</div>
+    <a class="rss" href="https://mtdhllf.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">Markdown学习笔记</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2020-04-26 / 7 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://mtdhllf.github.io/post-images/markdown-study-notes.jpg" alt="">
+        
+        <div class="post-content yue">
+          <h2 id="markdown-标题">Markdown 标题</h2>
+<ul>
+<li>
+<p>使用 = 和 - 标记一级和二级标题</p>
+<pre><code class="language-markdown">我展示的是一级标题(下面=要两个以上)
+=================
+
+我展示的是二级标题(下行-要两个以上)
+-----------------
+</code></pre>
+<h2 id="显示效果如下">显示效果如下：</h2>
+<h1 id="我展示的是一级标题">我展示的是一级标题</h1>
+<h2 id="我展示的是二级标题">我展示的是二级标题</h2>
+<hr>
+</li>
+<li>
+<p>使用 # 号标记</p>
+<p>使用 <strong>#</strong> 号可表示 1-6 级标题，一级标题对应一个 <strong>#</strong> 号，二级标题对应两个 <strong>#</strong> 号，以此类推。</p>
+<pre><code class="language-markdown"># 一级标题
+## 二级标题
+### 三级标题
+#### 四级标题
+##### 五级标题
+###### 六级标题
+</code></pre>
+<p>显示效果如下：</p>
+<hr>
+<h1 id="一级标题">一级标题</h1>
+<h2 id="二级标题">二级标题</h2>
+<h3 id="三级标题">三级标题</h3>
+<h4 id="四级标题">四级标题</h4>
+<h5 id="五级标题">五级标题</h5>
+<h6 id="六级标题">六级标题</h6>
+<hr>
+</li>
+</ul>
+<h2 id="markdown段落样式">Markdown段落样式</h2>
+<ul>
+<li>
+<h3 id="markdown段落">Markdown段落</h3>
+<ol>
+<li>
+<p>Markdown 段落没有特殊的格式，直接编写文字就好，段落的换行是使用两个以上空格加上回车。</p>
+<pre><code class="language-markdown">text1  (text1后面有两个空格)  
+text2
+</code></pre>
+</li>
+<li>
+<p>也可以在段落后面使用一个空行来表示重新开始一个段落。</p>
+<pre><code class="language-markdown">text1
+
+text2
+</code></pre>
+</li>
+</ol>
+</li>
+<li>
+<h3 id="字体">字体</h3>
+<p>Markdown 可以使用以下几种字体：</p>
+<pre><code class="language-markdown">*斜体文本*
+_斜体文本_
+**粗体文本**
+__粗体文本__
+***粗斜体文本***
+___粗斜体文本___
+</code></pre>
+<p>显示效果如下所示：</p>
+<hr>
+<p><em>斜体文本</em><br>
+<em>斜体文本</em><br>
+<strong>粗体文本</strong><br>
+<strong>粗体文本</strong><br>
+<em><strong>粗斜体文本</strong></em><br>
+<em><strong>粗斜体文本</strong></em></p>
+<hr>
+</li>
+</ul>
+<h2 id="markdown-列表">Markdown 列表</h2>
+<p>Markdown 支持有序列表和无序列表。</p>
+<p>无序列表使用星号(<em><strong><strong>)、加号(</strong>+</strong>)或是减号(</em><em>-</em>*)作为列表标记：</p>
+<pre><code class="language-markdown">* 第一项
+* 第二项
+* 第三项
+
++ 第一项
++ 第二项
++ 第三项
+
+
+- 第一项
+- 第二项
+- 第三项
+</code></pre>
+<p>显示结果如下：</p>
+<hr>
+<ul>
+<li>第一项</li>
+<li>第二项</li>
+<li>第三项</li>
+</ul>
+<ul>
+<li>第一项</li>
+<li>第二项</li>
+<li>第三项</li>
+</ul>
+<ul>
+<li>第一项</li>
+<li>第二项</li>
+<li>第三项</li>
+</ul>
+<h2 id="markdown-区块">Markdown 区块</h2>
+<ul>
+<li>
+<p><strong>单层区块</strong></p>
+<p>Markdown 区块引用是在段落开头使用 <strong>&gt;</strong> 符号 ，然后后面紧跟一个<strong>空格</strong>符号：</p>
+<pre><code class="language-markdown">&gt; 白日依山尽，
+&gt; 黄河入海流。
+&gt; 欲穷千里目，
+&gt; 更上一层楼。
+</code></pre>
+<p>显示结果如下：</p>
+<blockquote>
+<p>白日依山尽，<br>
+黄河入海流。<br>
+欲穷千里目，<br>
+更上一层楼。</p>
+</blockquote>
+</li>
+<li>
+<p><strong>嵌套区块</strong></p>
+<p>区块是可以嵌套的，一个 <strong>&gt;</strong> 符号是最外层，两个 <strong>&gt;</strong> 符号是第一层嵌套，以此类推：</p>
+<pre><code class="language-markdown">&gt; 最外层
+&gt; &gt; 第一层嵌套
+&gt; &gt; &gt; 第二层嵌套
+</code></pre>
+<p>显示结果如下：</p>
+<blockquote>
+<p>最外层</p>
+<blockquote>
+<p>第一层嵌套</p>
+<blockquote>
+<p>第二层嵌套</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</li>
+<li>
+<p><strong>区块中使用列表</strong></p>
+</li>
+</ul>
+<h2 id="markdown-代码">Markdown 代码</h2>
+<p>如果是段落上的一个函数或片段的代码可以用反引号把它包起来（<strong>`</strong>），例如：</p>
+<pre><code class="language-markdown">`printf()` 函数
+</code></pre>
+<p>显示结果如下：</p>
+<p><code>printf()</code> 函数</p>
+<ul>
+<li>
+<h3 id="代码区块">代码区块</h3>
+<p>代码区块使用 <strong>4 个空格</strong>或者一个<strong>制表符（Tab 键）</strong>。</p>
+<p>实例如下：</p>
+<pre><code class="language-php">&lt;?php
+echo 'beast php';
+function test(){
+    echo 'test';
+}
+</code></pre>
+<p>你也可以用 <strong>```</strong> 包裹一段代码，并指定一种语言（也可以不指定）：</p>
+<pre><code>```javascript
+$(document).ready(function () {
+    alert('javascript');
+});
+</code></pre>
+<p>显示结果如下：</p>
+<pre><code class="language-javascript">$(document).ready(function () {
+    alert('javascript');
+});
+</code></pre>
+<h2 id="markdown-链接">Markdown 链接</h2>
+<ul>
+<li>
+<p>常用链接使用方法：</p>
+<pre><code class="language-markdown">[链接名称](链接地址)
+
+或者
+
+&lt;链接地址&gt;
+</code></pre>
+<p>例如：</p>
+<pre><code class="language-markdown">这是一个链接 [百度一下](https://www.baidu.com)
+</code></pre>
+<p>显示结果如下：</p>
+<p>这是一个链接 <a href="https://www.baidu.com">百度一下</a></p>
+</li>
+<li>
+<p>直接使用链接地址：</p>
+<pre><code class="language-markdown">&lt;https://www.baidu.com&gt;
+</code></pre>
+<p>显示结果如下：</p>
+<p><a href="https://www.baidu.com">https://www.baidu.com</a></p>
+</li>
+</ul>
+<h2 id="markdown-图片">Markdown 图片</h2>
+<p>Markdown 图片语法格式如下：</p>
+<pre><code class="language-markdown">![alt 属性文本](图片地址)
+
+![alt 属性文本](图片地址 &quot;可选标题&quot;)
+</code></pre>
+<ul>
+<li>开头一个感叹号 !</li>
+<li>接着一个方括号，里面放上图片的替代文字</li>
+<li>接着一个普通括号，里面放上图片的网址，最后还可以用引号包住并加上选择性的 'title' 属性的文字。</li>
+</ul>
+<p>使用实例：</p>
+<pre><code class="language-markdown">![RUNOOB 图标](https://www.baidu.com/img/bd_logo1.png)
+
+![RUNOOB 图标](https://www.baidu.com/img/bd_logo1.png &quot;百度&quot;)
+</code></pre>
+<p>显示结果如下：</p>
+<figure data-type="image" tabindex="1"><img src="https://www.baidu.com/img/baidu_jgylogo3.gif" alt="RUNOOB 图标" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://www.baidu.com/img/baidu_jgylogo3.gif" alt="RUNOOB 图标" title="百度" loading="lazy"></figure>
+<p>Markdown 还没有办法指定图片的高度与宽度，如果你需要的话，你可以使用普通的 <img> 标签。</p>
+<pre><code class="language-html">&lt;img src=&quot;https://www.baidu.com/img/baidu_jgylogo3.gif&quot; width=&quot;20%&quot;&gt;
+</code></pre>
+<p>显示结果如下：</p>
+<img src="https://www.baidu.com/img/baidu_jgylogo3.gif" width="20%">
+</li>
+</ul>
+<h2 id="markdown-表格">Markdown 表格</h2>
+<p>Markdown 制作表格使用 <strong>|</strong> 来分隔不同的单元格，使用 <strong>-</strong> 来分隔表头和其他行。</p>
+<p>语法格式如下：</p>
+<pre><code class="language-markdown">|  表头   | 表头  |
+|  ----  | ----  |
+| 单元格  | 单元格 |
+| 单元格  | 单元格 |
+</code></pre>
+<p>以上代码显示结果如下：</p>
+<table>
+<thead>
+<tr>
+<th>表头</th>
+<th>表头</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>单元格</td>
+<td>单元格</td>
+</tr>
+<tr>
+<td>单元格</td>
+<td>单元格</td>
+</tr>
+</tbody>
+</table>
+<p>对齐方式</p>
+<p><strong>我们可以设置表格的对齐方式：</strong></p>
+<ul>
+<li><strong>-:</strong> 设置内容和标题栏居右对齐。</li>
+<li><strong>:-</strong> 设置内容和标题栏居左对齐。</li>
+<li><strong>:-:</strong> 设置内容和标题栏居中对齐。</li>
+</ul>
+<p>实例如下：</p>
+<pre><code class="language-markdown">| 左对齐 | 右对齐 | 居中对齐 |
+| :-----| ----: | :----: |
+| 单元格 | 单元格 | 单元格 |
+| 单元格 | 单元格 | 单元格 |
+</code></pre>
+<p>以上代码显示结果如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">左对齐</th>
+<th style="text-align:right">右对齐</th>
+<th style="text-align:center">居中对齐</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">单元格</td>
+<td style="text-align:right">单元格</td>
+<td style="text-align:center">单元格</td>
+</tr>
+<tr>
+<td style="text-align:left">单元格</td>
+<td style="text-align:right">单元格</td>
+<td style="text-align:center">单元格</td>
+</tr>
+</tbody>
+</table>
+<h2 id="markdown-高级技巧">Markdown 高级技巧</h2>
+<ul>
+<li>
+<h3 id="支持的-html-元素">支持的 HTML 元素</h3>
+<p>不在 Markdown 涵盖范围之内的标签，都可以直接在文档里面用 HTML 撰写。</p>
+<p>目前支持的 HTML 元素有：等 ，如：</p>
+<pre><code class="language-html">使用 &lt;kbd&gt;Ctrl&lt;/kbd&gt;+&lt;kbd&gt;Alt&lt;/kbd&gt;+&lt;kbd&gt;Del&lt;/kbd&gt; 重启电脑
+</code></pre>
+<p>输出结果为：</p>
+<p>使用 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Del</kbd> 重启电脑</p>
+</li>
+<li>
+<h3 id="转义">转义</h3>
+<p>Markdown 使用了很多特殊符号来表示特定的意义，如果需要显示特定的符号则需要使用转义字符，Markdown 使用反斜杠转义特殊字符：</p>
+<pre><code class="language-markdown">**文本加粗** 
+\*\* 正常显示星号 \*\*
+</code></pre>
+<p>输出结果为：</p>
+<p><strong>文本加粗</strong><br>
+** 正常显示星号 **</p>
+<p>Markdown 支持以下这些符号前面加上反斜杠来帮助插入普通的符号：</p>
+<pre><code class="language-markdown">\   反斜线
+`   反引号
+*   星号
+_   下划线
+{}  花括号
+[]  方括号
+()  小括号
+#   井字号
++   加号
+-   减号
+.   英文句点
+!   感叹号
+</code></pre>
+</li>
+<li>
+<h3 id="公式">公式</h3>
+<p>当你需要在编辑器中插入数学公式时，可以使用两个美元符 $$ 包裹 TeX 或 LaTeX 格式的数学公式来实现。提交后，问答和文章页会根据需要加载 Mathjax 对数学公式进行渲染。如：</p>
+<pre><code class="language-markdown">$$
+\mathbf{V}_1 \times \mathbf{V}_2 =  \begin{vmatrix} 
+\mathbf{i} &amp; \mathbf{j} &amp; \mathbf{k} \\
+\frac{\partial X}{\partial u} &amp;  \frac{\partial Y}{\partial u} &amp; 0 \\
+\frac{\partial X}{\partial v} &amp;  \frac{\partial Y}{\partial v} &amp; 0 \\
+\end{vmatrix}
+${$tep1}{\style{visibility:hidden}{(x+1)(x+1)}}
+$$
+</code></pre>
+<p>输出结果为：</p>
+<p class='katex-block katex-error' title='ParseError: KaTeX parse error: Can&#039;t use function &#039;$&#039; in math mode at position 248: …
+\end{vmatrix}
+$̲{$tep1}{\style{…'>\mathbf{V}_1 \times \mathbf{V}_2 =  \begin{vmatrix} 
+\mathbf{i} &amp; \mathbf{j} &amp; \mathbf{k} \\
+\frac{\partial X}{\partial u} &amp;  \frac{\partial Y}{\partial u} &amp; 0 \\
+\frac{\partial X}{\partial v} &amp;  \frac{\partial Y}{\partial v} &amp; 0 \\
+\end{vmatrix}
+${$tep1}{\style{visibility:hidden}{(x+1)(x+1)}}
+</p>
+</li>
+</ul>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://mtdhllf.github.io/tag/markdown/">
+            <span class="flex-auto">markdown</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://mtdhllf.github.io/analyze_image_color/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  Android/JAVA 图像分析-主要颜色
+                </h3>
+              </a>
+            </div>
+          
+
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://mtdhllf.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>
