@@ -282,6 +282,32 @@
     
     ,{
       "@type": "BlogPosting",
+      "title": "记一次相册重构",
+      "description": "相册重构背景
+旧相册现状:
+
+多种相册耦合严重，难以维护迭代
+入口参数混乱，容易出错
+分页多次扫描，多次查询
+数据结构不合理，数据源管理较多
+扫描入口调用较多，界面退出扫描未及时终止
+
+相册入口
+
+class Picker {
+
+    companion object{
+
+        const val allTag = ......",
+      "keywords": "Android",
+      "url": "/post/album-refactor/"
+      
+      ,"published": "2023-03-12T07:03:22+08:00",
+      "author": "Gopher&#39;s Blog"
+    }
+    
+    ,{
+      "@type": "BlogPosting",
       "title": "WebView视频全屏适配",
       "description": "设置WebChromeClient
 设置后，重点重下以下两个方法
@@ -414,17 +440,6 @@ StorageStatsManager ssm = getSyst......",
       "url": "/post/read-storage/"
       
       ,"published": "2020-11-26T15:24:17+08:00",
-      "author": "Gopher&#39;s Blog"
-    }
-    
-    ,{
-      "@type": "BlogPosting",
-      "title": "安卓自动朋友圈？--广告机器人",
-      "description": "...",
-      "keywords": "Android",
-      "url": "/post/wechat-robot/"
-      
-      ,"published": "2020-11-26T01:20:41+08:00",
       "author": "Gopher&#39;s Blog"
     }
     

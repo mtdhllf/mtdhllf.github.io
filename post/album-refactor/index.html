@@ -245,22 +245,23 @@
 
 
     <meta name="generator" content="Gridea Pro 1.3.0-beta.2">
-    <title>博客 | Gopher&#39;s Blog</title>
+    <title>记一次相册重构 | Gopher&#39;s Blog</title>
 
     
-<meta name="description" content=" ">
-<link rel="canonical" href="https://mtdhllf.github.io/post/page/2/">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Gopher's Blog","url":"https://mtdhllf.github.io","description":" ","potentialAction":{"@type":"SearchAction","query-input":"required name=search_term_string","target":"https://mtdhllf.github.io/search?q={search_term_string}"}}</script>
-<meta property="og:title" content="Gopher's Blog">
-<meta property="og:description" content=" ">
-<meta property="og:url" content="https://mtdhllf.github.io/post/page/2/">
-<meta property="og:type" content="website">
+<meta name="description" content="相册重构背景 旧相册现状: 多种相册耦合严重，难以维护迭代 入口参数混乱，容易出错 分页多次扫描，多次查询 数据结构不合理，数据源管理较多 扫描入口调用较多，界面退出扫描未及时终止 相册入口 class Picker { companion object{ const val allTag = ...">
+<link rel="canonical" href="https://mtdhllf.github.io/post/album-refactor/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"记一次相册重构","url":"https://mtdhllf.github.io/post/album-refactor/","description":"相册重构背景 旧相册现状: 多种相册耦合严重，难以维护迭代 入口参数混乱，容易出错 分页多次扫描，多次查询 数据结构不合理，数据源管理较多 扫描入口调用较多，界面退出扫描未及时终止 相册入口 class Picker { companion object{ const val allTag = ...","datePublished":"2023-03-12T07:03:22+08:00","dateModified":"2023-03-12T07:03:22+08:00","author":{"@type":"Person","name":"Gopher's Blog"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"Gopher's Blog"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://mtdhllf.github.io","name":"Gopher's Blog","position":1},{"@type":"ListItem","item":"https://mtdhllf.github.io/post/album-refactor/","name":"记一次相册重构","position":2}]}</script>
+<meta property="og:title" content="记一次相册重构">
+<meta property="og:description" content="相册重构背景 旧相册现状: 多种相册耦合严重，难以维护迭代 入口参数混乱，容易出错 分页多次扫描，多次查询 数据结构不合理，数据源管理较多 扫描入口调用较多，界面退出扫描未及时终止 相册入口 class Picker { companion object{ const val allTag = ...">
+<meta property="og:url" content="https://mtdhllf.github.io/post/album-refactor/">
+<meta property="og:type" content="article">
 <meta property="og:site_name" content="Gopher's Blog">
 <meta property="og:image" content="/images/avatar.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:url" content="https://mtdhllf.github.io/post/page/2/">
-<meta name="twitter:title" content="Gopher's Blog">
-<meta name="twitter:description" content=" ">
+<meta name="twitter:url" content="https://mtdhllf.github.io/post/album-refactor/">
+<meta name="twitter:title" content="记一次相册重构">
+<meta name="twitter:description" content="相册重构背景 旧相册现状: 多种相册耦合严重，难以维护迭代 入口参数混乱，容易出错 分页多次扫描，多次查询 数据结构不合理，数据源管理较多 扫描入口调用较多，界面退出扫描未及时终止 相册入口 class Picker { companion object{ const val allTag = ...">
 <meta name="twitter:image" content="/images/avatar.png">
 </head>
 
@@ -350,126 +351,390 @@
 </header>
 <!-- <a href="#" id="back-to-top" style="display: inline;"> ^ </a> -->
 
-<article class="mod-archive">
+<article class="mod-post mod-post__type-post">
+    <header>
+        <h1 class="mod-post__title">
+            记一次相册重构
+        </h1>
+    </header>
 
-    <div class="mod-archive__item">
-        <div class="mod-archive__year"></div>
+    <div class="mod-post__meta">
+        <time datetime="2023-03-12">
+            2023-03-12
+        </time> • 6 分钟阅读 •
+        
+        
+        
+        <a href="/tag/android/">
+            Android
+        </a>
+          </div>
 
-        <ul class="mod-archive__list">
-            
-            
 
-            
 
-            
-            
-            <li class="post-item"><time class="mod-archive__time" datetime="2020-11-26">2020-11-26</time> <span>&nbsp;&nbsp;&nbsp;</span>
-                <a href="/post/wechat-robot/">
-                    
-                    安卓自动朋友圈？--广告机器人
-                </a>
-            </li>
-            
-            
-            
-            <li class="post-item"><time class="mod-archive__time" datetime="2020-11-25">2020-11-25</time> <span>&nbsp;&nbsp;&nbsp;</span>
-                <a href="/post/adb_command/">
-                    
-                    adb 常用命令
-                </a>
-            </li>
-            
-            
-            
-            <li class="post-item"><time class="mod-archive__time" datetime="2020-07-21">2020-07-21</time> <span>&nbsp;&nbsp;&nbsp;</span>
-                <a href="/post/qq-robot-01/">
-                    
-                    QQ机器人插件开发实践(一)
-                </a>
-            </li>
-            
-            
-            
-            <li class="post-item"><time class="mod-archive__time" datetime="2020-07-21">2020-07-21</time> <span>&nbsp;&nbsp;&nbsp;</span>
-                <a href="/post/qq-robot-02/">
-                    
-                    QQ机器人插件开发实践(二)
-                </a>
-            </li>
-            
-            
-            
-            <li class="post-item"><time class="mod-archive__time" datetime="2020-05-26">2020-05-26</time> <span>&nbsp;&nbsp;&nbsp;</span>
-                <a href="/post/levelOrder/">
-                    
-                    102. 二叉树的层序遍历
-                </a>
-            </li>
-            
-            
-            
-            <li class="post-item"><time class="mod-archive__time" datetime="2020-05-26">2020-05-26</time> <span>&nbsp;&nbsp;&nbsp;</span>
-                <a href="/post/findDuplicate/">
-                    
-                    287. 寻找重复数
-                </a>
-            </li>
-            
-            
-            
-            <li class="post-item"><time class="mod-archive__time" datetime="2020-05-17">2020-05-17</time> <span>&nbsp;&nbsp;&nbsp;</span>
-                <a href="/post/alipay/">
-                    
-                    支付宝实现自定义金额转账收款
-                </a>
-            </li>
-            
-            
-            
-            <li class="post-item"><time class="mod-archive__time" datetime="2020-04-29">2020-04-29</time> <span>&nbsp;&nbsp;&nbsp;</span>
-                <a href="/post/palette/">
-                    
-                    Android识别图片中的颜色
-                </a>
-            </li>
-            
-            
-            
-            <li class="post-item"><time class="mod-archive__time" datetime="2020-04-28">2020-04-28</time> <span>&nbsp;&nbsp;&nbsp;</span>
-                <a href="/post/vertical_seekbar/">
-                    
-                    几行代码完美实现VerticalSeekBar
-                </a>
-            </li>
-            
-            
-            
-            <li class="post-item"><time class="mod-archive__time" datetime="2020-04-27">2020-04-27</time> <span>&nbsp;&nbsp;&nbsp;</span>
-                <a href="/post/ringview/">
-                    
-                    Android自定义环形进度条
-                </a>
-            </li>
-            
-            
-        </ul>
+            <div class="mod-post__entry wzulli">
+                
+                <p><strong>相册重构背景</strong></p>
+<p>旧相册现状:</p>
+<ol>
+<li>多种相册耦合严重，难以维护迭代</li>
+<li>入口参数混乱，容易出错</li>
+<li>分页多次扫描，多次查询</li>
+<li>数据结构不合理，数据源管理较多</li>
+<li>扫描入口调用较多，界面退出扫描未及时终止</li>
+</ol>
+<p><strong>相册入口</strong></p>
+<pre><code class="language-kotlin">
+class Picker {
 
-        <div class="posts-nav">
-            
-            
-            <div style="float:right;">
-                <a href="/post/page/3/" class="page-numbers current flip">下一页</a>
+    companion object{
+
+        const val allTag = &quot;全部&quot;
+
+        /**
+
+         * 普通选择器
+
+         */
+
+        @JvmStatic
+
+        fun basic() = BasicPicker()
+
+        /**
+
+         * 创作模板选择器
+
+         */
+
+        @JvmStatic
+
+        fun creation() = CreationPicker()
+
+        /**
+
+         * AI模板选择器
+
+         */
+
+        @JvmStatic
+
+        fun ai() = AiPicker()
+
+    }
+
+}
+
+//启动示例代码,可链式设置常见参数通过回调直接返回
+
+Picker.basic().setMax(1).setType(PickType.IMG).start(medias -&amp;gt; {
+
+                            
+
+                        });
+
+</code></pre>
+<p><strong>相册选取的配置选项</strong></p>
+<pre><code class="language-kotlin">
+class BasicPicker : BasePicker() {
+
+    /**
+
+     * 设置类型，默认图片 + 视频
+
+     */
+
+    fun setType(type: PickType): BasicPicker {
+
+        config.type = type
+
+        return this
+
+    }
+
+    /**
+
+     * 是否保留选择页面
+
+     */
+
+    fun setKeep(value:Boolean): BasicPicker{
+
+        config.keep = value
+
+        return this
+
+    }
+
+    /**
+
+     * 设置最小选择数量
+
+     */
+
+    fun setMin(value:Int): BasicPicker{
+
+        config.minPick = value
+
+        return this
+
+    }
+
+    /**
+
+     * 设置最大选择数量
+
+     */
+
+    fun setMax(value:Int): BasicPicker{
+
+        config.maxPick = value
+
+        return this
+
+    }
+
+    /**
+
+     * 设置自定义检查器(其他关于选取的限制条件会失效)
+
+     */
+
+    fun setChecker(clazz:Class&amp;lt;out AbsBaseChecker&amp;gt;): BasicPicker{
+
+        config.checker = clazz
+
+        return this
+
+    }
+
+    /**
+
+     * 设置选取提示文案
+
+     */
+
+    fun setPickTip(value:String): BasicPicker{
+
+        config.pickTip = value
+
+        return this
+
+    }
+
+    /**
+
+     * 开始跳转选择
+
+     */
+
+    fun start(call: PickCall){
+
+        [config.call](http://config.call) = call
+
+        [AbsBasePickAct.data](http://AbsBasePickAct.data) = config
+
+        ActivityUtils.startActivity(BasicPickAct::[class.java](http://class.java))
+
+    }
+
+}
+
+</code></pre>
+<p>&lt;br/&gt;</p>
+<p><strong>相册展示及扫描流程（这里只列举基础相册）</strong></p>
+<ol>
+<li>入口设置选项，并生成配置一个配置对象 PickConfig，跳转并传递到展示页（部分代码）</li>
+</ol>
+<pre><code class="language-kotlin">
+ class PickConfig {
+
+
+
+     //最少数量
+
+     var minPick = 1
+
+
+
+     //最大数量
+
+     var maxPick = -1
+
+
+
+     //最小时长(视频,毫秒)
+
+     var limit: Int = Int.MAX_VALUE
+
+
+
+     //类型,默认 图片+视频
+
+     var type = PickType.BOTH
+
+
+
+     //选择完是否保留页面
+
+     var keep = false
+
+
+
+     //回调
+
+     var call: PickCall? = null
+
+
+
+     //选取检查器,可自定义
+
+     var checker: Class&amp;lt;out AbsBaseChecker&amp;gt; = BasicChecker::[class.java](http://class.java)
+
+
+
+     //选取文字提示
+
+     var pickTip: String = &quot;&quot;
+
+
+
+     //note 基础相册
+
+     //选择结果
+
+     val selList = ArrayList&lt;Media&gt;()
+
+
+
+     }
+
+</code></pre>
+<ol start="2">
+<li>展示页如BasicPickAct 继承 AbsBasePickAct。如配置读取，执行扫描器，封装相册用到的通用行为:</li>
+</ol>
+<pre><code class="language-kotlin">
+     /**
+
+      * 开始扫描
+
+      */
+
+     abstract fun startScan()
+
+
+
+     /**
+
+      * 目录更新通知
+
+      */
+
+     abstract fun notifyDir()
+
+
+
+     /**
+
+      * 分页更新通知
+
+      */
+
+     abstract fun notifyPage()
+
+
+
+     /**
+
+      * 选择文件夹更新
+
+      */
+
+     abstract fun pickDir(dir: MediaDir)
+
+
+
+     /**
+
+      * 选择变化（tab） 选中、取消
+
+      */
+
+     abstract fun selectChange()
+
+
+
+     /**
+
+      * 移除选中（底部）
+
+      */
+
+     abstract fun selectRemove()
+
+
+
+     /**
+
+      * 预览选中状态更新
+
+      */
+
+     abstract fun preViewUpdate(media: Media)
+
+
+
+     /**
+
+      * 回收
+
+      */
+
+     abstract fun destroy()
+
+</code></pre>
+<ol start="3">
+<li>相册扫描&ndash;PickScanner</li>
+</ol>
+<p>其主要功能是相册扫描，扫描图像跟视频，并根据文件夹名称进行分类，还有通知功能</p>
+<p>扫描过程中，PickScanner会根据一定的数量进行分页通知，以通知UI及时更新</p>
+<p>这里扫描用到 lifecycleScope管理生命周期，会在界面finish的时候提前终止扫描，避免性能浪费<br />
+4. 选择器&ndash;BasicChecker，可在Config.checker进行配置</p>
+<p>类似Okhttp拦截器原理，接入方可继承AbsBaseChecker，干预 图片/视频是否可以被选取的状态，</p>
+<p>替换check后，默认的可选配置会失效，需要自行根据配置处理<br />
+5. 图片/视频Tab 展示页 BasicMediaTabFrag，负责具体资源展示，还有选取，预览等操作</p>
+<p>BasicMediaTabAdapter适配器是其核心代码，第4点的BasicChecker在此处判断选取及展示</p>
+
             </div>
-            
-
-            
-            <a href="/post/" class="page-numbers current flip">上一页</a>
-            
-            
-        </div>
-    </div>
 
 </article>
+
+
+
+
+
+
+<div class="mod-post__poster">
+</div>
+
+</div>
+
+
+
+
+
+
+<!-- Reading Progress Component -->
+<div class="reading-progress-container">
+  <span class="reading-label">阅读进度</span>
+  <span class="reading-value">0%</span>
+  <svg class="progress-ring" viewBox="0 0 24 24">
+    <!-- Background Circle -->
+    <circle class="progress-ring__circle-bg" stroke-width="3" fill="transparent" r="10" cx="12" cy="12" />
+    <!-- Progress Circle -->
+    <circle class="progress-ring__circle" stroke-width="3" fill="transparent" r="10" cx="12" cy="12" />
+  </svg>
+</div>
 <footer id="footer" class="footer">
     <nav>
         
@@ -506,6 +771,8 @@
         </a>
     </div>
 </footer>
+
+
 
 
     
