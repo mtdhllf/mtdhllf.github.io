@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+<meta name="viewport"
+    content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" />
+<meta name="renderer" content="webkit">
+<meta name="format-detection" content="telephone=no, email=no, address=no">
+
+
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#292a2d" media="(prefers-color-scheme: dark)">
+
+
+<link rel="shortcut icon" href="/media/images/favicon.ico">
+<link rel="stylesheet" href="/styles/main.min.css">
+
+
+<style>:root{--accent-color:#28df99;}</style>
+
+
+<script>
+    // 自动为所有 target="_blank" 的链接添加 rel="noopener noreferrer"
+    document.addEventListener('DOMContentLoaded', function () {
+        var links = document.querySelectorAll('a[target="_blank"]');
+        links.forEach(function (link) {
+            var rel = link.getAttribute('rel') || '';
+            if (rel.indexOf('noopener') === -1) {
+                rel += ' noopener';
+            }
+            if (rel.indexOf('noreferrer') === -1) {
+                rel += ' noreferrer';
+            }
+            link.setAttribute('rel', rel.trim());
+        });
+    });
+</script>
+
+<script>
+    // declaraction of document.ready() function.
+    (function () {
+        var ie = !!(window.attachEvent && !window.opera);
+        var wk = /webkit\/(\d+)/i.test(navigator.userAgent) && (RegExp.$1 < 525);
+        var fn = [];
+        var run = function () {
+            for (var i = 0; i < fn.length; i++) fn[i]();
+        };
+        var d = document;
+        d.ready = function (f) {
+            if (!ie && !wk && d.addEventListener)
+                return d.addEventListener('DOMContentLoaded', f, false);
+            if (fn.push(f) > 1) return;
+            if (ie)
+                (function () {
+                    try {
+                        d.documentElement.doScroll('left');
+                        run();
+                    } catch (err) {
+                        setTimeout(arguments.callee, 0);
+                    }
+                })();
+            else if (wk)
+                var t = setInterval(function () {
+                    if (/^(loaded|complete)$/.test(d.readyState))
+                        clearInterval(t), run();
+                }, 0);
+        };
+    })();
+
+
+    document.ready(
+        function () {
+            var _Blog = window._Blog || {};
+
+            const getSystemTheme = () => {
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    return 'dark';
+                }
+                return 'light';
+            };
+
+            const configDefault = 'dark';
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme');
+            const initialTheme = currentTheme || configDefault || getSystemTheme();
+            const isDark = initialTheme === 'dark';
+
+            const updateButtons = (dark) => {
+                const sunBtn = document.getElementById("theme-toggle-sun");
+                const moonBtn = document.getElementById("theme-toggle-moon");
+                const mobileSunBtn = document.getElementById("mobile-theme-toggle-sun");
+                const mobileMoonBtn = document.getElementById("mobile-theme-toggle-moon");
+
+                if (dark) {
+                    if (sunBtn) sunBtn.style.display = 'none';
+                    if (moonBtn) moonBtn.style.display = 'inline-block';
+                    if (mobileSunBtn) mobileSunBtn.style.display = 'none';
+                    if (mobileMoonBtn) mobileMoonBtn.style.display = 'inline-block';
+                } else {
+                    if (sunBtn) sunBtn.style.display = 'inline-block';
+                    if (moonBtn) moonBtn.style.display = 'none';
+                    if (mobileSunBtn) mobileSunBtn.style.display = 'inline-block';
+                    if (mobileMoonBtn) mobileMoonBtn.style.display = 'none';
+                }
+            };
+
+            const updateThemeColor = (dark) => {
+                const themeColor = dark ? '#292a2d' : '#ffffff';
+                const metaTags = document.querySelectorAll('meta[name="theme-color"]');
+                if (metaTags.length > 0) {
+                    // 保留第一个，移除其他的，避免重复
+                    for (let i = 1; i < metaTags.length; i++) {
+                        metaTags[i].remove();
+                    }
+                    metaTags[0].setAttribute('content', themeColor);
+                    metaTags[0].removeAttribute('media');
+                } else {
+                    const meta = document.createElement('meta');
+                    meta.name = 'theme-color';
+                    meta.content = themeColor;
+                    document.head.appendChild(meta);
+                }
+            };
+
+            const applyTheme = (dark) => {
+                const body = document.getElementsByTagName('body')[0];
+                if (dark) {
+                    body.classList.add('dark-theme');
+                } else {
+                    body.classList.remove('dark-theme');
+                }
+                updateButtons(dark);
+                updateThemeColor(dark);
+            };
+
+            // Initial application
+            applyTheme(isDark);
+            if (!currentTheme) {
+                window.localStorage && window.localStorage.setItem('theme', initialTheme);
+            }
+
+            _Blog.toggleTheme = function () {
+                const toggleFunc = (e) => {
+                    // Prevent bubbling if needed, though buttons are distinct now
+                    if (e) e.stopPropagation();
+
+                    const body = document.getElementsByTagName('body')[0];
+                    const isCurrentlyDark = body.classList.contains('dark-theme');
+
+                    if (isCurrentlyDark) {
+                        body.classList.remove('dark-theme');
+                        updateButtons(false);
+                        window.localStorage && window.localStorage.setItem('theme', 'light');
+                    } else {
+                        body.classList.add('dark-theme');
+                        updateButtons(true);
+                        window.localStorage && window.localStorage.setItem('theme', 'dark');
+                    }
+                };
+
+                const sunBtn = document.getElementById("theme-toggle-sun");
+                const moonBtn = document.getElementById("theme-toggle-moon");
+                const mobileSunBtn = document.getElementById("mobile-theme-toggle-sun");
+                const mobileMoonBtn = document.getElementById("mobile-theme-toggle-moon");
+
+                if (sunBtn) sunBtn.addEventListener('click', toggleFunc);
+                if (moonBtn) moonBtn.addEventListener('click', toggleFunc);
+                if (mobileSunBtn) mobileSunBtn.addEventListener('click', toggleFunc);
+                if (mobileMoonBtn) mobileMoonBtn.addEventListener('click', toggleFunc);
+            };
+            _Blog.toggleTheme();
+
+            if (window.matchMedia && !configDefault) {
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+                    const newTheme = e.matches ? 'dark' : 'light';
+                    applyTheme(e.matches);
+                    window.localStorage && window.localStorage.setItem('theme', newTheme);
+                });
+            }
+        }
+    );
+</script>
+
+<script>
+    // Reading Progress Component
+    document.addEventListener('DOMContentLoaded', () => {
+        const progressValue = document.querySelector('.reading-value');
+        const progressCircle = document.querySelector('.progress-ring__circle');
+        const container = document.querySelector('.reading-progress-container');
+
+        // Exit if elements don't exist (e.g., not on a post page)
+        if (!progressValue || !progressCircle || !container) {
+            return;
+        }
+
+        // SVG Circle setup
+        const radius = progressCircle.r.baseVal.value;
+        const circumference = 2 * Math.PI * radius;
+
+        progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
+        progressCircle.style.strokeDashoffset = circumference;
+
+        function setProgress(percent) {
+            const safePercent = Math.min(100, Math.max(0, percent));
+            progressValue.textContent = `${Math.round(safePercent)}%`;
+            const offset = circumference - (safePercent / 100) * circumference;
+            progressCircle.style.strokeDashoffset = offset;
+        }
+
+        function onScroll() {
+            const scrollTop = window.scrollY || document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+
+            if (scrollHeight <= 0) {
+                setProgress(0);
+                return;
+            }
+
+            const scrollPercent = (scrollTop / scrollHeight) * 100;
+            setProgress(scrollPercent);
+
+            // Show/Hide logic: Show if scrolled more than 100px
+            if (scrollTop > 100) {
+                container.classList.add('show');
+            } else {
+                container.classList.remove('show');
+            }
+        }
+
+        // Initialize
+        onScroll();
+
+        // Listen for scroll events
+        window.addEventListener('scroll', onScroll, { passive: true });
+
+        // Recalculate on resize
+        window.addEventListener('resize', onScroll);
+    });
+</script>
+
+
+
+
+
+
+
+    <meta name="generator" content="Gridea Pro 1.3.0-beta.2">
+    <title>Android/JAVA 图像分析-主要颜色 | Gopher&#39;s Blog</title>
+
+    
+<meta name="description" content="Android/JAVA 图像分析-主要颜色 有些项目可能会遇到这类需求，识别一套服装或者其他物体的颜色信息，以此来判定他的颜色风格。如果业务交由于后端的话压力可能会比较大，其实前端自行处理一下就好了，逻辑也不复杂。 彩色图像的颜色模型有很多种形式，RGB、YUV、[HSV](https://baike.ba&amp;hellip;">
+<link rel="canonical" href="https://mtdhllf.github.io/post/analyze_image_color/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Android/JAVA 图像分析-主要颜色","url":"https://mtdhllf.github.io/post/analyze_image_color/","description":"Android/JAVA 图像分析-主要颜色 有些项目可能会遇到这类需求，识别一套服装或者其他物体的颜色信息，以此来判定他的颜色风格。如果业务交由于后端的话压力可能会比较大，其实前端自行处理一下就好了，逻辑也不复杂。 彩色图像的颜色模型有很多种形式，RGB、YUV、[HSV](https://baike.ba\u0026hellip;","image":"/post-images/analyze_image_color.png","datePublished":"2020-04-26T22:56:46+08:00","dateModified":"2026-09-24T22:11:36+08:00","author":{"@type":"Person","name":"Gopher's Blog"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"Gopher's Blog"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://mtdhllf.github.io","name":"Gopher's Blog","position":1},{"@type":"ListItem","item":"https://mtdhllf.github.io/post/analyze_image_color/","name":"Android/JAVA 图像分析-主要颜色","position":2}]}</script>
+<meta property="og:title" content="Android/JAVA 图像分析-主要颜色">
+<meta property="og:description" content="Android/JAVA 图像分析-主要颜色 有些项目可能会遇到这类需求，识别一套服装或者其他物体的颜色信息，以此来判定他的颜色风格。如果业务交由于后端的话压力可能会比较大，其实前端自行处理一下就好了，逻辑也不复杂。 彩色图像的颜色模型有很多种形式，RGB、YUV、[HSV](https://baike.ba&amp;hellip;">
+<meta property="og:url" content="https://mtdhllf.github.io/post/analyze_image_color/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Gopher's Blog">
+<meta property="og:image" content="/post-images/analyze_image_color.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://mtdhllf.github.io/post/analyze_image_color/">
+<meta name="twitter:title" content="Android/JAVA 图像分析-主要颜色">
+<meta name="twitter:description" content="Android/JAVA 图像分析-主要颜色 有些项目可能会遇到这类需求，识别一套服装或者其他物体的颜色信息，以此来判定他的颜色风格。如果业务交由于后端的话压力可能会比较大，其实前端自行处理一下就好了，逻辑也不复杂。 彩色图像的颜色模型有很多种形式，RGB、YUV、[HSV](https://baike.ba&amp;hellip;">
+<meta name="twitter:image" content="/post-images/analyze_image_color.png">
+</head>
+
+<body class="">
+
+    
+<script>
+    (function () {
+        const getSystemTheme = () => {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                return 'dark';
+            }
+            return 'light';
+        };
+
+        const configDefault = 'dark';
+        const savedTheme = localStorage.getItem('theme');
+        const theme = savedTheme || configDefault || getSystemTheme();
+
+        if (theme === 'dark') {
+            document.body.classList.add('dark-theme');
+        }
+
+        if (!savedTheme) {
+            localStorage.setItem('theme', theme);
+        }
+    })();
+</script>
+<header class="mod-head">
+    <div class="mod-head__left">
+        <div class="mod-head__logo">
+            <a href="/">
+                
+                <img class="avatar" alt="avatar" src="/images/avatar.png">
+                
+            </a>
+        </div>
+    </div>
+
+    <div class="mod-head__right">
+        <span>
+            <button id="theme-toggle-sun" class="tiptap-button theme-toggle-sun" aria-label="Switch to dark mode">
+                <svg width="18" height="18" class="tiptap-button-icon" viewBox="0 0 24 24" fill="currentColor"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M12 1C12.5523 1 13 1.44772 13 2V4C13 4.55228 12.5523 5 12 5C11.4477 5 11 4.55228 11 4V2C11 1.44772 11.4477 1 12 1Z"
+                        fill="currentColor"></path>
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="M7 12C7 9.23858 9.23858 7 12 7C14.7614 7 17 9.23858 17 12C17 14.7614 14.7614 17 12 17C9.23858 17 7 14.7614 7 12ZM12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9Z"
+                        fill="currentColor"></path>
+                    <path
+                        d="M13 20C13 19.4477 12.5523 19 12 19C11.4477 19 11 19.4477 11 20V22C11 22.5523 11.4477 23 12 23C12.5523 23 13 22.5523 13 22V20Z"
+                        fill="currentColor"></path>
+                    <path
+                        d="M4.22282 4.22289C4.61335 3.83236 5.24651 3.83236 5.63704 4.22289L7.04704 5.63289C7.43756 6.02341 7.43756 6.65658 7.04704 7.0471C6.65651 7.43762 6.02335 7.43762 5.63283 7.0471L4.22282 5.6371C3.8323 5.24658 3.8323 4.61341 4.22282 4.22289Z"
+                        fill="currentColor"></path>
+                    <path
+                        d="M18.367 16.9529C17.9765 16.5623 17.3433 16.5623 16.9528 16.9529C16.5623 17.3434 16.5623 17.9766 16.9528 18.3671L18.3628 19.7771C18.7533 20.1676 19.3865 20.1676 19.777 19.7771C20.1675 19.3866 20.1675 18.7534 19.777 18.3629L18.367 16.9529Z"
+                        fill="currentColor"></path>
+                    <path
+                        d="M1 12C1 11.4477 1.44772 11 2 11H4C4.55228 11 5 11.4477 5 12C5 12.5523 4.55228 13 4 13H2C1.44772 13 1 12.5523 1 12Z"
+                        fill="currentColor"></path>
+                    <path
+                        d="M20 11C19.4477 11 19 11.4477 19 12C19 12.5523 19.4477 13 20 13H22C22.5523 13 23 12.5523 23 12C23 11.4477 22.5523 11 22 11H20Z"
+                        fill="currentColor"></path>
+                    <path
+                        d="M7.04704 16.9529C7.43756 17.3434 7.43756 17.9766 7.04704 18.3671L5.63704 19.7771C5.24651 20.1676 4.61335 20.1676 4.22282 19.7771C3.8323 19.3866 3.8323 18.7534 4.22283 18.3629L5.63283 16.9529C6.02335 16.5623 6.65651 16.5623 7.04704 16.9529Z"
+                        fill="currentColor"></path>
+                    <path
+                        d="M19.777 5.6371C20.1675 5.24657 20.1675 4.61341 19.777 4.22289C19.3865 3.83236 18.7533 3.83236 18.3628 4.22289L16.9528 5.63289C16.5623 6.02341 16.5623 6.65658 16.9528 7.0471C17.3433 7.43762 17.9765 7.43762 18.367 7.0471L19.777 5.6371Z"
+                        fill="currentColor"></path>
+                </svg>
+            </button>
+            <button id="theme-toggle-moon" class="tiptap-button theme-toggle-moon" aria-label="Switch to light mode">
+                <svg width="18" height="18" class="tiptap-button-icon" viewBox="0 0 24 24" fill="currentColor"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="M12 2C10.0222 2 8.08879 2.58649 6.4443 3.6853C4.79981 4.78412 3.51809 6.3459 2.76121 8.17317C2.00433 10.0004 1.8063 12.0111 2.19215 13.9509C2.578 15.8907 3.53041 17.6725 4.92894 19.0711C6.32746 20.4696 8.10929 21.422 10.0491 21.8079C11.9889 22.1937 13.9996 21.9957 15.8268 21.2388C17.6541 20.4819 19.2159 19.2002 20.3147 17.5557C21.4135 15.9112 22 13.9778 22 12C22 11.5955 21.7564 11.2309 21.3827 11.0761C21.009 10.9213 20.5789 11.0069 20.2929 11.2929C19.287 12.2988 17.9226 12.864 16.5 12.864C15.0774 12.864 13.713 12.2988 12.7071 11.2929C11.7012 10.287 11.136 8.92261 11.136 7.5C11.136 6.07739 11.7012 4.71304 12.7071 3.70711C12.9931 3.42111 13.0787 2.99099 12.9239 2.61732C12.7691 2.24364 12.4045 2 12 2ZM7.55544 5.34824C8.27036 4.87055 9.05353 4.51389 9.87357 4.28778C9.39271 5.27979 9.13604 6.37666 9.13604 7.5C9.13604 9.45304 9.91189 11.3261 11.2929 12.7071C12.6739 14.0881 14.547 14.864 16.5 14.864C17.6233 14.864 18.7202 14.6073 19.7122 14.1264C19.4861 14.9465 19.1295 15.7296 18.6518 16.4446C17.7727 17.7602 16.5233 18.7855 15.0615 19.391C13.5997 19.9965 11.9911 20.155 10.4393 19.8463C8.88743 19.5376 7.46197 18.7757 6.34315 17.6569C5.21447 16.538 4.4624 15.1126 4.15372 13.5607C3.84504 12.0089 4.00347 10.4003 4.60897 8.93853C5.21447 7.47672 6.23985 6.22729 7.55544 5.34824Z"
+                        fill="currentColor"></path>
+                    <path
+                        d="M19 2C19.5523 2 20 2.44772 20 3V4H21C21.5523 4 22 4.44772 22 5C22 5.55228 21.5523 6 21 6H20V7C20 7.55228 19.5523 8 19 8C18.4477 8 18 7.55228 18 7V6H17C16.4477 6 16 5.55228 16 5C16 4.44772 16.4477 4 17 4H18V3C18 2.44772 18.4477 2 19 2Z"
+                        fill="currentColor"></path>
+                </svg>
+            </button>
+        </span>
+    </div>
+</header>
+<!-- <a href="#" id="back-to-top" style="display: inline;"> ^ </a> -->
+
+<article class="mod-post mod-post__type-post">
+    <header>
+        <h1 class="mod-post__title">
+            Android/JAVA 图像分析-主要颜色
+        </h1>
+    </header>
+
+    <div class="mod-post__meta">
+        <time datetime="2020-04-26">
+            2020-04-26
+        </time> • 9 分钟阅读 •
+        
+        
+        
+        <a href="/tag/android/">
+            Android
+        </a>
+          </div>
+
+
+
+            <div class="mod-post__entry wzulli">
+                 <img src="/post-images/analyze_image_color.png" class="img"
+                    alt="Android/JAVA 图像分析-主要颜色" />
+                
+                <h2 id="androidjava--">Android/JAVA 图像分析-主要颜色</h2>
+<p>有些项目可能会遇到这类需求，识别一套服装或者其他物体的颜色信息，以此来判定他的颜色风格。如果业务交由于后端的话压力可能会比较大，其实前端自行处理一下就好了，逻辑也不复杂。</p>
+<p>彩色图像的颜色模型有很多种形式，<a href="https://baike.baidu.com/item/RGB">RGB</a>、YUV、<a href="https://baike.baidu.com/item/HSV/547122">HSV</a>、CMYK，其中在图像处理以<a href="https://baike.baidu.com/item/RGB">RGB</a>最为直观理解且显示器系统采用就是此类模型，而<a href="https://baike.baidu.com/item/HSV/547122">HSV</a>更符合人眼的颜色分辨，通常在<a href="https://baike.baidu.com/item/HSV/547122">HSV</a>颜色空间下进行颜色识别。</p>
+<h2 id="demohttpsgithubcommtdhllfimagecolorsample">先上个效果图(<a href="https://github.com/mtdhllf/ImageColorSample">Demo点我</a>)</h2>
+<p><img src="https://mtdhllf.top/post-images/1656821351550.jpg" alt="" /></p>
+<h2 id="rgb">RGB的局限性</h2>
+<p><a href="https://baike.baidu.com/item/RGB">RGB</a> 是我们接触最多的颜色空间，由三个通道表示一幅图像，分别为红色(R)，绿色(G)和蓝色(B)。这三种颜色的不同组合可以形成几乎所有的其他颜色。</p>
+<p><a href="https://baike.baidu.com/item/RGB">RGB</a> 颜色空间是图像处理中最基本、最常用、面向硬件的颜色空间，比较容易理解。</p>
+<p><a href="https://baike.baidu.com/item/RGB">RGB</a> 色空间利用三个颜色分量的线性组合来表示颜色，任何颜色都与这三个分量有关，而且这三个分量是高度相关的，所以连续变换颜色时并不直观，想对图像的颜色进行调整需要更改这三个分量才行。</p>
+<p>自然环境下获取的图像容易受自然光照、遮挡和阴影等情况的影响，即对亮度比较敏感。而 <a href="https://baike.baidu.com/item/RGB">RGB</a> 颜色空间的三个分量都与亮度密切相关，即只要亮度改变，三个分量都会随之相应地改变，而没有一种更直观的方式来表达。</p>
+<p>但是人眼对于这三种颜色分量的敏感程度是不一样的，在单色中，人眼对红色最不敏感，蓝色最敏感，所以 <a href="https://baike.baidu.com/item/RGB">RGB</a> 颜色空间是一种均匀性较差的颜色空间。如果颜色的相似性直接用欧氏距离来度量，其结果与人眼视觉会有较大的偏差。对于某一种颜色，我们很难推测出较为精确的三个分量数值来表示。</p>
+<p>所以，<a href="https://baike.baidu.com/item/RGB">RGB</a> 颜色空间适合于显示系统，却并不适合于图像处理。</p>
+<h2 id="hsv">HSV颜色空间</h2>
+<p>基于上述理由，在图像处理中使用较多的是 <a href="https://baike.baidu.com/item/HSV/547122">HSV</a>颜色空间，它比 <a href="https://baike.baidu.com/item/RGB">RGB</a> 更接近人们对彩色的感知经验。非常直观地表达颜色的色调、鲜艳程度和明暗程度，方便进行颜色的对比。</p>
+<p>在 <a href="https://baike.baidu.com/item/HSV/547122">HSV</a> 颜色空间下，比<a href="https://baike.baidu.com/item/RGB">RGB</a>更容易跟踪某种颜色的物体，常用于分割指定颜色的物体。</p>
+<p><a href="https://baike.baidu.com/item/HSV/547122">HSV</a> 表达彩色图像的方式由三个部分组成：</p>
+<ul>
+<li>Hue（色调、色相）</li>
+<li>Saturation（饱和度、色彩纯净度）</li>
+<li>Value（明度）</li>
+</ul>
+<p>用下面这个圆柱体来表示 <a href="https://baike.baidu.com/item/HSV/547122">HSV</a> 颜色空间，圆柱体的横截面可以看做是一个极坐标系 ，H 用极坐标的极角表示，S 用极坐标的极轴长度表示，V 用圆柱中轴的高度表示。</p>
+<h2 id="heading">颜色识别的思路</h2>
+<ol>
+<li>统计图像中的颜色比重情况</li>
+<li>合并相近的颜色输</li>
+<li>得到新的结果</li>
+</ol>
+<h2 id="heading-1">代码实现</h2>
+<ul>
+<li>
+<h4 id="heading-2">颜色识别</h4>
+<pre><code class="language-kotlin">/**
+     * 颜色分析
+     * @param bitmap 位图(建议分辨率先压缩到256基准,当quality为10耗时大概[100-200]ms)
+     * @param quality 质量(颜色合并遍历次数)
+     * @param take 取前几个结果
+     */
+    fun analyzeImageColor(bitmap: Bitmap, quality: Int = 10, take: Int) {
+
+        /**&lt;颜色,计数&gt;*/
+        val allColor = ConcurrentHashMap&lt;Int, Int&gt;()
+        //统计所有颜色,相同颜色计数累加
+        for (y in 0 until bitmap.height) {
+            for (x in 0 until bitmap.width) {
+                bitmap.getPixel(x, y).let {
+                    if (allColor.containsKey(it)) allColor[it]!! + 1 else 1
+                }
+            }
+        }
+        //倒序排序
+        val sortColor = allColor.toList().sortedByDescending { it.second }
+            .toMap().toMutableMap()
+
+        val hsv1 = FloatArray(3)
+        val hsv2 = FloatArray(3)
+        Log.i(&quot;合并前&quot;, &quot;${sortColor.size}&quot;)
+        for (i in 0 until min(quality, sortColor.size)) {
+            if (sortColor.size &gt; i) {
+                val iterator = sortColor.iterator()
+                var first = iterator.next()
+                //move head
+                for (j in (0 until i)) {
+                    first = iterator.next()
+                }
+                while (iterator.hasNext()) {
+                    val second = iterator.next()
+                    Color.colorToHSV(first.key, hsv1)
+                    Color.colorToHSV(second.key, hsv2)
+                    //颜色相似判断及合并
+                    if (checkColorSimilar(hsv1, hsv2)) {
+                        first.setValue(first.value + second.value)
+                        iterator.next()
+                    }
+                }
+
+            }
+        }
+        Log.i(&quot;合并后&quot;, &quot;${sortColor.size}&quot;)
+
+        //结果取数量最多的前[take]个数据,
+        //List&lt;颜色,数量&gt;,结合实际需求自行封装成想要的数据
+        val result = sortColor.toList().sortedByDescending { it.second }.take(take)
+    }
+
+    /**
+     * 颜色相似判定
+     */
+    fun checkColorSimilar(hsv1: FloatArray, hsv2: FloatArray): Boolean {
+        val similarH = 10f
+        val similarS = 0.05
+        val similarV = 0.05
+        return when {
+            abs(hsv1[0] - hsv2[0]) &lt; similarH -&gt; true
+
+            abs(hsv1[0] - hsv2[0]) &lt; similarH * 2
+            &amp;&amp; abs(hsv1[1] - hsv2[1]) &lt; similarS -&gt; true
+
+            abs(hsv1[0] - hsv2[0]) &lt; similarH * 2
+            &amp;&amp; abs(hsv1[2] - hsv2[2]) &lt; similarV -&gt; true
+
+            else-&gt;false
+        }
+    }
+</code></pre>
+</li>
+<li>
+<h4 id="rgbhsv">RGB转HSV</h4>
+<pre><code class="language-java">public static HSV RGB2HSV(RGB rgb) {
+    float r =(float) rgb . getR () / 255;
+    float g =(float) rgb . getG () / 255;
+    float b =(float) rgb . getB () / 255;
+    float max = max (r, g, b);
+    float min = min (r, g, b);
+    float h = 0;
+    if (r == max)
+        h = (g - b) / (max - min);
+    if (g == max)
+        h = 2 + (b - r) / (max - min);
+    if (b == max)
+        h = 4 + (r - g) / (max - min);
+    h *= 60;
+    if (h &lt; 0) h += 360;
+    HSV hsv = new HSV(h, (max - min) / max, max);
+    return hsv;
+}
+</code></pre>
+</li>
+</ul>
+<h2 id="heading-3">参考</h2>
+<h3 id="rgbhsvhslhttpszhuanlanzhihucomp67930839"><a href="https://zhuanlan.zhihu.com/p/67930839">RGB、HSV和HSL颜色空间</a></h3>
+<h3 id="rgb-hsvhttpwww360doccomcontent1707261645531310-674302066shtml"><a href="http://www.360doc.com/content/17/0726/16/45531310_674302066.shtml">RGB转 HSV</a></h3>
+
+            </div>
+
+</article>
+
+
+
+
+
+
+<div class="mod-post__poster">
+</div>
+
+</div>
+
+
+
+
+
+
+<!-- Reading Progress Component -->
+<div class="reading-progress-container">
+  <span class="reading-label">阅读进度</span>
+  <span class="reading-value">0%</span>
+  <svg class="progress-ring" viewBox="0 0 24 24">
+    <!-- Background Circle -->
+    <circle class="progress-ring__circle-bg" stroke-width="3" fill="transparent" r="10" cx="12" cy="12" />
+    <!-- Progress Circle -->
+    <circle class="progress-ring__circle" stroke-width="3" fill="transparent" r="10" cx="12" cy="12" />
+  </svg>
+</div>
+<footer id="footer" class="footer">
+    <nav>
+        
+        
+        <a class="menu-item" href="/">首页</a>
+        
+         · 
+        <a class="menu-item" href="/post">博客</a>
+        
+         · 
+        <a class="menu-item" href="/memos">闪念</a>
+        
+         · 
+        <a class="menu-item" href="/archives">归档</a>
+        
+         · 
+        <a class="menu-item" href="/tags">标签</a>
+        
+         · 
+        <a class="menu-item" href="/links">友链</a>
+        
+         · 
+        <a class="menu-item" href="/post/about">关于</a>
+        
+    </nav>
+
+    <div class="Copyright">Copyright &copy; <span class="current-year"></span> <a href="https://mtdhllf.github.io">Gopher&#39;s Blog</a></div>
+    <script>document.querySelector('.current-year').textContent = new Date().getFullYear();</script>
+
+    <div class="index_footer">
+          ·
+        <a class="rss" href="/feed.xml" target="_blank" rel="noopener noreferrer">
+            <i class="ri-rss-line"></i>RSS
+        </a>
+    </div>
+</footer>
+
+
+
+
+    
+
+    
+<script>console.log("\n%c ✦ Gridea Pro v1.3.0-beta.2 %c · Theme: amore-jinja2 v1.1.0 · https://gridea.pro %c\n","color:#fadfa3;background:#111111;padding:9px 14px;border-radius:4px 0 0 4px;font-weight:500;font-size:12px","color:#e05c00;background:#fff3ec;padding:9px 14px;border-radius:0 4px 4px 0;font-size:11px","")</script>
+</body>
+
+</html>

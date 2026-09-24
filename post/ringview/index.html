@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+<meta name="viewport"
+    content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width" />
+<meta name="renderer" content="webkit">
+<meta name="format-detection" content="telephone=no, email=no, address=no">
+
+
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#292a2d" media="(prefers-color-scheme: dark)">
+
+
+<link rel="shortcut icon" href="/media/images/favicon.ico">
+<link rel="stylesheet" href="/styles/main.min.css">
+
+
+<style>:root{--accent-color:#28df99;}</style>
+
+
+<script>
+    // 自动为所有 target="_blank" 的链接添加 rel="noopener noreferrer"
+    document.addEventListener('DOMContentLoaded', function () {
+        var links = document.querySelectorAll('a[target="_blank"]');
+        links.forEach(function (link) {
+            var rel = link.getAttribute('rel') || '';
+            if (rel.indexOf('noopener') === -1) {
+                rel += ' noopener';
+            }
+            if (rel.indexOf('noreferrer') === -1) {
+                rel += ' noreferrer';
+            }
+            link.setAttribute('rel', rel.trim());
+        });
+    });
+</script>
+
+<script>
+    // declaraction of document.ready() function.
+    (function () {
+        var ie = !!(window.attachEvent && !window.opera);
+        var wk = /webkit\/(\d+)/i.test(navigator.userAgent) && (RegExp.$1 < 525);
+        var fn = [];
+        var run = function () {
+            for (var i = 0; i < fn.length; i++) fn[i]();
+        };
+        var d = document;
+        d.ready = function (f) {
+            if (!ie && !wk && d.addEventListener)
+                return d.addEventListener('DOMContentLoaded', f, false);
+            if (fn.push(f) > 1) return;
+            if (ie)
+                (function () {
+                    try {
+                        d.documentElement.doScroll('left');
+                        run();
+                    } catch (err) {
+                        setTimeout(arguments.callee, 0);
+                    }
+                })();
+            else if (wk)
+                var t = setInterval(function () {
+                    if (/^(loaded|complete)$/.test(d.readyState))
+                        clearInterval(t), run();
+                }, 0);
+        };
+    })();
+
+
+    document.ready(
+        function () {
+            var _Blog = window._Blog || {};
+
+            const getSystemTheme = () => {
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    return 'dark';
+                }
+                return 'light';
+            };
+
+            const configDefault = 'dark';
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme');
+            const initialTheme = currentTheme || configDefault || getSystemTheme();
+            const isDark = initialTheme === 'dark';
+
+            const updateButtons = (dark) => {
+                const sunBtn = document.getElementById("theme-toggle-sun");
+                const moonBtn = document.getElementById("theme-toggle-moon");
+                const mobileSunBtn = document.getElementById("mobile-theme-toggle-sun");
+                const mobileMoonBtn = document.getElementById("mobile-theme-toggle-moon");
+
+                if (dark) {
+                    if (sunBtn) sunBtn.style.display = 'none';
+                    if (moonBtn) moonBtn.style.display = 'inline-block';
+                    if (mobileSunBtn) mobileSunBtn.style.display = 'none';
+                    if (mobileMoonBtn) mobileMoonBtn.style.display = 'inline-block';
+                } else {
+                    if (sunBtn) sunBtn.style.display = 'inline-block';
+                    if (moonBtn) moonBtn.style.display = 'none';
+                    if (mobileSunBtn) mobileSunBtn.style.display = 'inline-block';
+                    if (mobileMoonBtn) mobileMoonBtn.style.display = 'none';
+                }
+            };
+
+            const updateThemeColor = (dark) => {
+                const themeColor = dark ? '#292a2d' : '#ffffff';
+                const metaTags = document.querySelectorAll('meta[name="theme-color"]');
+                if (metaTags.length > 0) {
+                    // 保留第一个，移除其他的，避免重复
+                    for (let i = 1; i < metaTags.length; i++) {
+                        metaTags[i].remove();
+                    }
+                    metaTags[0].setAttribute('content', themeColor);
+                    metaTags[0].removeAttribute('media');
+                } else {
+                    const meta = document.createElement('meta');
+                    meta.name = 'theme-color';
+                    meta.content = themeColor;
+                    document.head.appendChild(meta);
+                }
+            };
+
+            const applyTheme = (dark) => {
+                const body = document.getElementsByTagName('body')[0];
+                if (dark) {
+                    body.classList.add('dark-theme');
+                } else {
+                    body.classList.remove('dark-theme');
+                }
+                updateButtons(dark);
+                updateThemeColor(dark);
+            };
+
+            // Initial application
+            applyTheme(isDark);
+            if (!currentTheme) {
+                window.localStorage && window.localStorage.setItem('theme', initialTheme);
+            }
+
+            _Blog.toggleTheme = function () {
+                const toggleFunc = (e) => {
+                    // Prevent bubbling if needed, though buttons are distinct now
+                    if (e) e.stopPropagation();
+
+                    const body = document.getElementsByTagName('body')[0];
+                    const isCurrentlyDark = body.classList.contains('dark-theme');
+
+                    if (isCurrentlyDark) {
+                        body.classList.remove('dark-theme');
+                        updateButtons(false);
+                        window.localStorage && window.localStorage.setItem('theme', 'light');
+                    } else {
+                        body.classList.add('dark-theme');
+                        updateButtons(true);
+                        window.localStorage && window.localStorage.setItem('theme', 'dark');
+                    }
+                };
+
+                const sunBtn = document.getElementById("theme-toggle-sun");
+                const moonBtn = document.getElementById("theme-toggle-moon");
+                const mobileSunBtn = document.getElementById("mobile-theme-toggle-sun");
+                const mobileMoonBtn = document.getElementById("mobile-theme-toggle-moon");
+
+                if (sunBtn) sunBtn.addEventListener('click', toggleFunc);
+                if (moonBtn) moonBtn.addEventListener('click', toggleFunc);
+                if (mobileSunBtn) mobileSunBtn.addEventListener('click', toggleFunc);
+                if (mobileMoonBtn) mobileMoonBtn.addEventListener('click', toggleFunc);
+            };
+            _Blog.toggleTheme();
+
+            if (window.matchMedia && !configDefault) {
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+                    const newTheme = e.matches ? 'dark' : 'light';
+                    applyTheme(e.matches);
+                    window.localStorage && window.localStorage.setItem('theme', newTheme);
+                });
+            }
+        }
+    );
+</script>
+
+<script>
+    // Reading Progress Component
+    document.addEventListener('DOMContentLoaded', () => {
+        const progressValue = document.querySelector('.reading-value');
+        const progressCircle = document.querySelector('.progress-ring__circle');
+        const container = document.querySelector('.reading-progress-container');
+
+        // Exit if elements don't exist (e.g., not on a post page)
+        if (!progressValue || !progressCircle || !container) {
+            return;
+        }
+
+        // SVG Circle setup
+        const radius = progressCircle.r.baseVal.value;
+        const circumference = 2 * Math.PI * radius;
+
+        progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
+        progressCircle.style.strokeDashoffset = circumference;
+
+        function setProgress(percent) {
+            const safePercent = Math.min(100, Math.max(0, percent));
+            progressValue.textContent = `${Math.round(safePercent)}%`;
+            const offset = circumference - (safePercent / 100) * circumference;
+            progressCircle.style.strokeDashoffset = offset;
+        }
+
+        function onScroll() {
+            const scrollTop = window.scrollY || document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+
+            if (scrollHeight <= 0) {
+                setProgress(0);
+                return;
+            }
+
+            const scrollPercent = (scrollTop / scrollHeight) * 100;
+            setProgress(scrollPercent);
+
+            // Show/Hide logic: Show if scrolled more than 100px
+            if (scrollTop > 100) {
+                container.classList.add('show');
+            } else {
+                container.classList.remove('show');
+            }
+        }
+
+        // Initialize
+        onScroll();
+
+        // Listen for scroll events
+        window.addEventListener('scroll', onScroll, { passive: true });
+
+        // Recalculate on resize
+        window.addEventListener('resize', onScroll);
+    });
+</script>
+
+
+
+
+
+
+
+    <meta name="generator" content="Gridea Pro 1.3.0-beta.2">
+    <title>Android自定义环形进度条 | Gopher&#39;s Blog</title>
+
+    
+<meta name="description" content="手把手教你实现一个炫酷的环形进度条。 支持纯色/渐变，可选线条样式，动画时长。 可实现扇形进度条、多个进度叠加、最小/最大进度等。 先上个效果图: Demo点我 [](htt&amp;hellip;">
+<link rel="canonical" href="https://mtdhllf.github.io/post/ringview/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Android自定义环形进度条","url":"https://mtdhllf.github.io/post/ringview/","description":"手把手教你实现一个炫酷的环形进度条。 支持纯色/渐变，可选线条样式，动画时长。 可实现扇形进度条、多个进度叠加、最小/最大进度等。 先上个效果图: Demo点我 [](htt\u0026hellip;","image":"/post-images/ringview.png","datePublished":"2020-04-27T12:25:52+08:00","dateModified":"2026-09-24T22:11:44+08:00","author":{"@type":"Person","name":"Gopher's Blog"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"Gopher's Blog"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://mtdhllf.github.io","name":"Gopher's Blog","position":1},{"@type":"ListItem","item":"https://mtdhllf.github.io/post/ringview/","name":"Android自定义环形进度条","position":2}]}</script>
+<meta property="og:title" content="Android自定义环形进度条">
+<meta property="og:description" content="手把手教你实现一个炫酷的环形进度条。 支持纯色/渐变，可选线条样式，动画时长。 可实现扇形进度条、多个进度叠加、最小/最大进度等。 先上个效果图: Demo点我 [](htt&amp;hellip;">
+<meta property="og:url" content="https://mtdhllf.github.io/post/ringview/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Gopher's Blog">
+<meta property="og:image" content="/post-images/ringview.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://mtdhllf.github.io/post/ringview/">
+<meta name="twitter:title" content="Android自定义环形进度条">
+<meta name="twitter:description" content="手把手教你实现一个炫酷的环形进度条。 支持纯色/渐变，可选线条样式，动画时长。 可实现扇形进度条、多个进度叠加、最小/最大进度等。 先上个效果图: Demo点我 [](htt&amp;hellip;">
+<meta name="twitter:image" content="/post-images/ringview.png">
+</head>
+
+<body class="">
+
+    
+<script>
+    (function () {
+        const getSystemTheme = () => {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                return 'dark';
+            }
+            return 'light';
+        };
+
+        const configDefault = 'dark';
+        const savedTheme = localStorage.getItem('theme');
+        const theme = savedTheme || configDefault || getSystemTheme();
+
+        if (theme === 'dark') {
+            document.body.classList.add('dark-theme');
+        }
+
+        if (!savedTheme) {
+            localStorage.setItem('theme', theme);
+        }
+    })();
+</script>
+<header class="mod-head">
+    <div class="mod-head__left">
+        <div class="mod-head__logo">
+            <a href="/">
+                
+                <img class="avatar" alt="avatar" src="/images/avatar.png">
+                
+            </a>
+        </div>
+    </div>
+
+    <div class="mod-head__right">
+        <span>
+            <button id="theme-toggle-sun" class="tiptap-button theme-toggle-sun" aria-label="Switch to dark mode">
+                <svg width="18" height="18" class="tiptap-button-icon" viewBox="0 0 24 24" fill="currentColor"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M12 1C12.5523 1 13 1.44772 13 2V4C13 4.55228 12.5523 5 12 5C11.4477 5 11 4.55228 11 4V2C11 1.44772 11.4477 1 12 1Z"
+                        fill="currentColor"></path>
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="M7 12C7 9.23858 9.23858 7 12 7C14.7614 7 17 9.23858 17 12C17 14.7614 14.7614 17 12 17C9.23858 17 7 14.7614 7 12ZM12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9Z"
+                        fill="currentColor"></path>
+                    <path
+                        d="M13 20C13 19.4477 12.5523 19 12 19C11.4477 19 11 19.4477 11 20V22C11 22.5523 11.4477 23 12 23C12.5523 23 13 22.5523 13 22V20Z"
+                        fill="currentColor"></path>
+                    <path
+                        d="M4.22282 4.22289C4.61335 3.83236 5.24651 3.83236 5.63704 4.22289L7.04704 5.63289C7.43756 6.02341 7.43756 6.65658 7.04704 7.0471C6.65651 7.43762 6.02335 7.43762 5.63283 7.0471L4.22282 5.6371C3.8323 5.24658 3.8323 4.61341 4.22282 4.22289Z"
+                        fill="currentColor"></path>
+                    <path
+                        d="M18.367 16.9529C17.9765 16.5623 17.3433 16.5623 16.9528 16.9529C16.5623 17.3434 16.5623 17.9766 16.9528 18.3671L18.3628 19.7771C18.7533 20.1676 19.3865 20.1676 19.777 19.7771C20.1675 19.3866 20.1675 18.7534 19.777 18.3629L18.367 16.9529Z"
+                        fill="currentColor"></path>
+                    <path
+                        d="M1 12C1 11.4477 1.44772 11 2 11H4C4.55228 11 5 11.4477 5 12C5 12.5523 4.55228 13 4 13H2C1.44772 13 1 12.5523 1 12Z"
+                        fill="currentColor"></path>
+                    <path
+                        d="M20 11C19.4477 11 19 11.4477 19 12C19 12.5523 19.4477 13 20 13H22C22.5523 13 23 12.5523 23 12C23 11.4477 22.5523 11 22 11H20Z"
+                        fill="currentColor"></path>
+                    <path
+                        d="M7.04704 16.9529C7.43756 17.3434 7.43756 17.9766 7.04704 18.3671L5.63704 19.7771C5.24651 20.1676 4.61335 20.1676 4.22282 19.7771C3.8323 19.3866 3.8323 18.7534 4.22283 18.3629L5.63283 16.9529C6.02335 16.5623 6.65651 16.5623 7.04704 16.9529Z"
+                        fill="currentColor"></path>
+                    <path
+                        d="M19.777 5.6371C20.1675 5.24657 20.1675 4.61341 19.777 4.22289C19.3865 3.83236 18.7533 3.83236 18.3628 4.22289L16.9528 5.63289C16.5623 6.02341 16.5623 6.65658 16.9528 7.0471C17.3433 7.43762 17.9765 7.43762 18.367 7.0471L19.777 5.6371Z"
+                        fill="currentColor"></path>
+                </svg>
+            </button>
+            <button id="theme-toggle-moon" class="tiptap-button theme-toggle-moon" aria-label="Switch to light mode">
+                <svg width="18" height="18" class="tiptap-button-icon" viewBox="0 0 24 24" fill="currentColor"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="M12 2C10.0222 2 8.08879 2.58649 6.4443 3.6853C4.79981 4.78412 3.51809 6.3459 2.76121 8.17317C2.00433 10.0004 1.8063 12.0111 2.19215 13.9509C2.578 15.8907 3.53041 17.6725 4.92894 19.0711C6.32746 20.4696 8.10929 21.422 10.0491 21.8079C11.9889 22.1937 13.9996 21.9957 15.8268 21.2388C17.6541 20.4819 19.2159 19.2002 20.3147 17.5557C21.4135 15.9112 22 13.9778 22 12C22 11.5955 21.7564 11.2309 21.3827 11.0761C21.009 10.9213 20.5789 11.0069 20.2929 11.2929C19.287 12.2988 17.9226 12.864 16.5 12.864C15.0774 12.864 13.713 12.2988 12.7071 11.2929C11.7012 10.287 11.136 8.92261 11.136 7.5C11.136 6.07739 11.7012 4.71304 12.7071 3.70711C12.9931 3.42111 13.0787 2.99099 12.9239 2.61732C12.7691 2.24364 12.4045 2 12 2ZM7.55544 5.34824C8.27036 4.87055 9.05353 4.51389 9.87357 4.28778C9.39271 5.27979 9.13604 6.37666 9.13604 7.5C9.13604 9.45304 9.91189 11.3261 11.2929 12.7071C12.6739 14.0881 14.547 14.864 16.5 14.864C17.6233 14.864 18.7202 14.6073 19.7122 14.1264C19.4861 14.9465 19.1295 15.7296 18.6518 16.4446C17.7727 17.7602 16.5233 18.7855 15.0615 19.391C13.5997 19.9965 11.9911 20.155 10.4393 19.8463C8.88743 19.5376 7.46197 18.7757 6.34315 17.6569C5.21447 16.538 4.4624 15.1126 4.15372 13.5607C3.84504 12.0089 4.00347 10.4003 4.60897 8.93853C5.21447 7.47672 6.23985 6.22729 7.55544 5.34824Z"
+                        fill="currentColor"></path>
+                    <path
+                        d="M19 2C19.5523 2 20 2.44772 20 3V4H21C21.5523 4 22 4.44772 22 5C22 5.55228 21.5523 6 21 6H20V7C20 7.55228 19.5523 8 19 8C18.4477 8 18 7.55228 18 7V6H17C16.4477 6 16 5.55228 16 5C16 4.44772 16.4477 4 17 4H18V3C18 2.44772 18.4477 2 19 2Z"
+                        fill="currentColor"></path>
+                </svg>
+            </button>
+        </span>
+    </div>
+</header>
+<!-- <a href="#" id="back-to-top" style="display: inline;"> ^ </a> -->
+
+<article class="mod-post mod-post__type-post">
+    <header>
+        <h1 class="mod-post__title">
+            Android自定义环形进度条
+        </h1>
+    </header>
+
+    <div class="mod-post__meta">
+        <time datetime="2020-04-27">
+            2020-04-27
+        </time> • 11 分钟阅读 •
+        
+        
+        
+        <a href="/tag/android/">
+            Android
+        </a>
+          </div>
+
+
+
+            <div class="mod-post__entry wzulli">
+                 <img src="/post-images/ringview.png" class="img"
+                    alt="Android自定义环形进度条" />
+                
+                <p>手把手教你实现一个炫酷的环形进度条。</p>
+<p>支持纯色/渐变，可选线条样式，动画时长。</p>
+<p>可实现扇形进度条、多个进度叠加、最小/最大进度等。</p>
+<p>先上个效果图:	<a href="https://github.com/mtdhllf/RingProgressView">Demo点我</a></p>
+<p><a href="https://github.com/mtdhllf/RingProgressView"><img src="https://mtdhllf.top/post-images/1656821277349.gif" alt="" /></a></p>
+<h3 id="heading">实现思路</h3>
+<p>环形进度条,本质就是根据角度、半径等条件实现画圆的过程</p>
+<ol>
+<li>创建一个类继承View，并实现几个构造方法</li>
+<li>定义样式属性，获取属性值</li>
+<li>创建画笔，设置线条等样式</li>
+<li>在onDraw方法中进行绘制</li>
+</ol>
+<ul>
+<li>
+<p>定义的属性样式</p>
+<pre><code class="language-xml">&lt;declare-styleable name=&quot;RingProgressView&quot;&gt;
+  &lt;!--前景环形是否使用渐变--&gt;
+  &lt;attr format=&quot;boolean&quot; name=&quot;f_useGradient&quot;/&gt;
+  &lt;!--前景环形渐变起始颜色--&gt;
+  &lt;attr format=&quot;color&quot; name=&quot;f_startColor&quot;/&gt;
+  &lt;!--前景环形渐变中间颜色--&gt;
+  &lt;attr format=&quot;color&quot; name=&quot;f_centerColor&quot;/&gt;
+  &lt;!--前景环形渐变结束颜色--&gt;
+  &lt;attr format=&quot;color&quot; name=&quot;f_endColor&quot;/&gt;
+  &lt;!--前景环形颜色--&gt;
+  &lt;attr format=&quot;color&quot; name=&quot;f_ringColor&quot;/&gt;
+  &lt;!--背景环形颜色--&gt;
+  &lt;attr format=&quot;color&quot; name=&quot;f_ringBgColor&quot;/&gt;
+  &lt;!--前景环形起始角度--&gt;
+  &lt;attr format=&quot;float&quot; name=&quot;f_startAngle&quot;/&gt;
+  &lt;!--前景环形结束角度--&gt;
+  &lt;attr format=&quot;float&quot; name=&quot;f_endAngle&quot;/&gt;
+  &lt;!--背景环形起始角度--&gt;
+  &lt;attr format=&quot;float&quot; name=&quot;f_startBgAngle&quot;/&gt;
+  &lt;!--背景环形结束角度--&gt;
+  &lt;attr format=&quot;float&quot; name=&quot;f_endBgAngle&quot;/&gt;
+  &lt;!--环形线宽--&gt;
+  &lt;attr format=&quot;dimension&quot; name=&quot;f_roundWidth&quot;/&gt;
+  &lt;!--进度变化动画时长--&gt;
+  &lt;attr format=&quot;integer&quot; name=&quot;f_duration&quot;/&gt;
+  &lt;!--前景环形开始进度--&gt;
+  &lt;attr format=&quot;float&quot; name=&quot;f_startProgress&quot;/&gt;
+  &lt;!--前景环形结束进度--&gt;
+  &lt;attr format=&quot;float&quot; name=&quot;f_endProgress&quot;/&gt;
+  &lt;!--前景环形目标进度(你想设置的)--&gt;
+  &lt;attr format=&quot;float&quot; name=&quot;f_progress&quot;/&gt;
+  &lt;!--环形线帽样式Paint.Cap--&gt;
+  &lt;attr format=&quot;enum&quot; name=&quot;f_strokeCap&quot;&gt;
+      &lt;!--默认没有--&gt;
+      &lt;enum name=&quot;butt&quot; value=&quot;0&quot;/&gt;
+      &lt;!--圆角--&gt;
+      &lt;enum name=&quot;round&quot; value=&quot;1&quot;/&gt;
+      &lt;!--直角--&gt;
+      &lt;enum name=&quot;square&quot; value=&quot;2&quot;/&gt;
+  &lt;/attr&gt;
+  &lt;!--环形描边样式,详见Paint.Join--&gt;
+  &lt;attr format=&quot;enum&quot; name=&quot;f_strokeJoin&quot;&gt;
+      &lt;enum name=&quot;miter&quot; value=&quot;0&quot;/&gt;
+      &lt;enum name=&quot;round&quot; value=&quot;1&quot;/&gt;
+      &lt;enum name=&quot;bevel&quot; value=&quot;2&quot;/&gt;
+  &lt;/attr&gt;
+&lt;/declare-styleable&gt;
+</code></pre>
+</li>
+<li>
+<p>定义的属性,及初始化</p>
+<p>xml属性的读取,变量含义可参考上面的属性定义</p>
+<pre><code class="language-kotlin">//属性配置
+val ta = context.obtainStyledAttributes(attrs, R.styleable.RingProgressView)
+ringColor = ta.getColor(R.styleable.RingProgressView_f_ringColor, ringColor)
+ringBgColor = ta.getColor(R.styleable.RingProgressView_f_ringBgColor, ringBgColor)
+startColor = ta.getColor(R.styleable.RingProgressView_f_startColor, startColor)
+centerColor = ta.getColor(R.styleable.RingProgressView_f_centerColor, centerColor)
+endColor = ta.getColor(R.styleable.RingProgressView_f_endColor, endColor)
+//渐变色设置检查
+if (startColor != Color.TRANSPARENT || startColor != Color.TRANSPARENT || startColor != Color.TRANSPARENT) {
+    useGradient = true
+}
+useGradient = ta.getBoolean(R.styleable.RingProgressView_f_useGradient, useGradient)
+startAngle = ta.getFloat(R.styleable.RingProgressView_f_startAngle, startAngle)
+endAngle = ta.getFloat(R.styleable.RingProgressView_f_endAngle, endAngle)
+startBgAngle = ta.getFloat(R.styleable.RingProgressView_f_startBgAngle, startBgAngle)
+endBgAngle = ta.getFloat(R.styleable.RingProgressView_f_endBgAngle, endBgAngle)
+roundWidth = ta.getDimensionPixelSize(R.styleable.RingProgressView_f_roundWidth, roundWidth)
+strokeCap = when (ta.getInteger(R.styleable.RingProgressView_f_strokeCap, 0)) {
+    0 -&gt; Paint.Cap.BUTT
+    1 -&gt; Paint.Cap.ROUND
+    else -&gt; Paint.Cap.SQUARE
+}
+strokeJoin = when (ta.getInteger(R.styleable.RingProgressView_f_strokeJoin, 0)) {
+    0 -&gt; Paint.Join.MITER
+    1 -&gt; Paint.Join.ROUND
+    else -&gt; Paint.Join.BEVEL
+}
+duration = ta.getInt(R.styleable.RingProgressView_f_duration, duration.toInt()).toLong()
+startProgress = ta.getFloat(R.styleable.RingProgressView_f_startProgress, startProgress)
+endProgress = ta.getFloat(R.styleable.RingProgressView_f_endProgress, endProgress)
+progress = ta.getFloat(R.styleable.RingProgressView_f_progress, progress)
+tempProgress = progress
+ta.recycle()
+</code></pre>
+</li>
+<li>
+<p>动画插值器及画笔</p>
+<p>这里使用的是线性插值器(LinearInterpolator)，插值器是控制动画过程的关键，也有其他可代替的方案有Scroller、ValueAnimator等</p>
+<p>有关插值器等了解看文章最后的参考部分</p>
+<pre><code class="language-kotlin">init {	
+        va.interpolator = LinearInterpolator()
+        va.setFloatValues(startProgress, progress)
+        va.duration = duration
+        va.addUpdateListener {
+            tempProgress = it.animatedValue as Float
+            postInvalidate()
+        }
+        va.start()
+    }
+
+/**
+ * 初始化参数
+ */
+private fun init() {
+    //设置画笔参数
+    bgPaint.strokeWidth = roundWidth.toFloat()
+    bgPaint.strokeCap = strokeCap
+    bgPaint.strokeJoin = Paint.Join.ROUND
+    bgPaint.style = Paint.Style.STROKE
+    bgPaint.isAntiAlias = true
+    bgPaint.color = ringBgColor
+    forePaint.strokeWidth = roundWidth.toFloat()
+    forePaint.strokeCap = strokeCap
+    forePaint.strokeJoin = Paint.Join.ROUND
+    forePaint.style = Paint.Style.STROKE
+    forePaint.isAntiAlias = true
+    //着色器颜色筛选
+    val filter = intArrayOf(startColor, centerColor, endColor).filter { it != Color.TRANSPARENT }
+    val colorArray:IntArray = when{
+        filter.isEmpty()-&gt; intArrayOf(startColor, centerColor, endColor)
+        filter.size&gt;1-&gt; filter.toIntArray()
+        else-&gt;{
+            intArrayOf(filter.first(),filter.first())
+        }
+    }
+    //着色器/颜色设置
+    if (useGradient) {
+        forePaint.shader = LinearGradient(
+            0f,
+            0f,
+            width.toFloat(),
+            height.toFloat(),
+            colorArray,
+            null,
+            Shader.TileMode.CLAMP
+        )
+    } else {
+        forePaint.shader = null
+        forePaint.color = ringColor
+    }
+    //矩形
+    rectF
+    .set(
+        0f + roundWidth / 2,
+        0f + roundWidth / 2,
+        width.toFloat() - roundWidth / 2,
+        height.toFloat() - roundWidth / 2
+    )
+    if (init) {
+        postInvalidate()
+    }
+}
+</code></pre>
+</li>
+<li>
+<p>绘制部分</p>
+<pre><code class="language-kotlin">override fun onDraw(canvas: Canvas) {
+    //画背景环形
+    canvas.drawArc(rectF, startBgAngle, endBgAngle - startBgAngle, false, bgPaint)
+    //计算前景环形角度
+    sweepAngle = tempProgress / (endProgress - startProgress) * (endAngle - startAngle)
+    //画前景环形
+    canvas.drawArc(rectF, startAngle, sweepAngle, false, forePaint)
+}
+</code></pre>
+</li>
+</ul>
+<h3 id="heading-1">总结</h3>
+<ul>
+<li>动画的实现主要依赖于插值器的配合</li>
+<li>渐变的功能实现在于着色器(Paint.shader及LinearGradient)的应用</li>
+</ul>
+<h3 id="heading-2">参考</h3>
+<h4 id="interpolatorhttpswwwjianshucompa5750828003c"><a href="https://www.jianshu.com/p/a5750828003c">Interpolator插值器</a></h4>
+<h4 id="scrollerhttpswwwjianshucompd27c792c98b9"><a href="https://www.jianshu.com/p/d27c792c98b9">Scroller</a></h4>
+<h4 id="valueanimatorhttpswwwjianshucomp7d70fedcef21"><a href="https://www.jianshu.com/p/7d70fedcef21%5D">ValueAnimator</a></h4>
+
+            </div>
+
+</article>
+
+
+
+
+
+
+<div class="mod-post__poster">
+</div>
+
+</div>
+
+
+
+
+
+
+<!-- Reading Progress Component -->
+<div class="reading-progress-container">
+  <span class="reading-label">阅读进度</span>
+  <span class="reading-value">0%</span>
+  <svg class="progress-ring" viewBox="0 0 24 24">
+    <!-- Background Circle -->
+    <circle class="progress-ring__circle-bg" stroke-width="3" fill="transparent" r="10" cx="12" cy="12" />
+    <!-- Progress Circle -->
+    <circle class="progress-ring__circle" stroke-width="3" fill="transparent" r="10" cx="12" cy="12" />
+  </svg>
+</div>
+<footer id="footer" class="footer">
+    <nav>
+        
+        
+        <a class="menu-item" href="/">首页</a>
+        
+         · 
+        <a class="menu-item" href="/post">博客</a>
+        
+         · 
+        <a class="menu-item" href="/memos">闪念</a>
+        
+         · 
+        <a class="menu-item" href="/archives">归档</a>
+        
+         · 
+        <a class="menu-item" href="/tags">标签</a>
+        
+         · 
+        <a class="menu-item" href="/links">友链</a>
+        
+         · 
+        <a class="menu-item" href="/post/about">关于</a>
+        
+    </nav>
+
+    <div class="Copyright">Copyright &copy; <span class="current-year"></span> <a href="https://mtdhllf.github.io">Gopher&#39;s Blog</a></div>
+    <script>document.querySelector('.current-year').textContent = new Date().getFullYear();</script>
+
+    <div class="index_footer">
+          ·
+        <a class="rss" href="/feed.xml" target="_blank" rel="noopener noreferrer">
+            <i class="ri-rss-line"></i>RSS
+        </a>
+    </div>
+</footer>
+
+
+
+
+    
+
+    
+<script>console.log("\n%c ✦ Gridea Pro v1.3.0-beta.2 %c · Theme: amore-jinja2 v1.1.0 · https://gridea.pro %c\n","color:#fadfa3;background:#111111;padding:9px 14px;border-radius:4px 0 0 4px;font-weight:500;font-size:12px","color:#e05c00;background:#fff3ec;padding:9px 14px;border-radius:0 4px 4px 0;font-size:11px","")</script>
+</body>
+
+</html>
